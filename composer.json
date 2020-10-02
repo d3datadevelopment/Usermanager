@@ -34,7 +34,7 @@
   "require": {
     "php": "7.1 - 7.4", "ext-ionCube-Loader": "*",
     "oxid-esales/oxideshop-metapackage-ce": "~6.0.0 || ~6.1.0",
-    "d3/modcfg": "^5.3.2.000",
+    "d3/modcfg": "^5.3.2.000"
   },
   "require-dev": {
     "mikey179/vfsStream": "^1.4"
