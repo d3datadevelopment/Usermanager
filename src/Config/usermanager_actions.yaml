@@ -1,0 +1,165 @@
+# This Software is the property of Data Development and is protected
+# by copyright law - it is NOT Freeware.
+#
+# Any unauthorized use of this software without a valid license
+# is a violation of the license agreement and will be prosecuted by
+# civil and criminal law.
+#
+# https://www.d3data.de
+#
+# @copyright (C) D3 Data Development (Inh. Thomas Dartsch)
+# @author    D3 Data Development - Daniel Seifert <support@shopmodule.com>
+# @link      https://www.oxidmodule.com
+
+services:
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.usermanager
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.user
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.usermanager:
+    synthetic:  true
+    shared:     false
+    public:     false
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.user:
+    synthetic:  true
+    shared:     false
+    public:     false
+
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.usermanager
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.user
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.usermanager:
+    synthetic:  true
+    shared:     false
+    public:     false
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.user:
+    synthetic:  true
+    shared:     false
+    public:     false
+
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.usermanager
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.user
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.usermanager:
+    synthetic:  true
+    shared:     false
+    public:     false
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.user:
+    synthetic:  true
+    shared:     false
+    public:     false
+
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.usermanager
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.user
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.usermanager:
+    synthetic:  true
+    shared:     false
+    public:     false
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.user:
+    synthetic:  true
+    shared:     false
+    public:     false
+
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.usermanager
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.user
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.usermanager:
+    synthetic:  true
+    shared:     false
+    public:     false
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.user:
+    synthetic:  true
+    shared:     false
+    public:     false
+
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.usermanager
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.user
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.usermanager:
+    synthetic:  true
+    shared:     false
+    public:     false
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.user:
+    synthetic:  true
+    shared:     false
+    public:     false
+
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.usermanager
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.user
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.usermanager:
+    synthetic:  true
+    shared:     false
+    public:     false
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.user:
+    synthetic:  true
+    shared:     false
+    public:     false
+
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.usermanager
+      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.user
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.usermanager:
+    synthetic:  true
+    shared:     false
+    public:     false
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.user:
+    synthetic:  true
+    shared:     false
+    public:     false

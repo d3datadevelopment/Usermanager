@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+$count = 0;
+$filePath = '../../../source/modules/d3/usermanager/public/d3_usermanager_cron.php';
+$currentDirectory = __DIR__ . '/';
+while ($count < 5) {
+    $count++;
+    if (file_exists($currentDirectory . $filePath)) {
+        $filePath = $currentDirectory . $filePath;
+        break;
+    }
+    $filePath = '../' . $filePath;
+}
+
+require($filePath);

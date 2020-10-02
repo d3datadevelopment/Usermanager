@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OX>
+    <OXMENU id="NAVIGATION_ESHOPADMIN">
+        <MAINMENU id="mxuadmin">
+            <SUBMENU id="mxusers" cl="admin_user" list="user_list">
+                <TAB id="tbcluser_usermanager_jobs" cl="d3_usermanager_jobs" />
+            </SUBMENU>
+        </MAINMENU>
+    </OXMENU>
+    <OXMENU id="d3mxd3modules">
+        <MAINMENU id="d3mxusermanager">
+            <SUBMENU id="d3mxusermanager_settings" cl="d3_cfg_usermanagerset" list="d3_cfg_usermanagerset_list">
+                <TAB id="d3tbclusermanager_settings_main" cl="d3_cfg_usermanagerset_main" />
+                <TAB id="d3tbcl_licence" cl="d3_cfg_usermanagerset_licence" />
+            </SUBMENU>
+            <SUBMENU id="d3mxusermanager_items" cl="d3_cfg_usermanageritem" list="d3_cfg_usermanageritem_list">
+                <TAB id="d3tbclusermanager_items_main" cl="d3_cfg_usermanageritem_main" />
+                <TAB id="d3tbclusermanager_items_mall" cl="d3_cfg_usermanageritem_mall" />
+                <TAB id="d3tbclusermanager_items_overview" cl="d3_cfg_usermanageritem_overview" />
+                <TAB id="d3tbclusermanager_items_trigger" cl="d3_cfg_usermanageritem_trigger" />
+                <TAB id="d3tbclusermanager_items_requ" cl="d3_cfg_usermanageritem_requ" />
+                <TAB id="d3tbclusermanager_items_action" cl="d3_cfg_usermanageritem_action" />
+            </SUBMENU>
+            <SUBMENU id ="d3mxlog" cl="d3_cfg_usermanagerlog" list="d3_cfg_usermanagerlog_list">
+                <TAB id="d3tbcllog_main" cl="d3_cfg_log_main" />
+            </SUBMENU>
+        </MAINMENU>
+    </OXMENU>
+</OX>

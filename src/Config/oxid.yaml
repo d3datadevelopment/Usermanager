@@ -1,0 +1,391 @@
+# This Software is the property of Data Development and is protected
+# by copyright law - it is NOT Freeware.
+#
+# Any unauthorized use of this software without a valid license
+# is a violation of the license agreement and will be prosecuted by
+# civil and criminal law.
+#
+# https://www.d3data.de
+#
+# @copyright (C) D3 Data Development (Inh. Thomas Dartsch)
+# @author    D3 Data Development - Daniel Seifert <support@shopmodule.com>
+# @link      https://www.oxidmodule.com
+
+parameters:
+  d3ox.usermanager.OxidEsales\Facts\Facts.args.startpath:
+  d3ox.usermanager.OxidEsales\Facts\Facts.args.configfile:
+  d3ox.usermanager.OxidEsales\Eshop\Core\Price.args.price:
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Article.args.params:
+  d3ox.usermanager.OxidEsales\Eshop\Core\Model\ListModel.args.objectname:
+  d3ox.usermanager.OxidEsales\Eshop\Core\Field.args.value:
+  d3ox.usermanager.OxidEsales\Eshop\Core\Field.args.type:
+  d3ox.usermanager.OxidEsales\Eshop\Core\Exception\StandardException.args.message:
+  d3ox.usermanager.OxidEsales\Eshop\Core\Exception\StandardException.args.code:
+
+services:
+  # config
+  d3ox.usermanager.OxidEsales\Eshop\Core\Config:
+    class:      'OxidEsales\Eshop\Core\Config'
+    factory:
+      - 'OxidEsales\Eshop\Core\Registry'
+      - 'getConfig'
+    shared:     true
+
+  # session
+  d3ox.usermanager.OxidEsales\Eshop\Core\Session:
+    class:      'OxidEsales\Eshop\Core\Session'
+    factory:
+      - 'OxidEsales\Eshop\Core\Registry'
+      - 'getSession'
+    shared:     true
+
+  # ViewConfig
+  d3ox.usermanager.OxidEsales\Eshop\Core\ViewConfig:
+    class:      'OxidEsales\Eshop\Core\ViewConfig'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\ViewConfig'
+    shared:     false
+
+  # Request
+  d3ox.usermanager.OxidEsales\Eshop\Core\Request:
+    class:      'OxidEsales\Eshop\Core\Request'
+    factory:
+      - 'OxidEsales\Eshop\Core\Registry'
+      - 'get'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Request'
+    shared:     true
+
+  # UtilsView
+  d3ox.usermanager.OxidEsales\Eshop\Core\UtilsView:
+    class:      'OxidEsales\Eshop\Core\UtilsView'
+    factory:
+      - 'OxidEsales\Eshop\Core\Registry'
+      - 'get'
+    arguments:
+      - 'OxidEsales\Eshop\Core\UtilsView'
+    shared:     true
+
+  # UtilsFile
+  d3ox.usermanager.OxidEsales\Eshop\Core\UtilsFile:
+    class:      'OxidEsales\Eshop\Core\UtilsFile'
+    factory:
+      - 'OxidEsales\Eshop\Core\Registry'
+      - 'get'
+    arguments:
+      - 'OxidEsales\Eshop\Core\UtilsFile'
+    shared:     true
+
+  # DiscountList
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\DiscountList:
+    class:      'OxidEsales\Eshop\Application\Model\DiscountList'
+    factory:
+      - 'OxidEsales\Eshop\Core\Registry'
+      - 'get'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\DiscountList'
+    shared:     true
+
+  # DB_assoc
+  d3ox.usermanager.OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface.assoc:
+    class:      'OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface'
+    factory:
+      - 'OxidEsales\Eshop\Core\DatabaseProvider'
+      - 'getDb'
+    arguments:
+      - 2
+    shared:     true
+
+  # DB_num
+  d3ox.usermanager.OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface.num:
+    class:      'OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface'
+    factory:
+      - 'OxidEsales\Eshop\Core\DatabaseProvider'
+      - 'getDb'
+    arguments:
+      - 1
+    shared:     true
+
+  # Facts
+  d3ox.usermanager.OxidEsales\Facts\Facts:
+    class:      'OxidEsales\Facts\Facts'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Facts\Facts'
+      - '%d3ox.usermanager.OxidEsales\Facts\Facts.args.startpath%'
+      - '%d3ox.usermanager.OxidEsales\Facts\Facts.args.configfile%'
+    shared:     false
+
+  # BaseModel
+  d3ox.usermanager.OxidEsales\Eshop\Core\Model\BaseModel:
+    class:      'OxidEsales\Eshop\Core\Model\BaseModel'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Model\BaseModel'
+    shared:     false
+
+  # User
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\User:
+    class:      'OxidEsales\Eshop\Application\Model\User'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\User'
+    shared:     false
+
+  # Voucher
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Voucher:
+    class:      'OxidEsales\Eshop\Application\Model\Voucher'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Voucher'
+    shared:     false
+
+  # BasketItem
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\BasketItem:
+    class:      'OxidEsales\Eshop\Application\Model\BasketItem'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\BasketItem'
+    shared:     false
+
+  # Price
+  d3ox.usermanager.OxidEsales\Eshop\Core\Price:
+    class:      'OxidEsales\Eshop\Core\Price'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Price'
+      - '%d3ox.usermanager.OxidEsales\Eshop\Core\Price.args.price%'
+    shared:     false
+
+  # PriceList
+  d3ox.usermanager.OxidEsales\Eshop\Core\PriceList:
+    class:      'OxidEsales\Eshop\Core\PriceList'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\PriceList'
+    shared:     false
+
+  # Article
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Article:
+    class:      'OxidEsales\Eshop\Application\Model\Article'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Article'
+      - '%d3ox.usermanager.OxidEsales\Eshop\Application\Model\Article.args.params%'
+    shared:     false
+
+  # Payment
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Payment:
+    class:      'OxidEsales\Eshop\Application\Model\Payment'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Payment'
+    shared:     false
+
+  # PaymentList
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\PaymentList:
+    class:      'OxidEsales\Eshop\Application\Model\PaymentList'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\PaymentList'
+    shared:     false
+
+  # Content
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Content:
+    class:      'OxidEsales\Eshop\Application\Model\Content'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Content'
+    shared:     false
+
+  # ListModel
+  d3ox.usermanager.OxidEsales\Eshop\Core\Model\ListModel:
+    class:      'OxidEsales\Eshop\Core\Model\ListModel'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Model\ListModel'
+      - '%d3ox.usermanager.OxidEsales\Eshop\Core\Model\ListModel.args.objectname%'
+    shared:     false
+
+  # UserList
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\UserList:
+    class:      'OxidEsales\Eshop\Application\Model\UserList'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\UserList'
+    shared:     false
+
+  # ContentList
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\ContentList:
+    class:      'OxidEsales\Eshop\Application\Model\ContentList'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\ContentList'
+    shared:     false
+
+  # Groups
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Groups:
+    class:      'OxidEsales\Eshop\Application\Model\Groups'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Groups'
+    shared:     false
+
+  # Module
+  d3ox.usermanager.OxidEsales\Eshop\Core\Module\Module:
+    class:      'OxidEsales\Eshop\Core\Module\Module'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Module\Module'
+    shared:     false
+
+  # ModuleList
+  d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleList:
+    class:      'OxidEsales\Eshop\Core\Module\ModuleList'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Module\ModuleList'
+    shared:     false
+
+  # Email
+  d3ox.usermanager.OxidEsales\Eshop\Core\Email:
+    class:      'OxidEsales\Eshop\Core\Email'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Email'
+    shared:     false
+
+  # DeliveryList
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\DeliveryList:
+    class:      'OxidEsales\Eshop\Application\Model\DeliveryList'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\DeliveryList'
+    shared:     false
+
+  # CountryList
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\CountryList:
+    class:      'OxidEsales\Eshop\Application\Model\CountryList'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\CountryList'
+    shared:     false
+
+  # Output
+  d3ox.usermanager.OxidEsales\Eshop\Core\Output:
+    class:      'OxidEsales\Eshop\Core\Output'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Output'
+    shared:     false
+
+  # Remark
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Remark:
+    class:      'OxidEsales\Eshop\Application\Model\Remark'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Remark'
+    shared:     false
+
+  # Language
+  d3ox.usermanager.OxidEsales\Eshop\Core\Language:
+    class:      'OxidEsales\Eshop\Core\Language'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Language'
+    shared:     false
+
+  # Field
+  d3ox.usermanager.OxidEsales\Eshop\Core\Field:
+    class:      'OxidEsales\Eshop\Core\Field'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Core\Field'
+      - '%d3ox.usermanager.OxidEsales\Eshop\Core\Field.args.value%'
+      - '%d3ox.usermanager.OxidEsales\Eshop\Core\Field.args.type%'
+    shared:     false
+
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Shop:
+    class:      'OxidEsales\Eshop\Application\Model\Shop'
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Shop'
+
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Basket:
+    class:      'OxidEsales\Eshop\Application\Model\Basket'
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Basket'
+
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Object2Category:
+    class:      'OxidEsales\Eshop\Application\Model\Object2Category'
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Object2Category'
+
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Object2Group:
+    class:      'OxidEsales\Eshop\Application\Model\Object2Group'
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Object2Group'
+
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Delivery:
+    class:      'OxidEsales\Eshop\Application\Model\Delivery'
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Delivery'
+
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Order:
+    class:      'OxidEsales\Eshop\Application\Model\Order'
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Order'
+
+  d3ox.usermanager.Smarty:
+    class:      Smarty
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - '\Smarty'
+
+  ### Arguments
+
+  d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller:
+    class:      'OxidEsales\Eshop\Core\Module\ModuleInstaller'
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - OxidEsales\Eshop\Core\Module\ModuleInstaller
+      - @?d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecache
+      - @?d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecleaner
+  # d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecache:
+  #  synthetic:  true
+  #  shared:     false
+  #  public:     false
+  # d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecleaner:
+  #  synthetic:  true
+  #  shared:     false
+  #  public:     false
+
+  d3ox.usermanager.OxidEsales\Eshop\Core\Exception\StandardException:
+    class:      'OxidEsales\Eshop\Core\Exception\StandardException'
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - 'OxidEsales\Eshop\Core\Exception\StandardException'
+      - '%d3ox.usermanager.OxidEsales\Eshop\Core\Exception\StandardException.args.message%'
+      - '%d3ox.usermanager.OxidEsales\Eshop\Core\Exception\StandardException.args.code%'
+      - '@?d3ox.usermanager.OxidEsales\Eshop\Core\Exception\StandardException.args.exception'
+        # arg #3 exception
+      # no synthetic instance, because it's an optional argument
+    # D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.exception:
+    #   synthetic:  true
+    #   shared:     false
+    #   public:     false
