@@ -1,0 +1,1 @@
+<div class="extension_warning">[{$oView->getRestrictionMessage()}]</div>

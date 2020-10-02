@@ -1,0 +1,47 @@
+{
+  "name": "d3/usermanager",
+  "description": "User manager module for OXID eShop.",
+  "type": "oxideshop-module",
+  "keywords": [
+    "oxid",
+    "modules",
+    "eShop",
+    "d3",
+    "usermanager",
+    "users",
+    "requirements",
+    "actions",
+    "tasks"
+  ],
+  "authors": [
+    {
+        "name": "D3 Data Development (Inh. Thomas Dartsch)",
+        "email": "info@shopmodule.com",
+        "homepage": "https://www.d3data.de",
+        "role": "Owner"
+    }
+  ],
+  "homepage": "https://www.oxidmodule.com/",
+  "license": [
+    "proprietary"
+  ],
+  "extra": {
+    "oxideshop": {
+      "source-directory": "/src",
+      "target-directory": "d3/usermanager"
+    }
+  },
+  "require": {
+    "php": "7.1 - 7.4", "ext-ionCube-Loader": "*",
+    "oxid-esales/oxideshop-metapackage-ce": "~6.0.0 || ~6.1.0",
+    "d3/modcfg": "^5.3.2.000",
+  },
+  "require-dev": {
+    "mikey179/vfsStream": "^1.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "D3\\Usermanager\\": "../../../source/modules/d3/usermanager"
+    }
+  }
+}
