@@ -16,10 +16,10 @@
 
 namespace D3\Usermanager\Application\Controller\Admin;
 
-use D3\ModCfg\Application\Model\d3str;
-use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\d3filesystem;
+use D3\ModCfg\Application\Model\d3str;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
+use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
 use Exception;
 use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
@@ -92,10 +92,13 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
 
     /**
      * @return Manager
+     * @throws Exception
      */
     public function getProfile()
     {
-        return d3GetModCfgDIC()->get($this->_sObjectClassName);
+        /** @var Manager $oManager */
+        $oManager = d3GetModCfgDIC()->get($this->_sObjectClassName);
+        return $oManager;
     }
 
     /**

@@ -55,6 +55,9 @@ class d3_usermanager_jobs extends AdminDetailsController
      */
     public function __construct()
     {
+        // prevent the use of the global currency setting instead of the order setting
+        unset($_GET['cur']);
+
         d3GetModCfgDIC()->setParameter($this->_DIC_Instance_Id.'modcfgid', $this->_sModId);
 
         parent::__construct();
@@ -137,7 +140,9 @@ class d3_usermanager_jobs extends AdminDetailsController
      */
     public function getManagerList()
     {
-        return d3GetModCfgDIC()->get(ManagerListModel::class);
+        /** @var ManagerListModel $managerList */
+        $managerList = d3GetModCfgDIC()->get(ManagerListModel::class);
+        return $managerList;
     }
 
     /**
@@ -197,7 +202,9 @@ class d3_usermanager_jobs extends AdminDetailsController
      */
     public function getManager()
     {
-        return d3GetModCfgDIC()->get(Manager::class);
+        /** @var Manager $manager */
+        $manager = d3GetModCfgDIC()->get(Manager::class);
+        return $manager;
     }
 
     /**
@@ -212,7 +219,9 @@ class d3_usermanager_jobs extends AdminDetailsController
             $oManager
         );
 
-        return d3GetModCfgDIC()->get(ManagerExecuteModel::class);
+        /** @var ManagerExecuteModel $managerExecute */
+        $managerExecute = d3GetModCfgDIC()->get(ManagerExecuteModel::class);
+        return $managerExecute;
     }
 
     /**
@@ -280,7 +289,9 @@ class d3_usermanager_jobs extends AdminDetailsController
             $oManager
         );
 
-        return d3GetModCfgDIC()->get(ToItemAssignmentModel::class);
+        /** @var ToItemAssignmentModel $managerAssignment */
+        $managerAssignment = d3GetModCfgDIC()->get(ToItemAssignmentModel::class);
+        return $managerAssignment;
     }
 
     /**
@@ -342,7 +353,7 @@ class d3_usermanager_jobs extends AdminDetailsController
         $this->addTplParam("htmleditor", $this->generateTextEditor("95%", 180, $object, "aContent[mail][html]", "list.tpl.css"));
 
         $this->addTplParam('sAction', __FUNCTION__);
-        $this->addTplParam('oUserManager', $oManager);
+        $this->addTplParam('oManager', $oManager);
     }
 
     /**
@@ -359,10 +370,10 @@ class d3_usermanager_jobs extends AdminDetailsController
      */
     public function getLang()
     {
-        /** @var Language $lang */
-        $lang = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
+        /** @var Language $language */
+        $language = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
         
-        return $lang;
+        return $language;
     }
 
     /**
@@ -397,10 +408,10 @@ class d3_usermanager_jobs extends AdminDetailsController
      */
     public function d3GetSet()
     {
-        /** @var d3_cfg_mod $modcfg */
-        $modcfg = d3GetModCfgDIC()->get($this->_DIC_Instance_Id.'modcfg');
+        /** @var d3_cfg_mod $modCfg */
+        $modCfg = d3GetModCfgDIC()->get($this->_DIC_Instance_Id.'modcfg');
 
-        return $modcfg;
+        return $modCfg;
     }
 
     public function getLink()

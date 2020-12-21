@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\tests\integration\Requirements\d3RequirementIntegrationTestCase;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -259,6 +258,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -270,7 +270,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightMinMinute()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMinMinute());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertGreaterThanOrEqual(3, $oUserList->count());
         $this->assertFalse($oUserList->offsetExists( $this->aUserIdList[0]));
@@ -282,6 +282,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -293,7 +294,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightMinHour()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMinHour());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertGreaterThanOrEqual(2, $oUserList->count());
         $this->assertFalse($oUserList->offsetExists( $this->aUserIdList[0]));
@@ -305,6 +306,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -316,7 +318,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightMinDay()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMinDay());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertGreaterThanOrEqual(1, $oUserList->count());
         $this->assertFalse($oUserList->offsetExists( $this->aUserIdList[0]));
@@ -328,6 +330,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -339,7 +342,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightMaxMinute()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMaxMinute());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertGreaterThanOrEqual(1, $oUserList->count());
         $this->assertTrue($oUserList->offsetExists( $this->aUserIdList[0]));
@@ -351,6 +354,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -362,7 +366,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightMaxHour()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMaxHour());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertGreaterThanOrEqual(2, $oUserList->count());
         $this->assertTrue($oUserList->offsetExists( $this->aUserIdList[0]));
@@ -374,6 +378,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -385,7 +390,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightMaxDay()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMaxDay());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertGreaterThanOrEqual(3, $oUserList->count());
         $this->assertTrue($oUserList->offsetExists( $this->aUserIdList[0]));

@@ -22,10 +22,10 @@ use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\ModCfg\Application\Model\Log\d3LogInterface;
 use D3\ModCfg\Application\Model\Log\d3log;
-use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
-use D3\Usermanager\Application\Model\d3usermanagerlist as ManagerList;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_execute as ManagerExecuteModel;
+use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
+use D3\Usermanager\Application\Model\d3usermanagerlist as ManagerList;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException as cronUnavailableException;
 use Doctrine\DBAL\DBALException;
 use Exception;
@@ -35,6 +35,7 @@ use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\DatabaseException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Language;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\Session;
 
@@ -117,7 +118,8 @@ class d3usermanager_response extends Base
             $blExc = true;
         } catch (StandardException $oEx) {
             /** @var StandardException $oEx */
-            $oEx->debugOut();
+            $logger = Registry::getLogger();
+            $logger->error($oEx);
             $blExc = true;
         }
 
@@ -132,7 +134,10 @@ class d3usermanager_response extends Base
      */
     public function getManagerList()
     {
-        return d3GetModCfgDIC()->get(ManagerList::class);
+        /** @var ManagerList $managerList */
+        $managerList = d3GetModCfgDIC()->get(ManagerList::class);
+
+        return $managerList;
     }
 
     /**
@@ -147,7 +152,10 @@ class d3usermanager_response extends Base
             $oManager
         );
 
-        return d3GetModCfgDIC()->get(ManagerExecuteModel::class);
+        /** @var ManagerExecuteModel $manager_execute */
+        $manager_execute = d3GetModCfgDIC()->get(ManagerExecuteModel::class);
+
+        return $manager_execute;
     }
 
     /**
@@ -208,7 +216,10 @@ class d3usermanager_response extends Base
      */
     public function getManager()
     {
-        return d3GetModCfgDIC()->get(Manager::class);
+        /** @var Manager $manager */
+        $manager = d3GetModCfgDIC()->get(Manager::class);
+
+        return $manager;
     }
 
     /**
@@ -233,8 +244,6 @@ class d3usermanager_response extends Base
      */
     protected function _getSet()
     {
-        return d3_cfg_mod::get('d3usermanager');
-
         /** @var d3_cfg_mod $modcfg */
         $modcfg = d3GetModCfgDIC()->get($this->_DIC_Instance_Id.'modcfg');
 
@@ -342,7 +351,10 @@ class d3usermanager_response extends Base
             $sMessage
         );
 
-        return d3GetModCfgDIC()->get(cronUnavailableException::class);
+        /** @var cronUnavailableException $cronUnavailableExc */
+        $cronUnavailableExc = d3GetModCfgDIC()->get(cronUnavailableException::class);
+
+        return $cronUnavailableExc;
     }
 
     /**
@@ -395,7 +407,7 @@ class d3usermanager_response extends Base
             array_filter(
                 $this->getManager()->getAvailableCronjobIds(),
                 function($entry) use ($sCronJobId) {
-                    return ($entry['id'] == $sCronJobId) ? true : false;
+                    return $entry['id'] == $sCronJobId;
                 }
             )
         )['count'];
@@ -416,6 +428,7 @@ class d3usermanager_response extends Base
 
     /**
      * @return Language
+     * @throws Exception
      */
     public function getLang()
     {

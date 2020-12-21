@@ -158,6 +158,7 @@ class requirementHasUserbasketTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -169,7 +170,7 @@ class requirementHasUserbasketTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersSet()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerSet());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1
@@ -181,6 +182,7 @@ class requirementHasUserbasketTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -192,7 +194,7 @@ class requirementHasUserbasketTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersNotSet()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagernotset());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1

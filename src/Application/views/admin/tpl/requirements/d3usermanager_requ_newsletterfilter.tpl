@@ -1,23 +1,25 @@
-<dl class="[{$blActionRestriction}]">
-    <dt>
-        <input type="hidden" name="value[blCheckNewsletterUser_status]" value="0">
-        <input id="RequNewsletterUser" class="edittext ext_edittext" type="checkbox" name="value[blCheckNewsletterUser_status]" value='1' [{if $edit->getValue('blCheckNewsletterUser_status') == 1}]checked[{/if}] [{$blActionRestriction}] [{$readonly}]>
-        <label for="RequNewsletterUser">[{oxmultilang ident="D3_USERMANAGER_REQU_NEWSLETTERUSER"}]</label>
-    </dt>
-    <dd>
-        [{if $oView->isEditMode()}]
-            <SELECT id="RequNewsletterUserType" class="editinput" name="value[sCheckNewsletterUserType]" size="1" [{$blActionRestriction}] [{$readonly}]>
-                <option value="set" [{if $edit->getValue('sCheckNewsletterUserType') == 'set'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_GENERAL_SET"}]</option>
-                <option value="notset" [{if $edit->getValue('sCheckNewsletterUserType') == 'notset'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_GENERAL_NOTSET"}]</option>
-            </SELECT>
-        [{else}]
-            [{if $edit->getValue('sCheckNewsletterUserType') == 'set'}]
-                [{oxmultilang ident="D3_USERMANAGER_REQU_GENERAL_SET"}]
-            [{elseif $edit->getValue('sCheckNewsletterUserType') == 'notset'}]
-                [{oxmultilang ident="D3_USERMANAGER_REQU_GENERAL_NOTSET"}]
+[{block name="usermanager_admin_requ_newsletterfilter"}]
+    <dl class="[{$blActionRestriction}]">
+        [{include file="d3usermanager_activeswitch.tpl" oActionRequ=$oRequ blActionRestriction=$blActionRestriction readonly=$readonly}]
+        <dd>
+            [{if $oView->isEditMode()}]
+                [{block name="usermanager_admin_requ_newsletterfilter_editor"}]
+                    <SELECT id="RequNewsletterUserType" class="editinput" name="value[sCheckNewsletterUserType]" size="1" [{$blActionRestriction}] [{$readonly}]>
+                        <option value="set" [{if $edit->getValue('sCheckNewsletterUserType') == 'set'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_GENERAL_SET"}]</option>
+                        <option value="notset" [{if $edit->getValue('sCheckNewsletterUserType') == 'notset'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_GENERAL_NOTSET"}]</option>
+                    </SELECT>
+                [{/block}]
+            [{else}]
+                [{block name="usermanager_admin_requ_newsletterfilter_viewer"}]
+                    [{if $edit->getValue('sCheckNewsletterUserType') == 'set'}]
+                        [{oxmultilang ident="D3_USERMANAGER_REQU_GENERAL_SET"}]
+                    [{elseif $edit->getValue('sCheckNewsletterUserType') == 'notset'}]
+                        [{oxmultilang ident="D3_USERMANAGER_REQU_GENERAL_NOTSET"}]
+                    [{/if}]
+                [{/block}]
             [{/if}]
-        [{/if}]
-        [{oxinputhelp ident="D3_USERMANAGER_REQU_NEWSLETTERUSER_DESC"}]
-    </dd>
-    <dd class="spacer"></dd>
-</dl>
+            [{oxinputhelp ident="D3_USERMANAGER_REQU_NEWSLETTERUSER_DESC"}]
+        </dd>
+        <dd class="spacer"></dd>
+    </dl>
+[{/block}]

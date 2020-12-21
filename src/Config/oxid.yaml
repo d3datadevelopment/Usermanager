@@ -133,12 +133,36 @@ services:
       - 'OxidEsales\Eshop\Application\Model\User'
     shared:     false
 
+  # Address
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\Address:
+    class:      'OxidEsales\Eshop\Application\Model\Address'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\Address'
+    shared:     false
+
+  # UserBasket
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\UserBasket:
+    class:      'OxidEsales\Eshop\Application\Model\UserBasket'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\UserBasket'
+    shared:     false
+
   # Voucher
   d3ox.usermanager.OxidEsales\Eshop\Application\Model\Voucher:
     class:      'OxidEsales\Eshop\Application\Model\Voucher'
     factory:    'oxNew'
     arguments:
       - 'OxidEsales\Eshop\Application\Model\Voucher'
+    shared:     false
+
+  # VoucherSerie
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\VoucherSerie:
+    class:      'OxidEsales\Eshop\Application\Model\VoucherSerie'
+    factory:    'oxNew'
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\VoucherSerie'
     shared:     false
 
   # BasketItem
@@ -363,8 +387,8 @@ services:
     shared:     false
     arguments:
       - OxidEsales\Eshop\Core\Module\ModuleInstaller
-      - @?d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecache
-      - @?d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecleaner
+      - '@?d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecache'
+      - '@?d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecleaner'
   # d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecache:
   #  synthetic:  true
   #  shared:     false

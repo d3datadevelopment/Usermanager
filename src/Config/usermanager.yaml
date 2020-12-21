@@ -43,6 +43,14 @@ services:
       - D3\Usermanager\Application\Model\d3usermanagerlist
       - '%D3\Usermanager\Application\Model\d3usermanagerlist.args.objectname%'
 
+  # d3_cfg_usermanageritem_list
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_list:
+    class:      D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_list
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_list
+
   # d3_cfg_usermanageritem_action
   D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_action:
     class:      D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_action
@@ -74,7 +82,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\d3usermanager_listgenerator
-      - @D3\Usermanager\Application\Model\d3usermanager_listgenerator.args.usermanager
+      - '@D3\Usermanager\Application\Model\d3usermanager_listgenerator.args.usermanager'
   D3\Usermanager\Application\Model\d3usermanager_listgenerator.args.usermanager:
     synthetic:  true
     shared:     false
@@ -87,8 +95,8 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.usermanager:
     synthetic:  true
@@ -107,7 +115,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\d3usermanager_remark
-      - @D3\Usermanager\Application\Model\d3usermanager_remark.args.usermanager
+      - '@D3\Usermanager\Application\Model\d3usermanager_remark.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\d3usermanager_remark.args.usermanager:
     synthetic:  true
@@ -121,7 +129,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist.args.usermanager:
     synthetic:  true
@@ -135,7 +143,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist.args.usermanager:
     synthetic:  true
@@ -149,8 +157,8 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.usermanager:
     synthetic:  true
@@ -169,7 +177,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\d3usermanager_execute
-      - @D3\Usermanager\Application\Model\d3usermanager_execute.args.usermanager
+      - '@D3\Usermanager\Application\Model\d3usermanager_execute.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\d3usermanager_execute.args.usermanager:
     synthetic:  true
@@ -184,8 +192,8 @@ services:
     arguments:
       - D3\Usermanager\Application\Model\d3usermanager_export
       - '%D3\Usermanager\Application\Model\d3usermanager_export.args.filename%'
-      - @D3\Usermanager\Application\Model\d3usermanager_export.args.usermanager
-      - @D3\Usermanager\Application\Model\d3usermanager_export.args.parametercontainer
+      - '@D3\Usermanager\Application\Model\d3usermanager_export.args.usermanager'
+      - '@D3\Usermanager\Application\Model\d3usermanager_export.args.parametercontainer'
     # arg #2 usermanager
   D3\Usermanager\Application\Model\d3usermanager_export.args.usermanager:
     synthetic:  true
@@ -214,6 +222,21 @@ services:
   #   shared:     false
   #   public:     false
 
+  # d3usermanager_requirementException
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException:
+    class:      D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException
+      - '%D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException.args.message%'
+      - '@D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException.args.requirementobject'
+    # arg #2 requirement object
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException.args.requirementobject:
+    synthetic:  true
+    shared:     false
+    public:     false
+
   # d3usermanager_touserassignment
   D3\Usermanager\Application\Model\d3usermanager_touserassignment:
     class:      D3\Usermanager\Application\Model\d3usermanager_touserassignment
@@ -221,7 +244,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\d3usermanager_touserassignment
-      - @D3\Usermanager\Application\Model\d3usermanager_touserassignment.args.usermanager
+      - '@D3\Usermanager\Application\Model\d3usermanager_touserassignment.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\d3usermanager_touserassignment.args.usermanager:
     synthetic:  true
@@ -276,6 +299,13 @@ services:
     shared:   false
     arguments:
       - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_main
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_trigger:
+    class: D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_trigger
+    factory: 'oxNew'
+    shared: false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_trigger
 
   D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_list:
     class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_list

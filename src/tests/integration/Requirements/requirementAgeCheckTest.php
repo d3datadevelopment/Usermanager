@@ -131,6 +131,7 @@ class requirementAgeCheckTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -142,7 +143,7 @@ class requirementAgeCheckTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersLess()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerLess());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -170,6 +171,7 @@ class requirementAgeCheckTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -181,7 +183,7 @@ class requirementAgeCheckTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersHigher()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerHigher());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2

@@ -145,6 +145,7 @@ class requirementOtherJobTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -156,7 +157,7 @@ class requirementOtherJobTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersNotExec()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerNotExec());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -183,6 +184,7 @@ class requirementOtherJobTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -194,7 +196,7 @@ class requirementOtherJobTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersExec()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerExec());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue($oUserList->count() >= 1);
         $this->assertTrue($oUserList->offsetExists( $this->aUserIdList[0]));

@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -167,6 +166,7 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -178,7 +178,7 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMinute()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMinute());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 3
@@ -207,6 +207,7 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -218,7 +219,7 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersHour()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerHour());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -247,6 +248,7 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -258,7 +260,7 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersDay()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerDay());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1

@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\tests\integration\Requirements\d3RequirementIntegrationTestCase;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -186,6 +185,7 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -197,7 +197,7 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersSingle()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerSingle());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -210,6 +210,7 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -221,7 +222,7 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersNotSet()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMulti());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2

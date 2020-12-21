@@ -17,16 +17,15 @@
 
 namespace D3\Usermanager\Application\Controller\Admin;
 
-use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_main;
-use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
+use D3\Usermanager\Application\Model\d3usermanager as Manager;
+use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
 use D3\ModCfg\Application\Model\d3database;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
-use D3\Usermanager\Application\Model\d3usermanager as Manager;
-use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
+use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_main;
+use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use Doctrine\DBAL\DBALException;
 use Exception;
-use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -60,18 +59,6 @@ class d3_cfg_usermanageritem_settings extends d3_cfg_mod_main
     }
 
     /**
-     * @return array
-     * @throws Exception
-     */
-    public function getItemFolders()
-    {
-        /** @var Config $config */
-        $config = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Config::class);
-
-        return $config->getConfigParam('aUserfolder');
-    }
-
-    /**
      * @return ListModel
      * @throws Exception
      */
@@ -90,6 +77,7 @@ class d3_cfg_usermanageritem_settings extends d3_cfg_mod_main
      *
      * @return ListModel
      * @throws DBALException
+     * @throws Exception
      */
     protected function _getObjectList($oObjectList, $sWhere = null, $sOrderBy = null)
     {

@@ -134,7 +134,7 @@
     [{$oViewConf->getHiddenSid()}]
     <input type="hidden" name="oxid" value="[{$oxid}]">
     <input type="hidden" name="cl" value="[{$oViewConf->getActiveClassName()}]">
-    <input type="hidden" name="actshop" value="[{$shop->id}]">
+    <input type="hidden" name="actshop" value="[{$shop->getId()}]">
     <input type="hidden" name="editlanguage" value="[{$editlanguage}]">
 </form>
 

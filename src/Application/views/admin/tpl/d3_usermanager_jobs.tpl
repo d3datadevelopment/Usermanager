@@ -69,14 +69,14 @@ function d3TogglePlain(checkelement) {
                                     [{oxmultilang ident="D3_USERMANAGER_GENERAL_TASK"}]
                                 </td>
                                 <td class="listitem" style="padding: 5px; height: auto;">
-                                    [{$oUserManager->getFieldData('oxtitle')}] &nbsp;
+                                    [{$oManager->getFieldData('oxtitle')}] &nbsp;
                                 </td>
                             </tr>
                             <tr>
                                 <td class="listitem2" style="padding: 5px; height: auto;"></td>
                                 <td class="listitem2" style="padding: 5px; height: auto;">
                                     <span class="d3modcfg_btn icon d3color-green" style="margin-right: 10px;">
-                                        <button onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oUserManager->getId()}]'; document.getElementById('d3execusermanager').fnc.value = 'd3ExecChangedUserManager'; document.getElementById('d3execusermanager').submit();">
+                                        <button onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oManager->getId()}]'; document.getElementById('d3execusermanager').fnc.value = 'd3ExecChangedUserManager'; document.getElementById('d3execusermanager').submit();">
                                             <i class="fa fa-check-circle fa-inverse"></i>
                                             [{oxmultilang ident="D3_USERMANAGER_USERMAIN_SAVEEXEC"}]
                                         </button>
@@ -96,17 +96,17 @@ function d3TogglePlain(checkelement) {
                                 </td>
                                 <td class="listitem" style="padding: 5px; height: auto;">
                                     <input type="hidden" name="aContent[blSendMailToCustomer]" value="0">
-                                    <input id="ToCustomer" class="edittext ext_edittext" type="checkbox" name="aContent[blSendMailToCustomer]" value='1' [{if $oUserManager->getValue('blSendMailToCustomer') == 1}]checked[{/if}] [{$blActionRestriction}] [{$readonly}]>
+                                    <input id="ToCustomer" class="edittext ext_edittext" type="checkbox" name="aContent[blSendMailToCustomer]" value='1' [{if $oManager->getValue('blSendMailToCustomer') == 1}]checked[{/if}] [{$blActionRestriction}] [{$readonly}]>
                                     <label for="ToCustomer">[{oxmultilang ident="D3_USERMANAGER_ACTION_MAILSEND_TOCUSTOMER"}]</label>
                                     [{oxinputhelp ident="D3_USERMANAGER_ACTION_MAILSEND_TOCUSTOMER_DESC"}]<br>
                                     <input type="hidden" name="aContent[blSendMailToOwner]" value="0">
-                                    <input id="ToOwner" class="edittext ext_edittext" type="checkbox" name="aContent[blSendMailToOwner]" value='1' [{if $oUserManager->getValue('blSendMailToOwner') == 1}]checked[{/if}] [{$blActionRestriction}] [{$readonly}]>
+                                    <input id="ToOwner" class="edittext ext_edittext" type="checkbox" name="aContent[blSendMailToOwner]" value='1' [{if $oManager->getValue('blSendMailToOwner') == 1}]checked[{/if}] [{$blActionRestriction}] [{$readonly}]>
                                     <label for="ToOwner">[{oxmultilang ident="D3_USERMANAGER_ACTION_MAILSEND_TOOWNER"}]</label>
                                     [{oxinputhelp ident="D3_USERMANAGER_ACTION_MAILSEND_TOOWNER_DESC"}]<br>
                                     <input type="hidden" name="aContent[blSendMailToCustom]" value="0">
-                                    <input id="ToMail" class="edittext ext_edittext" type="checkbox" name="aContent[blSendMailToCustom]" value='1' [{if $oUserManager->getValue('blSendMailToCustom') == 1}]checked[{/if}] [{$blActionRestriction}] [{$readonly}]>
+                                    <input id="ToMail" class="edittext ext_edittext" type="checkbox" name="aContent[blSendMailToCustom]" value='1' [{if $oManager->getValue('blSendMailToCustom') == 1}]checked[{/if}] [{$blActionRestriction}] [{$readonly}]>
                                     <label for="ToMail">[{oxmultilang ident="D3_USERMANAGER_ACTION_MAILSEND_TOMAIL"}]</label>
-                                    <input id="ToMailInput" type="text" name="aContent[sSendMailToCustomAddress]" size="30" maxlength="60" value="[{$oUserManager->getValue('sSendMailToCustomAddress')}]" [{$blActionRestriction}] [{$readonly}]>
+                                    <input id="ToMailInput" type="text" name="aContent[sSendMailToCustomAddress]" size="30" maxlength="60" value="[{$oManager->getValue('sSendMailToCustomAddress')}]" [{$blActionRestriction}] [{$readonly}]>
                                     <label for="ToMailInput" style="position: absolute; left: -2000px">[{oxmultilang ident="D3_USERMANAGER_ACTION_MAILSEND_TOMAIL"}]</label>
                                     [{oxinputhelp ident="D3_USERMANAGER_ACTION_MAILSEND_TOMAIL_DESC"}]
                                 </td>
@@ -151,20 +151,18 @@ function d3TogglePlain(checkelement) {
                 <td style="vertical-align: top;" class="edittext">
                     <fieldset>
                         <form name="d3folderselector" id="d3folderselector" action="[{$oViewConf->getSelfLink()}]" method="post">
-                            <legend>
-                                [{$oViewConf->getHiddenSid()}]
-                                <input type="hidden" name="cl" value="[{$oViewConf->getActiveClassName()}]">
-                                <input type="hidden" name="oxid" value="[{$oxid}]">
-                                <input type="hidden" name="editval[oxuser__oxid]" value="[{$oxid}]">
-                                <input type="hidden" name="usermanagerid" value="-1">
-                                <input type="hidden" name="fnc" value="changeFolder">
-                                <label for="folderselector" style="position: absolute; left: -2000px">[{oxmultilang ident="D3_USERMANAGER_FIELDTITLE_OXFOLDER"}]</label>
-                                <select id="folderselector" size="1" class="editinput" name="jobfolder" onchange="document.getElementById('d3folderselector').submit();">
-                                    [{foreach from=$oView->getFolderList() key="sMLItem" item="sTranslation"}]
-                                        <option value="[{$sMLItem}]" [{if $sMLItem == $jobfolder}] selected[{/if}]>[{$sTranslation}]</option>
-                                    [{/foreach}]
-                                </select>
-                            </legend>
+                            [{$oViewConf->getHiddenSid()}]
+                            <input type="hidden" name="cl" value="[{$oViewConf->getActiveClassName()}]">
+                            <input type="hidden" name="oxid" value="[{$oxid}]">
+                            <input type="hidden" name="editval[oxuser__oxid]" value="[{$oxid}]">
+                            <input type="hidden" name="usermanagerid" value="-1">
+                            <input type="hidden" name="fnc" value="changeFolder">
+                            <label for="folderselector" style="position: absolute; left: -2000px">[{oxmultilang ident="D3_USERMANAGER_FIELDTITLE_OXFOLDER"}]</label>
+                            <select id="folderselector" size="1" class="editinput" name="jobfolder" onchange="document.getElementById('d3folderselector').submit();">
+                                [{foreach from=$oView->getFolderList() key="sMLItem" item="sTranslation"}]
+                                    <option value="[{$sMLItem}]" [{if $sMLItem == $jobfolder}] selected[{/if}]>[{$sTranslation}]</option>
+                                [{/foreach}]
+                            </select>
                         </form>
                         [{if $oView->d3GetJobList()}]
                             <form name="d3execusermanager" id="d3execusermanager" action="[{$oViewConf->getSelfLink()}]" method="post">
@@ -176,32 +174,32 @@ function d3TogglePlain(checkelement) {
                                 <input type="hidden" name="usermanagerid" value="-1">
                                 <table  style="border: none; padding: 0; width: 100%;">
                                     [{assign var="listclass" value="listitem"}]
-                                    [{foreach from=$oView->d3GetJobList() item="oUserManager"}]
+                                    [{foreach from=$oView->d3GetJobList() item="oManager"}]
                                         <tr>
-                                            [{assign var="sExecTime" value=$oUserManager->getLastExecutedTime($oxid)}]
-                                            [{assign var="sExecStatus" value=$oUserManager->getExecutedStatus($oxid)}]
-                                            <td class="[{$listclass}]">[{$oUserManager->getFieldData('oxtitle')}]</td>
+                                            [{assign var="sExecTime" value=$oManager->getLastExecutedTime($oxid)}]
+                                            [{assign var="sExecStatus" value=$oManager->getExecutedStatus($oxid)}]
+                                            <td class="[{$listclass}]">[{$oManager->getFieldData('oxtitle')}]</td>
                                             <td class="[{$listclass}]">
                                                 [{if $sExecStatus == 'finished'}]
                                                     <span class="d3modcfg_btn icon d3color-blue">
-                                                        <button style="width: 300px;" onclick="if (confirm('[{oxmultilang ident="D3_USERMANAGER_USERMAIN_EXECRESETCONFIRM"}]')) {document.getElementById('d3execusermanager').fnc.value = 'd3resetUserManagerAssignment'; document.getElementById('d3execusermanager').usermanagerid.value = '[{$oUserManager->getId()}]'; document.getElementById('d3execusermanager').submit();} else {return false;}">
+                                                        <button style="width: 300px;" onclick="if (confirm('[{oxmultilang ident="D3_USERMANAGER_USERMAIN_EXECRESETCONFIRM"}]')) {document.getElementById('d3execusermanager').fnc.value = 'd3resetUserManagerAssignment'; document.getElementById('d3execusermanager').usermanagerid.value = '[{$oManager->getId()}]'; document.getElementById('d3execusermanager').submit();} else {return false;}">
                                                             <i class="fa fa-trash-o"></i>
                                                             [{oxmultilang ident="D3_USERMANAGER_USERMAIN_EXECRESET"}]
                                                         </button>
                                                     </span>
                                                 [{elseif $sExecStatus == 'reexecute'}]
                                                     <span class="d3modcfg_btn icon d3color-blue">
-                                                        <button style="width: 300px;" onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oUserManager->getId()}]'; document.getElementById('d3execusermanager').submit();">
+                                                        <button style="width: 300px;" onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oManager->getId()}]'; document.getElementById('d3execusermanager').submit();">
                                                             <i class="fa fa-circle"></i>
-                                                            [{oxmultilang ident="D3_USERMANAGER_USERMAIN_REEXECSTART"}][{if false == $oUserManager->getValue('sManuallyExecMeetCondition')}]*[{/if}]
+                                                            [{oxmultilang ident="D3_USERMANAGER_USERMAIN_REEXECSTART"}][{if false == $oManager->getValue('sManuallyExecMeetCondition')}]*[{/if}]
                                                         </button>
                                                     </span>
                                                     [{assign var="blExecNote" value=true}]
                                                 [{else}]
                                                     <span class="d3modcfg_btn icon d3color-blue">
-                                                        <button style="width: 300px;" name="requestData" onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oUserManager->getId()}]'; document.getElementById('d3execusermanager').submit();">
+                                                        <button style="width: 300px;" name="requestData" onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oManager->getId()}]'; document.getElementById('d3execusermanager').submit();">
                                                             <i class="fa fa-circle-o"></i>
-                                                            [{oxmultilang ident="D3_USERMANAGER_USERMAIN_EXECSTART"}][{if false == $oUserManager->getValue('sManuallyExecMeetCondition')}]*[{/if}]
+                                                            [{oxmultilang ident="D3_USERMANAGER_USERMAIN_EXECSTART"}][{if false == $oManager->getValue('sManuallyExecMeetCondition')}]*[{/if}]
                                                         </button>
                                                     </span>
                                                     [{assign var="blExecNote" value=true}]
@@ -212,16 +210,16 @@ function d3TogglePlain(checkelement) {
                                             </td>
                                             <td class="[{$listclass}]">
                                                 [{if $sExecStatus == 'finished'}]
-                                                [{elseif $oUserManager->getValue('blActionMailsend_status')}]
+                                                [{elseif $oManager->getValue('blActionMailsend_status')}]
                                                     <span class="d3modcfg_btn icon d3color-orange">
-                                                        <button style="width: 300px;" onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oUserManager->getId()}]'; document.getElementById('d3execusermanager').fnc.value = 'execChangedContents'; document.getElementById('d3execusermanager').submit();">
+                                                        <button style="width: 300px;" onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oManager->getId()}]'; document.getElementById('d3execusermanager').fnc.value = 'execChangedContents'; document.getElementById('d3execusermanager').submit();">
                                                             <i class="fa fa-pencil fa-inverse"></i>
-                                                            [{oxmultilang ident="D3_USERMANAGER_USERMAIN_CHANGEEXEC"}][{if false == $oUserManager->getValue('sManuallyExecMeetCondition')}]*[{/if}]
+                                                            [{oxmultilang ident="D3_USERMANAGER_USERMAIN_CHANGEEXEC"}][{if false == $oManager->getValue('sManuallyExecMeetCondition')}]*[{/if}]
                                                         </button>
                                                     </span>
                                                 [{else}]
                                                     <span class="d3modcfg_btn icon d3color-orange">
-                                                        <button style="width: 300px;" onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oUserManager->getId()}]'; document.getElementById('d3execusermanager').fnc.value = 'execChangedContents'; document.getElementById('d3execusermanager').submit();" disabled>
+                                                        <button style="width: 300px;" onclick="document.getElementById('d3execusermanager').usermanagerid.value = '[{$oManager->getId()}]'; document.getElementById('d3execusermanager').fnc.value = 'execChangedContents'; document.getElementById('d3execusermanager').submit();" disabled>
                                                             <i class="fa fa-pencil fa-inverse"></i>
                                                             [{oxmultilang ident="D3_USERMANAGER_USERMAIN_NOCHANGEEXEC"}]
                                                         </button>

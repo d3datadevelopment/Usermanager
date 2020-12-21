@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -147,6 +146,7 @@ class requirementOrderMaxCountTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -158,7 +158,7 @@ class requirementOrderMaxCountTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersSingle()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerSingle());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -184,6 +184,7 @@ class requirementOrderMaxCountTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -195,7 +196,7 @@ class requirementOrderMaxCountTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMulti()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMulti());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 3

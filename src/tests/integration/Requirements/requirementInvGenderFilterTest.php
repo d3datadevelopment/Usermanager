@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\tests\integration\Requirements\d3RequirementIntegrationTestCase;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -135,6 +134,7 @@ class requirementInvGenderFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -146,7 +146,7 @@ class requirementInvGenderFilterTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMr()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMr());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1
@@ -158,6 +158,7 @@ class requirementInvGenderFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -169,7 +170,7 @@ class requirementInvGenderFilterTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMrs()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMrs());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1

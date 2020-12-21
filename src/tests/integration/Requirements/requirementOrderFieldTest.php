@@ -135,6 +135,7 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -146,7 +147,7 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersContent()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerContent());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() === 1
@@ -173,6 +174,7 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -184,7 +186,7 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersArticleCountryDelSingle()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerNotEmpty());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1
@@ -211,6 +213,7 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -222,7 +225,7 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersEmpty()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerEmpty());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1
@@ -249,6 +252,7 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -259,8 +263,8 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
      */
     public function requirementsSelectsRightUsersFieldNotExist()
     {
-        $this->setExpectedException(d3usermanager_requirementException::class);
+        $this->expectException(d3usermanager_requirementException::class);
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerFieldNotExist());
-        $oListGenerator->getConcernedUsers();
+        $oListGenerator->getConcernedItems();
     }
 }

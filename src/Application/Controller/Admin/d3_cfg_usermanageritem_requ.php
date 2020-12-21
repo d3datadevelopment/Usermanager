@@ -49,10 +49,10 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
         $aMissingRequiredValues = array();
         /** @var RequirementAbstractModel $oRequirement */
         foreach ($this->getRequirementList() as $sId => $oRequirement) {
-            if ($this->getProfile()->getValue($oRequirement->sRequActiveSwitch) && false == $oRequirement->hasRequiredValues()) {
+            if ($this->getProfile()->getValue($oRequirement->getActiveSwitchParameter()) && false == $oRequirement->hasRequiredValues()) {
                 $aMissingRequiredValues[] = $sId;
             }
-        };
+        }
 
         if (count($aMissingRequiredValues)) {
             $this->addTplParam('missingRequValuesActions', $aMissingRequiredValues);
@@ -114,8 +114,7 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
     public function getLanguageList()
     {
         $oLang = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
-        $aLanguageList = $oLang->getLanguageArray();
-        return $aLanguageList;
+        return $oLang->getLanguageArray();
     }
 
     /**
@@ -151,7 +150,9 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
             $oManager
         );
 
-        return d3GetModCfgDIC()->get(RequirementGroupListModel::class);
+        /** @var RequirementGroupListModel $requGroupModel */
+        $requGroupModel = d3GetModCfgDIC()->get(RequirementGroupListModel::class);
+        return $requGroupModel;
     }
 
     /**
@@ -166,18 +167,19 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
             $oManager
         );
 
-        return d3GetModCfgDIC()->get(RequirementListModel::class);
+        /** @var RequirementListModel $requListModel */
+        $requListModel = d3GetModCfgDIC()->get(RequirementListModel::class);
+        return $requListModel;
     }
 
     /**
      * @return array
      * @throws Exception
      */
-    public function getGroupedRequirementList()
+    public function getGroupedRequirementList(): array
     {
         /** @var Manager $oManager */
         $oManager = $this->getProfile();
-        /** @var RequirementGroupListModel $oRequList */
         $oRequList = $this->getRequirementGroupList($oManager);
         $oRequList->setGroups($oManager->getConfiguration()->getGroupedRequirementIdList());
 
@@ -192,7 +194,6 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
     {
         /** @var Manager $oManager */
         $oManager = $this->getProfile();
-        /** @var RequirementListModel $oRequList */
         $oRequList = $this->getRequirementListObject($oManager);
         $oRequList->setRequirements($oManager->getConfiguration()->getRequirementIdList());
 

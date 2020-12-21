@@ -16,29 +16,26 @@
  */
 namespace D3\Usermanager\tests\integration;
 
+use D3\ModCfg\Application\Model\d3database;
 use D3\ModCfg\Application\Model\Log\d3log;
 use D3\ModCfg\Tests\unit\d3ModCfgUnitTestCase;
-use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\Application\Model\d3usermanager_listgenerator;
-use D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException;
+use D3\Usermanager\Application\Model\d3usermanager as Manager;
+use D3\Usermanager\Application\Model\d3usermanager_listgenerator as Manager_Listgenerator;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\FetchMode;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Groups;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\DatabaseProvider;
-use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
-use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Model\BaseModel;
-use OxidEsales\Eshop\Core\Model\ListModel;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
 {
     /**
      * Set up fixture.
-     * @throws Exception
      */
     public function setUp()
     {
@@ -69,11 +66,16 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
      */
     public function createObject($sClass, $sId, $aFields = array())
     {
-        /** @var BaseModel $oOrder */
-        $oOrder = d3GetModCfgDIC()->get($sClass);
-        $oOrder->setId($sId);
-        $oOrder->assign($aFields);
-        $oOrder->save();
+        /** @var BaseModel $oObject */
+        $oObject = d3GetModCfgDIC()->get($sClass);
+
+        if ($oObject->exists($sId)) {
+            $oObject->delete($sId);
+        }
+
+        $oObject->setId($sId);
+        $oObject->assign($aFields);
+        $oObject->save();
     }
 
     /**
@@ -84,12 +86,12 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
      */
     public function createBaseModelObject($sTableName, $sId, $aFields = array())
     {
-        /** @var BaseModel $oOrder */
-        $oOrder = d3GetModCfgDIC()->get('d3ox.usermanager.'.BaseModel::class);
-        $oOrder->init($sTableName);
-        $oOrder->setId($sId);
-        $oOrder->assign($aFields);
-        $oOrder->save();
+        /** @var BaseModel $oObject */
+        $oObject = d3GetModCfgDIC()->get('d3ox.usermanager.'.BaseModel::class);
+        $oObject->init($sTableName);
+        $oObject->setId($sId);
+        $oObject->assign($aFields);
+        $oObject->save();
     }
 
     /**
@@ -116,13 +118,14 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
     public function createManager($sId)
     {
         $this->createObject(
-            d3usermanager::class,
+            Manager::class,
             $sId,
             array(
                 'OXSHOPID'          => 1,
                 'OXACTIVE'          => true,
+                'OXTITLE'           => 'userManagerTestTitle',
                 'OXMODID'           => 'd3usermanager',
-                'D3_UM_MARKUSER'   => false,
+                'D3_UM_MARKUSER'    => false,
             )
         );
     }
@@ -171,44 +174,47 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
     /**
      * @param $sClass
      * @param $sId
-     * @throws Exception
      */
     public function deleteObject($sClass, $sId)
     {
-        /** @var BaseModel $oObject */
-        $oObject = d3GetModCfgDIC()->get($sClass);
-        if ($oObject->exists($sId)) {
-            $oObject->delete($sId);
-        }
+        try {
+            /** @var BaseModel $oObject */
+            $oObject = d3GetModCfgDIC()->get($sClass);
+            if ($oObject->exists($sId)) {
+                $oObject->delete($sId);
+            }
+        } catch (Exception $ex) {}
     }
 
     /**
      * @param $sTableName
      * @param $sId
-     * @throws Exception
      */
     public function deleteBaseModelObject($sTableName, $sId)
     {
-        /** @var BaseModel $oObject */
-        $oObject = d3GetModCfgDIC()->get('d3ox.usermanager.'.BaseModel::class);
-        $oObject->init($sTableName);
-        if ($oObject->exists($sId)) {
-            $oObject->delete($sId);
-        }
+        try {
+            /** @var BaseModel $oObject */
+            $oObject = d3GetModCfgDIC()->get('d3ox.usermanager.' . BaseModel::class);
+            $oObject->init($sTableName);
+            if ($oObject->exists($sId)) {
+                $oObject->delete($sId);
+            }
+        } catch (Exception $ex) {}
     }
 
     /**
      * @param $sId
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function deleteManager($sId)
     {
-        $this->deleteObject(d3usermanager::class, $sId);
-        $sQ = "SELECT oxid FROM d3user2usermanager WHERE oxusermanagerid = '{$sId}';";
+        $this->deleteObject(Manager::class, $sId);
+        $qb = d3database::getInstance()->getQueryBuilder();
+        $qb->select('oxid')
+            ->from('d3user2usermanager')
+            ->where('oxusermanagerid = '.$qb->createNamedParameter($sId));
 
-        foreach ((array) DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->getAll($sQ) as $aId) {
+        foreach ((array) $qb->execute()->fetchAll(FetchMode::ASSOCIATIVE) as $aId) {
             $aId = array_change_key_case($aId, CASE_UPPER);
             $this->deleteBaseModelObject('d3user2usermanager', $aId['OXID']);
         }
@@ -242,14 +248,14 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
     }
 
     /**
-     * @return d3log|PHPUnit_Framework_MockObject_MockObject
+     * @return d3log|MockObject
      */
     public function getD3LogMock()
     {
-        /** @var d3log|PHPUnit_Framework_MockObject_MockObject $oD3LogMock */
-        $oD3LogMock = $this->getMock(d3log::class, array(
-            'log',
-        ));
+        /** @var d3log|MockObject $oD3LogMock */
+        $oD3LogMock = $this->getMockBuilder(d3log::class)
+            ->setMethods(['log'])
+            ->getMock();
         $oD3LogMock->method('log')->willReturn(true);
 
         return $oD3LogMock;
@@ -257,37 +263,40 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
 
     /**
      * @param $sManagerId
-     * @return d3usermanager|PHPUnit_Framework_MockObject_MockObject
+     * @return Manager|MockObject
      * @throws Exception
      */
     public function getManagerMock($sManagerId)
     {
-        /** @var d3usermanager|PHPUnit_Framework_MockObject_MockObject $oManager */
-        $oManager = $this->getMock(d3usermanager::class, array(
-            'd3getLog',
-            'getListGenerator',
-            'getRecalculateFlag',
-        ));
+        /** @var Manager|MockObject $oManager */
+        $oManager = $this->getMockBuilder(Manager::class)
+            ->setMethods([
+                'd3getLog',
+                'getListGenerator'
+            ])
+            ->getMock();
         $oManager->method('d3getLog')->willReturn($this->getD3LogMock());
         $oManager->method('getListGenerator')->willReturn($this->getListGenerator($oManager));
-        $oManager->method('getRecalculateFlag')->willReturn(false);
         $oManager->load($sManagerId);
 
         return $oManager;
     }
 
     /**
-     * @param d3usermanager $oManager
-     * @return d3usermanager_listgenerator|PHPUnit_Framework_MockObject_MockObject
+     * @param Manager $oManager
+     * @return Manager_Listgenerator|MockObject
      * @throws Exception
      */
-    public function getListGenerator(d3usermanager $oManager)
+    public function getListGenerator(Manager $oManager)
     {
         d3GetModCfgDIC()->set(
-            d3usermanager_listgenerator::class.'.args.usermanager',
+            Manager_Listgenerator::class.'.args.usermanager',
             $oManager
         );
 
-        return d3GetModCfgDIC()->get(d3usermanager_listgenerator::class);
+        /** @var Manager_Listgenerator $object */
+        $object = d3GetModCfgDIC()->get(Manager_Listgenerator::class);
+
+        return $object;
     }
 }

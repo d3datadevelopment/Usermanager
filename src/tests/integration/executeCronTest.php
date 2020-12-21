@@ -1,21 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 06.08.18
- * Time: 22:24
- */
 
 namespace D3\Usermanager\tests\integration;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
-use D3\Usermanager\Application\Controller\d3usermanager_response;
-use D3\Usermanager\Application\Model\d3usermanager;
+use D3\Usermanager\Application\Controller\d3usermanager_response as ResponseController;
+use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use Doctrine\DBAL\DBALException;
 use Exception;
-use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Application\Model\User as Item;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -90,7 +84,7 @@ class executeCronTest extends d3IntegrationTestCase
     }
 
     /**
-     * @return d3usermanager
+     * @return Manager
      * @throws Exception
      */
     public function getConfiguredManager()
@@ -111,6 +105,7 @@ class executeCronTest extends d3IntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -127,8 +122,8 @@ class executeCronTest extends d3IntegrationTestCase
         $set->assign(array('oxactive' => 1));
         $set->saveNoLicenseRefresh();
 
-        /** @var $oResponse d3usermanager_response */
-        $oResponse = d3GetModCfgDIC()->get(d3usermanager_response::class);
+        /** @var $oResponse ResponseController */
+        $oResponse = d3GetModCfgDIC()->get(ResponseController::class);
 
         $_GET['shp'] = 1;
         $_GET['cjid'] = 'testId';
@@ -139,25 +134,26 @@ class executeCronTest extends d3IntegrationTestCase
         $set->assign(array('oxactive' => 1));
         $set->saveNoLicenseRefresh();
 
-        /** @var User $oUser */
-        $oUser = d3GetModCfgDIC()->get('d3ox.usermanager.'.User::class);
-        $oUser->load( $this->aUserIdList[0]);
+        /** @var Item $oItem */
+        $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
+        $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
             $this->dExpectedValue,
-            $oUser->getFieldData('oxactive')
+            $oItem->getFieldData('oxactive')
         );
 
-        /** @var User $oUser */
-        $oUser = d3GetModCfgDIC()->get('d3ox.usermanager.'.User::class);
-        $oUser->load( $this->aUserIdList[1]);
+        /** @var Item $oItem */
+        $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
+        $oItem->load( $this->aUserIdList[1]);
         $this->assertSame(
             $this->dCurrentValue,
-            $oUser->getFieldData('oxactive')
+            $oItem->getFieldData('oxactive')
         );
     }
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -175,8 +171,8 @@ class executeCronTest extends d3IntegrationTestCase
         $set->assign(array('oxactive' => 0));
         $set->saveNoLicenseRefresh();
 
-        /** @var $oResponse d3usermanager_response */
-        $oResponse = d3GetModCfgDIC()->get(d3usermanager_response::class);
+        /** @var $oResponse ResponseController */
+        $oResponse = d3GetModCfgDIC()->get(ResponseController::class);
 
         $_GET['shp'] = 1;
         $_GET['cjid'] = 'testId';
@@ -189,25 +185,26 @@ class executeCronTest extends d3IntegrationTestCase
         $set->assign(array('oxactive' => 1));
         $set->saveNoLicenseRefresh();
 
-        /** @var User $oUser */
-        $oUser = d3GetModCfgDIC()->get('d3ox.usermanager.'.User::class);
-        $oUser->load( $this->aUserIdList[0]);
+        /** @var Item $oItem */
+        $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
+        $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
             $this->dCurrentValue,
-            $oUser->getFieldData('oxactive')
+            $oItem->getFieldData('oxactive')
         );
 
-        /** @var User $oUser */
-        $oUser = d3GetModCfgDIC()->get('d3ox.usermanager.'.User::class);
-        $oUser->load( $this->aUserIdList[1]);
+        /** @var Item $oItem */
+        $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
+        $oItem->load( $this->aUserIdList[1]);
         $this->assertSame(
             $this->dCurrentValue,
-            $oUser->getFieldData('oxactive')
+            $oItem->getFieldData('oxactive')
         );
     }
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -224,8 +221,8 @@ class executeCronTest extends d3IntegrationTestCase
         $set->assign(array('oxactive' => 1));
         $set->saveNoLicenseRefresh();
 
-        /** @var $oResponse d3usermanager_response */
-        $oResponse = d3GetModCfgDIC()->get(d3usermanager_response::class);
+        /** @var $oResponse ResponseController */
+        $oResponse = d3GetModCfgDIC()->get(ResponseController::class);
 
         $_GET['shp'] = 1;
         $_GET['cjid'] = 'testId';
@@ -236,20 +233,20 @@ class executeCronTest extends d3IntegrationTestCase
         $set->assign(array('oxactive' => 1));
         $set->saveNoLicenseRefresh();
 
-        /** @var User $oUser */
-        $oUser = d3GetModCfgDIC()->get('d3ox.usermanager.'.User::class);
-        $oUser->load( $this->aUserIdList[0]);
+        /** @var Item $oItem */
+        $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
+        $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
             $this->dCurrentValue,
-            $oUser->getFieldData('oxactive')
+            $oItem->getFieldData('oxactive')
         );
 
-        /** @var User $oUser */
-        $oUser = d3GetModCfgDIC()->get('d3ox.usermanager.'.User::class);
-        $oUser->load( $this->aUserIdList[1]);
+        /** @var Item $oItem */
+        $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
+        $oItem->load( $this->aUserIdList[1]);
         $this->assertSame(
             $this->dCurrentValue,
-            $oUser->getFieldData('oxactive')
+            $oItem->getFieldData('oxactive')
         );
     }
 }

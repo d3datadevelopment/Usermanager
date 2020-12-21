@@ -3,6 +3,7 @@
 
 namespace D3\Usermanager\Modules\Application\Model;
 
+use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
@@ -13,19 +14,10 @@ use D3\Usermanager\Application\Model\d3usermanagerlist;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Basket;
-use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
-
-// @codeCoverageIgnoreStart
-if (false) {
-    class_alias(
-        Order::class,
-        d3_order_usermanager_parent::class
-    );
-}
-// @codeCoverageIgnoreEnd
 
 /**
  * Class d3_order_usermanager
@@ -36,7 +28,7 @@ class d3_order_usermanager extends d3_order_usermanager_parent
 {
     /**
      * @param Basket $oBasket
-     * @param object $oUser
+     * @param User $oUser
      * @param false  $blRecalculatingOrder
      *
      * @return bool|int|null
@@ -53,13 +45,17 @@ class d3_order_usermanager extends d3_order_usermanager_parent
     {
         $iRet = parent::finalizeOrder($oBasket, $oUser, $blRecalculatingOrder);
 
-        /** @var d3usermanagerlist $oUserManagerList */
-        $oUserManagerList = d3GetModCfgDIC()->get(d3usermanagerlist::class);
-        /** @var d3usermanager $oManager */
-        foreach ($oUserManagerList->d3GetOrderFinishTriggeredManagerTasks() as $oManager) {
-            $oManagerExecute = $this->d3UsermanagerGetManagerExecute($oManager);
-            if ($oManagerExecute->userMeetsConditions($this->getUser()->getId())) {
-                $oManagerExecute->exec4user($this->getUser()->getId(), d3usermanager_conf::EXECTYPE_ORDERFINISHTRIGGERED);
+        /** @var d3_cfg_mod $oSet */
+        $oSet = d3GetModCfgDIC()->get('d3.usermanager.modcfg');
+        if ($oSet->isActive()) {
+            /** @var d3usermanagerlist $oUserManagerList */
+            $oUserManagerList = d3GetModCfgDIC()->get(d3usermanagerlist::class);
+            /** @var d3usermanager $oManager */
+            foreach ($oUserManagerList->d3GetOrderFinishTriggeredManagerTasks() as $oManager) {
+                $oManagerExecute = $this->d3UsermanagerGetManagerExecute($oManager);
+                if ($oManagerExecute->userMeetsConditions($oUser->getId())) {
+                    $oManagerExecute->exec4user($oUser->getId(), d3usermanager_conf::EXECTYPE_ORDERFINISHTRIGGERED);
+                }
             }
         }
 

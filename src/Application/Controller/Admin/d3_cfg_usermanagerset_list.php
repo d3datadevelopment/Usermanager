@@ -22,9 +22,19 @@ use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_list;
 class d3_cfg_usermanagerset_list extends d3_cfg_mod_list
 {
     // enables language depended configuration
-    protected $_blD3ShowLangSwitch = true;
+    protected $_blD3ShowLangSwitch = false;
     protected $_sMenuItemTitle = 'd3mxusermanager';
     protected $_sMenuSubItemTitle = 'd3mxusermanager_settings';
+
+    /**
+     * constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_blD3ShowLangSwitch = false;
+    }
 
     /**
      * @return null

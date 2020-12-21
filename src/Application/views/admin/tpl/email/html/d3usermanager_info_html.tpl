@@ -1,6 +1,6 @@
 [{block name="d3usermanager_infomail_main"}]
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<html lang="de">
   <head>
     <title>[{oxmultilang ident="D3_USERMANAGER_MAIL_USERSUBJECT"}]</title>
     <meta http-equiv="Content-Type" content="text/html; charset=[{$oEmailView->getCharset()}]">
@@ -11,18 +11,18 @@
   [{strip}]
     [{foreach from=$aNotes item="aManagerJobs" key="sUserId"}]
         [{block name="d3usermanager_infomail_order"}]
-            [{assign var="oUser" value=$oEmailView->d3getUser($sUserId)}]
-            [{if $oUser->getId()}]
-                [{oxmultilang ident="D3_USERMANAGER_MAIL_USER"}] [{$oUser->getFieldData('oxcustnr')}] [{oxmultilang ident="D3_USERMANAGER_MAIL_USERNAME"}] [{$oUser->getFieldData('oxlname')}], [{$oUser->getFieldData('oxfname')}]:<br>
+            [{assign var="oItem" value=$oEmailView->d3getUser($sUserId)}]
+            [{if $oItem->getId()}]
+                [{oxmultilang ident="D3_USERMANAGER_MAIL_USER"}] [{$oItem->getFieldData('oxcustnr')}] [{oxmultilang ident="D3_USERMANAGER_MAIL_USERNAME"}] [{$oItem->getFieldData('oxlname')}], [{$oItem->getFieldData('oxfname')}]:<br>
             [{else}]
                 [{oxmultilang ident="D3_USERMANAGER_MAIL_GENERAL"}]:<br>
             [{/if}]
             <ul>
                 [{block name="d3usermanager_infomail_manager"}]
                     [{foreach from=$aManagerJobs item="aJobActions" key="sManagerId"}]
-                        [{assign var="oUserManager" value=$oEmailView->d3getUserManager($sManagerId)}]
+                        [{assign var="oManager" value=$oEmailView->d3getUserManager($sManagerId)}]
                         <li>
-                            [{$oUserManager->getFieldData('oxtitle')}]
+                            [{$oManager->getFieldData('oxtitle')}]
                             <ul>
                                 [{block name="d3usermanager_infomail_job"}]
                                     [{foreach from=$aJobActions item="sJobText"}]

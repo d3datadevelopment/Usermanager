@@ -18,8 +18,8 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.usermanager:
     synthetic:  true
@@ -37,8 +37,8 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.usermanager:
     synthetic:  true
@@ -56,8 +56,8 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.usermanager:
     synthetic:  true
@@ -75,8 +75,8 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.usermanager:
     synthetic:  true
@@ -94,8 +94,8 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.usermanager:
     synthetic:  true
@@ -113,8 +113,8 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.usermanager:
     synthetic:  true
@@ -126,14 +126,33 @@ services:
     shared:     false
     public:     false
 
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification.args.user'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification.args.usermanager:
+    synthetic:  true
+    shared:     false
+    public:     false
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification.args.user:
+    synthetic:  true
+    shared:     false
+    public:     false
+
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag
     factory:    'oxNew'
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.usermanager:
     synthetic:  true
@@ -151,8 +170,8 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.usermanager
-      - @D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.user
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.user'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.usermanager:
     synthetic:  true

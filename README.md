@@ -6,7 +6,7 @@ Lassen Sie wiederkehrende Aufgaben automatisch nach frei definierbaren Regeln au
 ![](https://img.shields.io/badge/softwaregetestet-komplett-brightgreen.svg)
 ![](https://img.shields.io/badge/Testabdeckung-100%25-brightgreen.svg)
 
-[![Downloads](https://img.shields.io/packagist/dt/d3/usermanager.svg?label=Downloads)](https://packagist.org/packages/d3/ordermanager)
+[![Downloads](https://img.shields.io/packagist/dt/d3/usermanager.svg?label=Downloads)](https://packagist.org/packages/d3/usermanager)
 [![](https://img.shields.io/badge/documentation-online-brightgreen.svg)](https://docs.oxidmodule.com/Kundenmanager/)
 [![License](https://img.shields.io/packagist/l/d3/usermanager.svg?label=Lizenz)](https://packagist.org/packages/d3/usermanager)
 

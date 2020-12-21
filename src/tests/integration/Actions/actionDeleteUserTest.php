@@ -84,6 +84,7 @@ class actionDeleteUserTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

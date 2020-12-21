@@ -204,6 +204,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -215,7 +216,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMaxMinute()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMaxMinute());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1
@@ -246,6 +247,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -257,7 +259,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMaxHour()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMaxHour());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -288,6 +290,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -299,7 +302,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMaxDay()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMaxDay());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 3
@@ -330,6 +333,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -341,7 +345,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMinMinute()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMinMinute());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 3
@@ -372,6 +376,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -383,7 +388,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMinHour()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMinHour());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -414,6 +419,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -425,7 +431,7 @@ class requirementUserbasketTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMinDay()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMinDay());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1

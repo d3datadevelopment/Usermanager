@@ -32,7 +32,6 @@ use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Request;
-use oxsystemcomponentexception;
 
 class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 {
@@ -59,7 +58,9 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      */
     public function getActionAdminController()
     {
-        return d3GetModCfgDIC()->get(ItemActionController::class);
+        /** @var ItemActionController $action */
+        $action = d3GetModCfgDIC()->get(ItemActionController::class);
+        return $action;
     }
 
     /**
@@ -68,7 +69,9 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      */
     public function getRequirementAdminController()
     {
-        return d3GetModCfgDIC()->get(ItemRequirementController::class);
+        /** @var ItemRequirementController $requ */
+        $requ = d3GetModCfgDIC()->get(ItemRequirementController::class);
+        return $requ;
     }
 
     /**
@@ -76,7 +79,6 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @param $aArguments
      *
      * @return mixed
-     * @throws oxSystemComponentException
      * @throws Exception
      */
     public function __call($sName, $aArguments)
@@ -106,7 +108,9 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
             $oManager
         );
 
-        return d3GetModCfgDIC()->get(RequirementListModel::class);
+        /** @var RequirementListModel $requList */
+        $requList = d3GetModCfgDIC()->get(RequirementListModel::class);
+        return $requList;
     }
 
     /**
@@ -139,7 +143,9 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
             d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.ItemModel::class)
         );
 
-        return d3GetModCfgDIC()->get(ActionListModel::class);
+        /** @var ActionListModel $actionlist */
+        $actionlist = d3GetModCfgDIC()->get(ActionListModel::class);
+        return $actionlist;
     }
 
     /**
@@ -347,11 +353,14 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      */
     public function getManager()
     {
-        return d3GetModCfgDIC()->get(Manager::class);
+        /** @var Manager $manager */
+        $manager = d3GetModCfgDIC()->get(Manager::class);
+        return $manager;
     }
 
     /**
      * @return Language
+     * @throws Exception
      */
     public function getLang()
     {
@@ -371,7 +380,7 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
         $oManager = $this->getManager();
         if ($oManager->load($sManagerId)) {
             return $oManager->getFieldData('oxtitle');
-        };
+        }
 
         return $this->getLang()->translateString('D3_USERMANAGER_REQU_OTHERJOB_UNKNOWNJOBID').' "'.$sManagerId.'"';
     }

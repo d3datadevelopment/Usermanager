@@ -18,7 +18,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_activefilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_activefilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_activefilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_activefilter.args.usermanager:
     synthetic:  true
@@ -31,7 +31,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_agecheck
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_agecheck.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_agecheck.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_agecheck.args.usermanager:
     synthetic:  true
@@ -44,7 +44,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdatefrom
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdatefrom.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdatefrom.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdatefrom.args.usermanager:
     synthetic:  true
@@ -57,7 +57,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdateto
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdateto.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdateto.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdateto.args.usermanager:
     synthetic:  true
@@ -70,7 +70,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_bonifilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_bonifilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_bonifilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_bonifilter.args.usermanager:
     synthetic:  true
@@ -83,7 +83,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrfrom
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrfrom.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrfrom.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrfrom.args.usermanager:
     synthetic:  true
@@ -96,7 +96,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrto
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrto.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrto.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrto.args.usermanager:
     synthetic:  true
@@ -109,7 +109,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_deladdrfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_deladdrfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_deladdrfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_deladdrfilter.args.usermanager:
     synthetic:  true
@@ -122,7 +122,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcompanyfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcompanyfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcompanyfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcompanyfilter.args.usermanager:
     synthetic:  true
@@ -135,7 +135,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcountryfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcountryfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcountryfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcountryfilter.args.usermanager:
     synthetic:  true
@@ -148,7 +148,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delfieldfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delfieldfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delfieldfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delfieldfilter.args.usermanager:
     synthetic:  true
@@ -161,7 +161,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delgenderfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delgenderfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delgenderfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delgenderfilter.args.usermanager:
     synthetic:  true
@@ -174,7 +174,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delzipfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delzipfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delzipfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delzipfilter.args.usermanager:
     synthetic:  true
@@ -187,7 +187,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_executemethodfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_executemethodfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_executemethodfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_executemethodfilter.args.usermanager:
     synthetic:  true
@@ -200,7 +200,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasbirthday
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasbirthday.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasbirthday.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasbirthday.args.usermanager:
     synthetic:  true
@@ -213,7 +213,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasnoticelist
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasnoticelist.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasnoticelist.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasnoticelist.args.usermanager:
     synthetic:  true
@@ -226,7 +226,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasuserbasket
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasuserbasket.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasuserbasket.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasuserbasket.args.usermanager:
     synthetic:  true
@@ -239,7 +239,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasvoucher
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasvoucher.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasvoucher.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasvoucher.args.usermanager:
     synthetic:  true
@@ -252,7 +252,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_haswishlist
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_haswishlist.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_haswishlist.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_haswishlist.args.usermanager:
     synthetic:  true
@@ -265,7 +265,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ingroupfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ingroupfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ingroupfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ingroupfilter.args.usermanager:
     synthetic:  true
@@ -278,7 +278,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcompanyfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcompanyfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcompanyfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcompanyfilter.args.usermanager:
     synthetic:  true
@@ -291,7 +291,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcountryfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcountryfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcountryfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcountryfilter.args.usermanager:
     synthetic:  true
@@ -304,7 +304,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invfieldfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invfieldfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invfieldfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invfieldfilter.args.usermanager:
     synthetic:  true
@@ -317,7 +317,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invgenderfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invgenderfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invgenderfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invgenderfilter.args.usermanager:
     synthetic:  true
@@ -330,7 +330,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invustidfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invustidfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invustidfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invustidfilter.args.usermanager:
     synthetic:  true
@@ -343,7 +343,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invzipfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invzipfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invzipfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invzipfilter.args.usermanager:
     synthetic:  true
@@ -356,7 +356,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_newsletterfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_newsletterfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_newsletterfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_newsletterfilter.args.usermanager:
     synthetic:  true
@@ -369,7 +369,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_noticelistcount
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_noticelistcount.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_noticelistcount.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_noticelistcount.args.usermanager:
     synthetic:  true
@@ -382,7 +382,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_notingroupfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_notingroupfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_notingroupfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_notingroupfilter.args.usermanager:
     synthetic:  true
@@ -395,7 +395,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderdeltypefilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderdeltypefilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderdeltypefilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderdeltypefilter.args.usermanager:
     synthetic:  true
@@ -408,7 +408,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderfieldfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderfieldfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderfieldfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderfieldfilter.args.usermanager:
     synthetic:  true
@@ -421,7 +421,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderlanguagefilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderlanguagefilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderlanguagefilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderlanguagefilter.args.usermanager:
     synthetic:  true
@@ -434,7 +434,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxcount
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxcount.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxcount.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxcount.args.usermanager:
     synthetic:  true
@@ -447,7 +447,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxsum
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxsum.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxsum.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxsum.args.usermanager:
     synthetic:  true
@@ -460,7 +460,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxtimespan
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxtimespan.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxtimespan.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxtimespan.args.usermanager:
     synthetic:  true
@@ -473,7 +473,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermincount
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermincount.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermincount.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermincount.args.usermanager:
     synthetic:  true
@@ -486,7 +486,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderminsum
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderminsum.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderminsum.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderminsum.args.usermanager:
     synthetic:  true
@@ -499,7 +499,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermintimespan
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermintimespan.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermintimespan.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermintimespan.args.usermanager:
     synthetic:  true
@@ -512,7 +512,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordernocount
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordernocount.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordernocount.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordernocount.args.usermanager:
     synthetic:  true
@@ -525,7 +525,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderpaymentfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderpaymentfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderpaymentfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderpaymentfilter.args.usermanager:
     synthetic:  true
@@ -538,7 +538,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordertimespan
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordertimespan.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordertimespan.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordertimespan.args.usermanager:
     synthetic:  true
@@ -551,7 +551,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_otherjob
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_otherjob.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_otherjob.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_otherjob.args.usermanager:
     synthetic:  true
@@ -564,7 +564,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_passwordfilter
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_passwordfilter.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_passwordfilter.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_passwordfilter.args.usermanager:
     synthetic:  true
@@ -577,7 +577,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerfrom
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerfrom.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerfrom.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerfrom.args.usermanager:
     synthetic:  true
@@ -590,7 +590,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registertimespan
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registertimespan.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registertimespan.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registertimespan.args.usermanager:
     synthetic:  true
@@ -603,7 +603,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerto
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerto.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerto.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerto.args.usermanager:
     synthetic:  true
@@ -616,7 +616,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketfrom
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketfrom.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketfrom.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketfrom.args.usermanager:
     synthetic:  true
@@ -629,7 +629,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbaskettimespan
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbaskettimespan.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbaskettimespan.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbaskettimespan.args.usermanager:
     synthetic:  true
@@ -642,7 +642,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketto
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketto.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketto.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketto.args.usermanager:
     synthetic:  true
@@ -655,7 +655,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_validnewslettermail
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_validnewslettermail.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_validnewslettermail.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_validnewslettermail.args.usermanager:
     synthetic:  true
@@ -668,7 +668,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_vouchernumber
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_vouchernumber.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_vouchernumber.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_vouchernumber.args.usermanager:
     synthetic:  true
@@ -681,7 +681,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_voucherserie
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_voucherserie.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_voucherserie.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_voucherserie.args.usermanager:
     synthetic:  true
@@ -694,7 +694,7 @@ services:
     shared:     false
     arguments:
       - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_wishlistcount
-      - @D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_wishlistcount.args.usermanager
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_wishlistcount.args.usermanager'
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_wishlistcount.args.usermanager:
     synthetic:  true

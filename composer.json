@@ -33,15 +33,21 @@
   },
   "require": {
     "php": "7.1 - 7.4", "ext-ionCube-Loader": "*",
-    "oxid-esales/oxideshop-metapackage-ce": "~6.0.0 || ~6.1.0",
-    "d3/modcfg": "^5.3.2.000"
+    "oxid-esales/oxideshop-ce": "6.5 - 6.6",
+    "d3/modcfg": "^5.3.2.000",
+    "splitbrain/php-cli": "^1.1",
+    "html2text/html2text": "^4.2",
+    "nilportugues/sql-query-formatter": "^1.2.2",
+    "guzzlehttp/guzzle": "^6.5.3"
   },
   "require-dev": {
-    "mikey179/vfsstream": "^1.4"
+    "mikey179/vfsstream": "^1.4",
+    "donatj/mock-webserver": "^2.1"
   },
   "autoload": {
     "psr-4": {
       "D3\\Usermanager\\": "../../../source/modules/d3/usermanager"
     }
-  }
+  },
+  "bin": ["src/bin/d3_usermanager_cron"]
 }

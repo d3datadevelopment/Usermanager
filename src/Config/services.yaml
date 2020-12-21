@@ -12,6 +12,7 @@
 # @link      https://www.oxidmodule.com
 
 imports:
+  - { resource: packages.yaml }
   - { resource: modcfg.yaml }
   - { resource: oxid.yaml }
   - { resource: usermanager.yaml }

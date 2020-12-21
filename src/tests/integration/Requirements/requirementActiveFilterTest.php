@@ -112,6 +112,7 @@ class requirementActiveFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -123,7 +124,7 @@ class requirementActiveFilterTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightActiveUsers()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerActive());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1
@@ -148,6 +149,7 @@ class requirementActiveFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -159,7 +161,7 @@ class requirementActiveFilterTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightNotActiveUsers()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerNotActive());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1

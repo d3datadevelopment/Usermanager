@@ -171,6 +171,7 @@ class requirementValidNewsletterMailTest extends d3RequirementIntegrationTestCas
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -182,7 +183,7 @@ class requirementValidNewsletterMailTest extends d3RequirementIntegrationTestCas
     public function requirementsSelectsRightUsersValid()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerValid());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -194,6 +195,7 @@ class requirementValidNewsletterMailTest extends d3RequirementIntegrationTestCas
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -205,7 +207,7 @@ class requirementValidNewsletterMailTest extends d3RequirementIntegrationTestCas
     public function requirementsSelectsRightUsersNotValid()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagernotvalid());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1

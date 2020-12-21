@@ -65,7 +65,10 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      */
     public function getManager()
     {
-        return d3GetModCfgDIC()->get(Manager::class);
+        /** @var Manager $manager */
+        $manager = d3GetModCfgDIC()->get(Manager::class);
+
+        return $manager;
     }
 
     /**
@@ -99,7 +102,9 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      */
     public function getD3Str()
     {
-        return d3GetModCfgDIC()->get(d3str::class);
+        /** @var d3str $d3str */
+        $d3str = d3GetModCfgDIC()->get(d3str::class);
+        return $d3str;
     }
 
     /**
@@ -131,9 +136,7 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
                 $this->getBaseCronPW();
         }
 
-        $sURL   = $this->getD3Str()->generateParameterUrl($sBaseUrl, $aParameters);
-
-        return $sURL;
+        return $this->getD3Str()->generateParameterUrl($sBaseUrl, $aParameters);
     }
 
     /**
@@ -155,15 +158,13 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
             $aParameters['cjid'] = $iCronJobId;
         }
 
-        $sPath   = 'php ' . $sScriptPath." ".implode(' ', $aParameters);
-
-        return $sPath;
+        return 'php ' . $sScriptPath." ".implode(' ', $aParameters);
     }
 
     /**
      * @return array
+     * @throws DBALException
      * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
      * @throws Exception
      */
     public function getAvailableCronjobIds()
@@ -217,7 +218,10 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      */
     public function getFileGeneratorCronSh()
     {
-        return d3GetModCfgDIC()->get(d3filegeneratorcronsh::class);
+        /** @var d3filegeneratorcronsh $filegenerator */
+        $filegenerator = d3GetModCfgDIC()->get(d3filegeneratorcronsh::class);
+
+        return $filegenerator;
     }
 
     /**
@@ -235,7 +239,9 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      */
     public function getCompatibilityAdapterHandler()
     {
-        return d3GetModCfgDIC()->get(d3ShopCompatibilityAdapterHandler::class);
+        /** @var d3ShopCompatibilityAdapterHandler $compatiblityHandler */
+        $compatiblityHandler = d3GetModCfgDIC()->get(d3ShopCompatibilityAdapterHandler::class);
+        return $compatiblityHandler;
     }
 
     /**
@@ -267,7 +273,6 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
         $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
         $sCronId = $request->getRequestEscapedParameter('cronid');
 
-        /** @var Shop $oShop */
         $oShop = $this->d3GetActiveShop();
         $aParameters = array(
             0 => 'run',

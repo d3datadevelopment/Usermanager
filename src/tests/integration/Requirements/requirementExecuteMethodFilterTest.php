@@ -115,6 +115,7 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -128,11 +129,13 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
         $oListGenerator = $this->getListGenerator($this->getConfiguredManager());
 
         /** @var ListModel|PHPUnit_Framework_MockObject_MockObject $oListMock */
-        $oListMock = $this->getMock(ListModel::class, array('testChangeUserList'));
+        $oListMock = $this->getMockBuilder(ListModel::class)
+            ->setMethods(['testChangeUserList'])
+            ->getMock();
         $oListMock->expects($this->once())->method('testChangeUserList')->willReturn(null);
         d3GetModCfgDIC()->set('d3ox.usermanager.'.ListModel::class, $oListMock);
 
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2

@@ -24,6 +24,7 @@ use D3\Usermanager\tests\integration\d3IntegrationTestCase;
 use Exception;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Model\ListModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit_Framework_MockObject_MockObject;
 
 abstract class d3ActionIntegrationTestCase extends d3IntegrationTestCase
@@ -57,10 +58,11 @@ abstract class d3ActionIntegrationTestCase extends d3IntegrationTestCase
     public function getListGenerator(d3usermanager $oManager)
     {
         /** @var d3usermanager_listgenerator|PHPUnit_Framework_MockObject_MockObject $oListGeneratorMock */
-        $oListGeneratorMock = $this->getMock(d3usermanager_listgenerator::class, array(
-            'getConcernedUsers',
-        ), array($oManager));
-        $oListGeneratorMock->method('getConcernedUsers')->willReturn($this->getFilledResultList());
+        $oListGeneratorMock = $this->getMockBuilder(d3usermanager_listgenerator::class)
+            ->setMethods(['getConcernedItems'])
+            ->setConstructorArgs([$oManager])
+            ->getMock();
+        $oListGeneratorMock->method('getConcernedItems')->willReturn($this->getFilledResultList());
 
         return $oListGeneratorMock;
     }
@@ -69,13 +71,14 @@ abstract class d3ActionIntegrationTestCase extends d3IntegrationTestCase
 
     /**
      * @param d3usermanager $oManager
-     * @return PHPUnit_Framework_MockObject_MockObject
+     * @return d3usermanager_touserassignment|MockObject
      */
     public function getManagerAssignmentMock(d3usermanager $oManager)
     {
-        $oAssignmentMock = $this->getMock(d3usermanager_touserassignment::class, array(
-            'setAssignment'
-        ), array($oManager));
+        $oAssignmentMock = $this->getMockBuilder(d3usermanager_touserassignment::class)
+            ->setMethods(['setAssignment'])
+            ->setConstructorArgs([$oManager])
+            ->getMock();
         $oAssignmentMock->method('setAssignment')->willReturn(true);
 
         return $oAssignmentMock;
@@ -88,9 +91,10 @@ abstract class d3ActionIntegrationTestCase extends d3IntegrationTestCase
     public function getExecuteMock(d3usermanager $oConfiguredManager)
     {
         /** @var d3usermanager_execute|PHPUnit_Framework_MockObject_MockObject $oExecute */
-        $oExecute = $this->getMock(d3usermanager_execute::class, array(
-            'getManagerAssignmentInstance',
-        ), array($oConfiguredManager));
+        $oExecute = $this->getMockBuilder(d3usermanager_execute::class)
+            ->setMethods(['getManagerAssignmentInstance'])
+            ->setConstructorArgs([$oConfiguredManager])
+            ->getMock();
         $oExecute->method('getManagerAssignmentInstance')->willReturn($this->getManagerAssignmentMock($oExecute->getManager()));
 
         return $oExecute;

@@ -91,8 +91,9 @@ Das Modul **{$modulename}** erhalten Sie in verschiedenen Editionen mit untersch
 | Aktivhaken setzen / entfernen                 |               | X                 | X                 |
 | in Gruppe zuordnen                            |               | X                 | X                 |
 | aus Gruppe entfernen                          |               | X                 | X                 |
-| E.Mail senden                                 | X             | X                 | X                 |
+| E-Mail senden                                 | X             | X                 | X                 |
 | Kunden in Liste exportieren                   |               | X                 | X                 |
 | Methode des Kundenobjektes ausführen          |               |                   | X                 |
 | Kundenfeld mit Wert füllen                    |               |                   | X                 |
 | Kundenkonto löschen                           |               | X                 | X                 |
+| Push-Notification senden                      |               |                   | X                 |

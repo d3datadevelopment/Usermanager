@@ -20,6 +20,7 @@ namespace D3\Usermanager\Application\Controller\Admin;
 use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_list;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanagerlist as ManagerList;
+use OxidEsales\Eshop\Core\TableViewNameGenerator;
 
 class d3_cfg_usermanageritem_list extends d3_cfg_mod_list
 {
@@ -36,12 +37,12 @@ class d3_cfg_usermanageritem_list extends d3_cfg_mod_list
 
         $baseObject = $this->getItemListBaseObject();
         foreach ($aWhere as $key => $value) {
+            unset($aWhere[$key]);
             $aWhere[str_replace(
-                getViewName($baseObject->getCoreTableName()),
+                oxNew(TableViewNameGenerator::class)->getViewName($baseObject->getCoreTableName()),
                 $baseObject->getViewName(),
                 $key
             )] = $value;
-            unset($aWhere[$key]);
         }
 
         return $aWhere;

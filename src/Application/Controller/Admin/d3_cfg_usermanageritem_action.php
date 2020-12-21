@@ -19,7 +19,6 @@ namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
-use D3\ModCfg\Application\Model\Shopcompatibility\d3ShopCompatibilityAdapterHandler;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_action_abstract as ActionAbstract;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist as ActionGroupList;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist as ActionList;
@@ -35,12 +34,13 @@ use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Model\ListModel;
-use OxidEsales\Eshop\Core\Module\Module;
-use OxidEsales\Eshop\Core\Module\ModuleList;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_settings as ItemSettingsController;
 use OxidEsales\Eshop\Core\UtilsView;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\ShopConfigurationDaoBridgeInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Path\ModulePathResolverInterface;
 
 class d3_cfg_usermanageritem_action extends ItemSettingsController
 {
@@ -73,7 +73,7 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
         $aMissingRequiredValues = array();
         /** @var ActionAbstract $oAction */
         foreach ($this->getActionList() as $sId => $oAction) {
-            if ($this->getProfile()->getValue($oAction->sActionActiveSwitch) && false == $oAction->hasRequiredValues()) {
+            if ($this->getProfile()->getValue($oAction->getActiveSwitchParameter()) && false == $oAction->hasRequiredValues()) {
                 $aMissingRequiredValues[] = $sId;
             }
         }
@@ -254,7 +254,10 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
             d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Item::class)
         );
 
-        return d3GetModCfgDIC()->get(ActionGroupList::class);
+        /** @var ActionGroupList $actiongroup */
+        $actiongroup = d3GetModCfgDIC()->get(ActionGroupList::class);
+
+        return $actiongroup;
     }
 
     /**
@@ -272,7 +275,9 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
             d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Item::class)
         );
 
-        return d3GetModCfgDIC()->get(ActionList::class);
+        /** @var ActionList $actionlist */
+        $actionlist = d3GetModCfgDIC()->get(ActionList::class);
+        return $actionlist;
     }
 
     /**
@@ -281,7 +286,6 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
      */
     public function getGroupedActionList()
     {
-        /** @var Manager $oManager */
         $oManager = $this->getProfile();
         $oActionList = $this->getActionGroupList();
         $oActionList->setGroups($oManager->getConfiguration()->getGroupedActionIdList());
@@ -295,7 +299,6 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
      */
     public function getActionList()
     {
-        /** @var Manager $oManager */
         $oManager = $this->getProfile();
         $oActionList = $this->getActionListObject();
         $oActionList->setActions($oManager->getConfiguration()->getActionIdList());
@@ -321,57 +324,24 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
     }
 
     /**
-     * @return ModuleList
-     * @throws Exception
-     */
-    public function getModuleList()
-    {
-        /** @var ModuleList $moduleList */
-        $moduleList = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.ModuleList::class);
-
-        return $moduleList;
-    }
-
-    /**
-     * @return d3ShopCompatibilityAdapterHandler
-     * @throws Exception
-     */
-    public function getShopCompatibilityAdapterHandler()
-    {
-        /** @var d3ShopCompatibilityAdapterHandler $compatHandler */
-        $compatHandler = d3GetModCfgDIC()->get(d3ShopCompatibilityAdapterHandler::class);
-        return $compatHandler;
-    }
-
-    /**
      * @return array
-     * @throws StandardException
-     * @throws Exception
-     * @throws d3ShopCompatibilityAdapterException
      */
     public function getModulePathList()
     {
-        /** @var Config $config */
-        $config = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Config::class);
-
-        $sModulesDir = $config->getModulesDir();
         $aModulePathList = array();
 
-        /** @var Module $oModule */
-        $oModule = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Module::class);
-        /** @var ModuleList $oModuleList */
-        $oModuleList = $this->getModuleList();
+        $container = ContainerFactory::getInstance()->getContainer();
+        $shopConfiguration = $container->get(ShopConfigurationDaoBridgeInterface::class)->get();
 
-        foreach (array_keys($oModuleList->getModulesFromDir($sModulesDir)) as $sId) {
-            /** @var d3ShopCompatibilityAdapterHandler $oD3CompatibilityAdapterHandler */
-            $oD3CompatibilityAdapterHandler = $this->getShopCompatibilityAdapterHandler();
-            $sModulePath = $oD3CompatibilityAdapterHandler->call(
-                'oxmodule__getModuleFullPath',
-                array($oModule, $sId)
+        foreach ($shopConfiguration->getModuleConfigurations() as $moduleConfiguration) {
+            $pathResolver = ContainerFactory::getInstance()->getContainer()->get(ModulePathResolverInterface::class);
+            $sModulePath = $pathResolver->getFullModulePathFromConfiguration(
+                $moduleConfiguration->getId(),
+                Registry::getConfig()->getShopId()
             );
 
-            $aModulePathList[$sId] = $sModulePath;
-        };
+            $aModulePathList[$moduleConfiguration->getId()] = $sModulePath;
+        }
 
         return $aModulePathList;
     }
@@ -387,10 +357,7 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
      */
     public function markAsFinished()
     {
-        /** @var Manager $oProfile */
         $oProfile = $this->getProfile();
-        /** @var Language $oLang */
-        $oLang = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
         $iCount = $oProfile->markConcernedItemsAsFinished();
 
         $oEx = oxNew(

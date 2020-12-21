@@ -2,9 +2,35 @@
 title: Changelog
 ---
 
+## unreleased
+
+---
+
+## 4.1.1.0 - (2020-12-21) - (aus Kompatibilitätsgründen zu Auftragsmanager-Release)
+
+** Hinweis für kleinere Versions-Upgrades: Es gibt einige rückwärts-inkompatible Änderungen an dieser Version. **
+
+### Added
+- Angepasst für Shopversion 6.2.3
+- Zufallspasswort wird im Installationsprozess erstellt
+- CLI-Aufrufe ermöglicht
+- Push Notification Aktion hinzugefügt
+- Bedingungen verwenden QueryBuilder statt plain SQL
+- Verwendung des Injection Containers integriert
+- automatisierte Tests eingefügt
+
+### Changed
+- unnötige Parameterprüfung für Plain-Inhalte der Mails entfernt
+- an Code des Autragsmanager Moduls angepasst
+
+### Fixed
+- Queryfehler korrigiert
+
+---
+
 ## 3.3.0.0 - (2020-10-02) - (aus Kompatibilitätsgründen zu Ordermanager-Release)
 
-**Minor version upgrade notice: there are some backward-incompatible changes to this release.**
+** Hinweis für kleinere Versions-Upgrades: Es gibt einige rückwärts-inkompatible Änderungen an dieser Version. **
 
 #### Added
 - Angepasst für Shopversion 6.x, Installation via Composer 

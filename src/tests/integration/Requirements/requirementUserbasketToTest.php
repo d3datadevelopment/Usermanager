@@ -183,6 +183,7 @@ class requirementUserbasketToTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -194,7 +195,7 @@ class requirementUserbasketToTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsers()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManager());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2

@@ -35,9 +35,9 @@ abstract class d3RequirementIntegrationTestCase extends d3IntegrationTestCase
     public function getManagerMock($sManagerId)
     {
         /** @var d3usermanager|PHPUnit_Framework_MockObject_MockObject $oManager */
-        $oManager = $this->getMock(d3usermanager::class, array(
-            'd3getLog',
-        ));
+        $oManager = $this->getMockBuilder(d3usermanager::class)
+            ->setMethods(['d3getLog'])
+            ->getMock();
         $oManager->method('d3getLog')->willReturn($this->getD3LogMock());
         $oManager->load($sManagerId);
 

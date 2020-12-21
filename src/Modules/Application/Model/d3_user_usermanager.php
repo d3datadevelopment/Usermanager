@@ -17,6 +17,7 @@
 
 namespace D3\Usermanager\Modules\Application\Model;
 
+use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
@@ -26,19 +27,9 @@ use D3\Usermanager\Application\Model\d3usermanager_execute;
 use D3\Usermanager\Application\Model\d3usermanagerlist;
 use Doctrine\DBAL\DBALException;
 use Exception;
-use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
-
-// @codeCoverageIgnoreStart
-if (false) {
-    class_alias(
-        User::class,
-        d3_user_usermanager_parent::class
-    );
-}
-// @codeCoverageIgnoreEnd
 
 class d3_user_usermanager extends d3_user_usermanager_parent
 {
@@ -89,12 +80,16 @@ class d3_user_usermanager extends d3_user_usermanager_parent
     {
         $blSave = parent::save();
 
-        $oManagerList = d3GetModCfgDIC()->get(d3usermanagerlist::class);
-        /** @var d3usermanager $oManager */
-        foreach ($oManagerList->d3GetUserSaveTriggeredManagerTasks() as $oManager) {
-            $oManagerExecute = $this->d3UsermanagerGetManagerExecute($oManager);
-            if ($oManagerExecute->userMeetsConditions($this->getId())) {
-                $oManagerExecute->exec4user($this->getId(), d3usermanager_conf::EXECTYPE_USERSAVETRIGGERED);
+        /** @var d3_cfg_mod $oSet */
+        $oSet = d3GetModCfgDIC()->get('d3.usermanager.modcfg');
+        if ($oSet->isActive()) {
+            $oManagerList = d3GetModCfgDIC()->get(d3usermanagerlist::class);
+            /** @var d3usermanager $oManager */
+            foreach ($oManagerList->d3GetUserSaveTriggeredManagerTasks() as $oManager) {
+                $oManagerExecute = $this->d3UsermanagerGetManagerExecute($oManager);
+                if ($oManagerExecute->userMeetsConditions($this->getId())) {
+                    $oManagerExecute->exec4user($this->getId(), d3usermanager_conf::EXECTYPE_USERSAVETRIGGERED);
+                }
             }
         }
 

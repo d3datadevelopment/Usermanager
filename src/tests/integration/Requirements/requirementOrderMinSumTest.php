@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -188,6 +187,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -199,7 +199,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersTotalNetSum()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerTotalNetSum());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -227,6 +227,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -238,7 +239,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersTotalBrutSum()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerTotalBrutSum());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1
@@ -266,6 +267,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -277,7 +279,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersTotalOrderSum()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerTotalOrderSum());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2
@@ -305,6 +307,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -316,7 +319,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersDelCostSum()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerDelCostSum());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 1
@@ -344,6 +347,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
+     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -355,7 +359,7 @@ class requirementOrderMinSumTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersPayCostSum()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerPayCostSum());
-        $oUserList = $oListGenerator->getConcernedUsers();
+        $oUserList = $oListGenerator->getConcernedItems();
 
         $this->assertTrue(
             $oUserList->count() >= 2

@@ -21,15 +21,18 @@ use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanagerlist as ManagerList;
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Configuration\d3modprofilelist;
-use D3\ModCfg\Application\Model\d3utils;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
-use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
+use Psr\Container\ContainerInterface;
 
 class d3usermanagerlist extends d3modprofilelist
 {
@@ -55,15 +58,19 @@ class d3usermanagerlist extends d3modprofilelist
     {
         /** @var Manager $oListObject */
         $oListObject = $this->getBaseObject();
-        $sFieldList = $oListObject->getSelectFields();
-        $sQ = "select $sFieldList from " . $oListObject->getViewName();
+        $fieldList = array_map('trim', explode(',', $oListObject->getSelectFields()));
 
-        $sQ .= " where ";
-        $sQ = $this->d3AddActiveSnippet($oListObject, $sQ, true, false);
-        $sQ = $this->d3AddFolderSelection($sFolderId, $oListObject, $sQ);
-        $sQ .= " ORDER BY ".$oListObject->getViewName().".oxsort ASC, ".$oListObject->getViewName().".oxfolder ASC";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = $this->getDIContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select($fieldList)
+            ->from($oListObject->getViewName())
+            ->orderBy($oListObject->getViewName().".oxsort", "ASC")
+            ->addOrderBy($oListObject->getViewName().".oxfolder", "ASC");
 
-        $this->selectString($sQ);
+        $queryBuilder = $this->d3AddActiveSnippet($oListObject, $queryBuilder, true, false);
+        $queryBuilder = $this->d3AddFolderSelection($sFolderId, $oListObject, $queryBuilder);
+
+        $this->selectString($queryBuilder->getSQL(), $queryBuilder->getParameters());
 
         /** @var $oManager Manager */
         foreach ($this->getArray() as $sKey => $oManager) {
@@ -95,14 +102,24 @@ class d3usermanagerlist extends d3modprofilelist
         ) {
             /** @var Manager $oListObject */
             $oListObject = $this->getBaseObject();
-            $sFieldList = $oListObject->getSelectFields();
-            $sQ = "select $sFieldList from " . $oListObject->getViewName();
+            $fieldList = array_map('trim', explode(',', $oListObject->getSelectFields()));
 
-            $sQ .= " where ";
-            $sQ = $this->d3AddActiveSnippet($oListObject, $sQ, true, false);
-            $sQ .= ' AND ' . $oListObject->getViewName() . '.D3_UM_USERSAVETRIGGERED = 1';
-            $sQ .= " ORDER BY " . $oListObject->getViewName() . ".oxsort ASC, " . $oListObject->getViewName() . ".oxfolder ASC";
-            $this->selectString($sQ);
+            /** @var QueryBuilder $queryBuilder */
+            $queryBuilder = $this->getDIContainer()->get(QueryBuilderFactoryInterface::class)->create();
+            $queryBuilder->select($fieldList)
+                ->from($oListObject->getViewName())
+                ->where(
+                    $queryBuilder->expr()->eq(
+                        $oListObject->getViewName() . '.D3_UM_USERSAVETRIGGERED',
+                        $queryBuilder->createNamedParameter(1)
+                    )
+                )
+                ->orderBy($oListObject->getViewName() . ".oxsort", 'ASC')
+                ->addOrderBy($oListObject->getViewName() . ".oxfolder", "ASC");
+
+            $queryBuilder = $this->d3AddActiveSnippet($oListObject, $queryBuilder, true, false);
+
+            $this->selectString($queryBuilder->getSQL(), $queryBuilder->getParameters());
 
             /** @var $oManager Manager */
             foreach ($this->getArray() as $sKey => $oManager) {
@@ -116,7 +133,7 @@ class d3usermanagerlist extends d3modprofilelist
     }
 
     /**
-     * @return $this
+     * @return ManagerList
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -133,18 +150,28 @@ class d3usermanagerlist extends d3modprofilelist
                 array_map(array($this->d3GetSet(),'getLicenseConfigData'),array(d3usermanager_conf::SERIAL_BIT_STANDARD_EDITION))
             )
         ) {
-            /** @var d3usermanager $oListObject */
+            /** @var Manager $oListObject */
             $oListObject = $this->getBaseObject();
-            $sFieldList = $oListObject->getSelectFields();
-            $sQ = "select $sFieldList from " . $oListObject->getViewName();
+            $fieldList = array_map('trim', explode(',', $oListObject->getSelectFields()));
 
-            $sQ .= " where ";
-            $sQ = $this->d3AddActiveSnippet($oListObject, $sQ, true, false);
-            $sQ .= ' AND ' . $oListObject->getViewName() . '.D3_UM_ORDERFINISHTRIGGERED = 1';
-            $sQ .= " ORDER BY " . $oListObject->getViewName() . ".oxsort ASC, " . $oListObject->getViewName() . ".oxfolder ASC";
-            $this->selectString($sQ);
+            /** @var QueryBuilder $queryBuilder */
+            $queryBuilder = $this->getDIContainer()->get(QueryBuilderFactoryInterface::class)->create();
+            $queryBuilder->select($fieldList)
+                ->from($oListObject->getViewName())
+                ->where(
+                    $queryBuilder->expr()->eq(
+                        $oListObject->getViewName() . '.D3_UM_ORDERFINISHTRIGGERED',
+                        $queryBuilder->createNamedParameter(1)
+                    )
+                )
+                ->orderBy($oListObject->getViewName() . ".oxsort", 'ASC')
+                ->addOrderBy($oListObject->getViewName() . ".oxfolder", 'ASC');
 
-            /** @var $oManager d3usermanager */
+            $queryBuilder = $this->d3AddActiveSnippet($oListObject, $queryBuilder, true, false);
+
+            $this->selectString($queryBuilder->getSQL(), $queryBuilder->getParameters());
+
+            /** @var $oManager Manager */
             foreach ($this->getArray() as $sKey => $oManager) {
                 if (false == $oManager->getLicenseActive()) {
                     $this->offsetUnset($sKey);
@@ -174,64 +201,57 @@ class d3usermanagerlist extends d3modprofilelist
 
     /**
      * @param Manager $oListObject
-     * @param                $sQ
-     * @param bool $blManually
-     * @param bool $blUseCommonActiveCheck (oxactive field)
+     * @param QueryBuilder   $queryBuilder
+     * @param bool           $blManually
+     * @param bool           $blUseCommonActiveCheck (oxactive field)
      *
-     * @return string
+     * @return QueryBuilder
      * @throws DatabaseConnectionException
      * @throws Exception
      */
-    public function d3AddActiveSnippet(Manager $oListObject, $sQ, $blManually = false, $blUseCommonActiveCheck = true)
+    public function d3AddActiveSnippet(Manager $oListObject, QueryBuilder $queryBuilder, $blManually = false, $blUseCommonActiveCheck = true)
     {
         $sActiveSnippet = $oListObject->getSqlActiveSnippet();
 
-        /** @var d3utils $d3Utils */
-        $d3Utils = d3GetModCfgDIC()->get(d3utils::class);
-
         if ($blUseCommonActiveCheck && $sActiveSnippet) {
-            $sQ .= " $sActiveSnippet ";
-        } else {
-            $sQ .= " 1 ";
+            $queryBuilder->andWhere($sActiveSnippet);
         }
 
         if ($blManually) {
-            $sFieldName = $d3Utils->getMultiLangFieldName(
-                'D3_UM_EXECMANUALLY',
-                '',
-                $oListObject
-            );
+            $sFieldName = "D3_UM_EXECMANUALLY";
         } else {
-            $sFieldName = $d3Utils->getMultiLangFieldName(
-                'oxactive',
-                '',
-                $oListObject
-            );
+            $sFieldName = "oxactive";
         }
 
-        $sQ .= " AND " . $oListObject->getViewName() . "." . $sFieldName . " = 1 ";
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->eq(
+                $oListObject->getViewName() . "." . $sFieldName,
+                    $queryBuilder->createNamedParameter(1, ParameterType::INTEGER)
+            )
+        );
 
-        return $sQ;
+        return $queryBuilder;
     }
 
     /**
-     * @param               $sFolderId
-     * @param Manager       $oListObject
-     * @param               $sQ
+     * @param                $sFolderId
+     * @param Manager $oListObject
+     * @param QueryBuilder   $queryBuilder
      *
-     * @return string
-     * @throws Exception
+     * @return QueryBuilder
      */
-    public function d3AddFolderSelection($sFolderId, Manager $oListObject, $sQ)
+    public function d3AddFolderSelection($sFolderId, Manager $oListObject, QueryBuilder $queryBuilder)
     {
-        /** @var DatabaseInterface $oDb */
-        $oDb = d3GetModCfgDIC()->get('d3ox.usermanager.'.DatabaseInterface::class.'.num');
-
         if ($sFolderId && $sFolderId != '-1') {
-            $sQ .= " AND " . $oListObject->getViewName() . ".oxfolder = " . $oDb->quote($sFolderId);
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->eq(
+                    $oListObject->getViewName() . ".oxfolder",
+                    $queryBuilder->createNamedParameter($sFolderId)
+                )
+            );
         }
 
-        return $sQ;
+        return $queryBuilder;
     }
 
     /**
@@ -250,6 +270,16 @@ class d3usermanagerlist extends d3modprofilelist
      */
     public function d3GetSet()
     {
-        return d3GetModCfgDIC()->get('d3.usermanager.modcfg');
+        /** @var d3_cfg_mod $set */
+        $set = d3GetModCfgDIC()->get('d3.usermanager.modcfg');
+        return $set;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getDIContainer()
+    {
+        return ContainerFactory::getInstance()->getContainer();
     }
 }
