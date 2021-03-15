@@ -306,7 +306,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
             ->getMock();
         $oProfileMock->expects($this->once())->method('loadInLang')->willReturn(true);
         $oProfileMock->method('getStartTime')->willReturn(1420716228);
-        $oProfileMock->method('getListExportFilePath')->willReturn('/var/www/html/shop/source/export/d3ordermananger_profileName_2015-01-08_12-23-48.csv');
+        $oProfileMock->method('getListExportFilePath')->willReturn('/var/www/html/shop/source/export/d3usermananger_profileName_2015-01-08_12-23-48.csv');
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
@@ -321,7 +321,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
         $this->_oController = $oControllerMock;
 
         $sPath = $this->callMethod($this->_oController, 'getExportExamplePath');
-        $this->assertRegExp('@/var/www/html/shop/source/export/d3ordermananger_profileName_.*.csv@i', $sPath);
+        $this->assertRegExp('@/var/www/html/shop/source/export/d3usermananger_profileName_.*.csv@i', $sPath);
         $this->assertNotContains('2015-01-08_12-23-48', $sPath);
     }
 
@@ -700,7 +700,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     /**
      * @return string
      */
-    public function shopCompatHandlerCallback()
+    public function shopCompatHandlerCallback(): string
     {
         $args = func_get_args();
         return '/module/path/'.$args[1][1];

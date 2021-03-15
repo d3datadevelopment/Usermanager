@@ -27,6 +27,7 @@ use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\Eshop\Core\Model\ListModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class d3_cfg_usermanageritem_settingsTest extends d3UsermanagerUnitTestCase
 {
@@ -168,5 +169,21 @@ class d3_cfg_usermanageritem_settingsTest extends d3UsermanagerUnitTestCase
     protected function _setModuleLicenseKey($sLicenseKey, $oManager = null)
     {
         return null;
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_settings::getDIContainer
+     * @test
+     * @throws ReflectionException
+     */
+    public function getDIContainerHasRightInstance()
+    {
+        $this->assertInstanceOf(
+            ContainerInterface::class,
+            $this->callMethod(
+                $this->_oController,
+                'getDIContainer'
+            )
+        );
     }
 }

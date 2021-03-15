@@ -2,7 +2,36 @@
 title: Changelog
 ---
 
-## unreleased
+## 4.1.2.0 - (2021-03-10)
+
+** Hinweis für kleinere Versions-Upgrades: Es gibt einige rückwärts-inkompatible Änderungen an dieser Version. **
+
+### Added
+- erweiterte Konfigurationsprüfung integriert
+- Ausführungsabbruch mit passenden Fehlermeldungen bei Konfigurationsfehlern eingefügt
+- Debugausgaben werden auch bei Konsolenausführung gezeigt
+- statische Auswahllisten sind erweiterbar
+- Prüfung und Behandlung von Kompilierungsfehlern aufgrund fehlerhafter Smarty-Codes
+- Abfangen leerer Inhalte auf Grund von falsch encodeten Templatedateien
+- Profiling für CLI und GUI integriert
+- Historyeinträge können optional angelegt werden
+- globale Filter pro Shopmandant für Migrationsfälle konfigurierbar
+
+### Changed
+- Bedingungen- und Aktioneninterfaces aktualisiert
+- Response-Script für automatische Ausführung als abgekündigt markiert
+- Exportdateinamen wird für gültige Dateinamen überarbeitet
+- Modul verwendet strict types
+- Remark anlegen optimiert
+
+### Fixed
+- Bedingung "gesetzte Rechnungsnummer" korrigiert
+- Endlosschleifen bei Ausführung von finalizeOrder- und orderSave-Trigger verhindert
+- Ordnernamen, die nicht aus Übersetzungen kommen, zeigen keine Fehlermeldung
+- nicht generierbare Statusmails korrigiert
+- Debugmodus verwendet SQL-Logger für optimierte Anzeige
+- nicht geladenes Manager-Objekt im Admincontroller korrigiert
+- "Einträge als erledigt markieren" ignoriert "Einträge nich als erledigt markieren"-Option 
 
 ---
 

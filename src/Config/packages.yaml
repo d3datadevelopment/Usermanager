@@ -20,3 +20,13 @@ services:
     shared:     false
     arguments:
       - '%Html2Text\Html2Text.args.html%'
+
+  d3.usermanager.D3\OxidSqlLogger\OxidEsalesDatabase:
+    class:      D3\OxidSqlLogger\OxidEsalesDatabase
+    shared:     false
+
+  ReflectionClass:
+    class:      ReflectionClass
+    shared:     false
+    arguments:
+      - '@ReflectionClass.args.object'

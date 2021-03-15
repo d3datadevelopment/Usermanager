@@ -20,6 +20,7 @@ use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderfieldfilter;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -51,6 +52,8 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -100,9 +103,7 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -135,7 +136,6 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -174,7 +174,6 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -213,7 +212,6 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -244,7 +242,7 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckOrderField_status', true);
         $oManager->setValue('sOrderField_FieldName', 'notexistingfield');
-        $oManager->setValue('sCheckOrderFieldType', 'empty');
+        $oManager->setValue('sCheckOrderFieldType', d3usermanager_requirement_orderfieldfilter::TYPE_EMPTY);
         $oManager->setValue('sOrderField_FieldValue', '');
 
         return $oManager;
@@ -252,7 +250,6 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -264,7 +261,14 @@ class requirementOrderFieldTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersFieldNotExist()
     {
         $this->expectException(d3usermanager_requirementException::class);
+
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerFieldNotExist());
-        $oListGenerator->getConcernedItems();
+        $oUserList = $oListGenerator->getConcernedItems();
+
+        $this->assertTrue(
+            $oUserList->count() === 0
+            && false == $oUserList->offsetExists( $this->aUserIdList[1])
+            && false == $oUserList->offsetExists( $this->aUserIdList[0])
+        );
     }
 }

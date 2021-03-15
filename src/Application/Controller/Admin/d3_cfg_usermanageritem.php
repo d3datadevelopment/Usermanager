@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_;
@@ -26,7 +28,7 @@ class d3_cfg_usermanageritem extends d3_cfg_mod_
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->addTplParam('sListClass', itemList::class);
         $this->addTplParam('sMainClass', itemMain::class);

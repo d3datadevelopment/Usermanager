@@ -484,11 +484,13 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
      */
     public function canGetCronProviderList()
     {
+        $expected = ['contentList'];
+
         /** @var d3filegeneratorcronsh|MockObject $oFileGeneratorCronShMock */
         $oFileGeneratorCronShMock = $this->getMockBuilder(d3filegeneratorcronsh::class)
             ->setMethods(['getContentList'])
             ->getMock();
-        $oFileGeneratorCronShMock->method('getContentList')->willReturn('contentList');
+        $oFileGeneratorCronShMock->method('getContentList')->willReturn($expected);
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
@@ -499,7 +501,7 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
         $this->_oController = $oControllerMock;
 
         $this->assertSame(
-            'contentList',
+            $expected,
             $this->callMethod($this->_oController, 'getCronProviderList')
         );
     }
@@ -586,7 +588,7 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
     /**
      * @return string
      */
-    public function shopCompatHandlerCallback()
+    public function shopCompatHandlerCallback(): string
     {
         $args = func_get_args();
         return '/module/path/'.$args[1][1];

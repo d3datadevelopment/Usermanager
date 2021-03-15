@@ -23,6 +23,7 @@ use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
+use OxidEsales\Eshop\Core\Registry;
 use ReflectionException;
 
 class d3_cfg_usermanagersetTest extends d3UsermanagerUnitTestCase
@@ -41,6 +42,8 @@ class d3_cfg_usermanagersetTest extends d3UsermanagerUnitTestCase
     {
         parent::setUp();
 
+        // required because error if test is executed with intergration tests
+        Registry::getConfig()->getActiveShop();
         $this->_oController = d3GetModCfgDIC()->get(d3_cfg_usermanagerset::class);
     }
 

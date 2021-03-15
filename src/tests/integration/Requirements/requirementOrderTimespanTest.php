@@ -19,6 +19,7 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordertimespan;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -55,8 +56,8 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
+     *
+     * @throws DBALException
      */
     public function tearDown()
     {
@@ -143,9 +144,7 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -170,8 +169,9 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckOrderTimespan_status', true);
         $oManager->setValue('sOrderTimespanValue', '5');
-        $oManager->setValue('sOrderTimespanUnit', 'minute');
-        $oManager->setValue('sOrderTimespanType', 'minimum');
+        $oManager->setValue('sOrderTimespanOrderType', d3usermanager_requirement_ordertimespan::ORDERTYPE_LAST);
+        $oManager->setValue('sOrderTimespanUnit', d3usermanager_requirement_ordertimespan::UNIT_MINUTE);
+        $oManager->setValue('sOrderTimespanType', d3usermanager_requirement_ordertimespan::TYPE_MIN);
 
         return $oManager;
     }
@@ -186,8 +186,9 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckOrderTimespan_status', true);
         $oManager->setValue('sOrderTimespanValue', '5');
-        $oManager->setValue('sOrderTimespanUnit', 'hour');
-        $oManager->setValue('sOrderTimespanType', 'minimum');
+        $oManager->setValue('sOrderTimespanOrderType', d3usermanager_requirement_ordertimespan::ORDERTYPE_LAST);
+        $oManager->setValue('sOrderTimespanUnit', d3usermanager_requirement_ordertimespan::UNIT_HOUR);
+        $oManager->setValue('sOrderTimespanType', d3usermanager_requirement_ordertimespan::TYPE_MIN);
 
         return $oManager;
     }
@@ -202,8 +203,9 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckOrderTimespan_status', true);
         $oManager->setValue('sOrderTimespanValue', '5');
-        $oManager->setValue('sOrderTimespanUnit', 'day');
-        $oManager->setValue('sOrderTimespanType', 'minimum');
+        $oManager->setValue('sOrderTimespanOrderType', d3usermanager_requirement_ordertimespan::ORDERTYPE_LAST);
+        $oManager->setValue('sOrderTimespanUnit', d3usermanager_requirement_ordertimespan::UNIT_DAY);
+        $oManager->setValue('sOrderTimespanType', d3usermanager_requirement_ordertimespan::TYPE_MIN);
 
         return $oManager;
     }
@@ -218,8 +220,9 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckOrderTimespan_status', true);
         $oManager->setValue('sOrderTimespanValue', '5');
-        $oManager->setValue('sOrderTimespanUnit', 'minute');
-        $oManager->setValue('sOrderTimespanType', 'maximum');
+        $oManager->setValue('sOrderTimespanOrderType', d3usermanager_requirement_ordertimespan::ORDERTYPE_LAST);
+        $oManager->setValue('sOrderTimespanUnit', d3usermanager_requirement_ordertimespan::UNIT_MINUTE);
+        $oManager->setValue('sOrderTimespanType', d3usermanager_requirement_ordertimespan::TYPE_MAX);
 
         return $oManager;
     }
@@ -234,8 +237,9 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckOrderTimespan_status', true);
         $oManager->setValue('sOrderTimespanValue', '5');
-        $oManager->setValue('sOrderTimespanUnit', 'hour');
-        $oManager->setValue('sOrderTimespanType', 'maximum');
+        $oManager->setValue('sOrderTimespanOrderType', d3usermanager_requirement_ordertimespan::ORDERTYPE_LAST);
+        $oManager->setValue('sOrderTimespanUnit', d3usermanager_requirement_ordertimespan::UNIT_HOUR);
+        $oManager->setValue('sOrderTimespanType', d3usermanager_requirement_ordertimespan::TYPE_MAX);
 
         return $oManager;
     }
@@ -250,15 +254,15 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckOrderTimespan_status', true);
         $oManager->setValue('sOrderTimespanValue', '5');
-        $oManager->setValue('sOrderTimespanUnit', 'day');
-        $oManager->setValue('sOrderTimespanType', 'maximum');
+        $oManager->setValue('sOrderTimespanOrderType', d3usermanager_requirement_ordertimespan::ORDERTYPE_LAST);
+        $oManager->setValue('sOrderTimespanUnit', d3usermanager_requirement_ordertimespan::UNIT_DAY);
+        $oManager->setValue('sOrderTimespanType', d3usermanager_requirement_ordertimespan::TYPE_MAX);
 
         return $oManager;
     }
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -282,7 +286,6 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -306,7 +309,6 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -330,7 +332,6 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -354,7 +355,6 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -378,7 +378,6 @@ class requirementOrderTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

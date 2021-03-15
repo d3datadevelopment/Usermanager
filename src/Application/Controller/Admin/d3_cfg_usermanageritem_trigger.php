@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
@@ -24,7 +26,6 @@ use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_main;
 use D3\Usermanager\Application\Model\d3usermanager_conf as ConfModel;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
 use Doctrine\DBAL\DBALException;
-use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -56,9 +57,8 @@ class d3_cfg_usermanageritem_trigger extends d3_cfg_mod_main
      * @param array $aParams Parameters, to set default values
      *
      * @return array
-     * @throws Exception
      */
-    public function addDefaultValues($aParams)
+    public function addDefaultValues($aParams): array
     {
         $aParams = parent::addDefaultValues($aParams);
 
@@ -105,7 +105,7 @@ class d3_cfg_usermanageritem_trigger extends d3_cfg_mod_main
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
-    public function triggersAreAllowed()
+    public function triggersAreAllowed(): bool
     {
         return $this->d3GetSet()->isDemo() ||
             in_array(
@@ -123,7 +123,7 @@ class d3_cfg_usermanageritem_trigger extends d3_cfg_mod_main
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
-    public function scriptsAreAllowed()
+    public function scriptsAreAllowed(): bool
     {
         return $this->d3GetSet()->isDemo() ||
             in_array(

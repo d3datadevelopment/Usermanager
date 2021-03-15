@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_main;
@@ -23,7 +25,6 @@ use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
 use Doctrine\DBAL\DBALException;
-use Exception;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -54,15 +55,14 @@ class d3_cfg_usermanageritem_main extends d3_cfg_mod_main
      * name of template file "article_main.tpl".
      *
      * @return string
-     * @throws d3ShopCompatibilityAdapterException
-     * @throws d3_cfg_mod_exception
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
-     * @throws Exception
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
      */
-    public function render()
+    public function render(): string
     {
         $sRet = parent::render();
 
@@ -81,9 +81,8 @@ class d3_cfg_usermanageritem_main extends d3_cfg_mod_main
      * @param array $aParams Parameters, to set default values
      *
      * @return array
-     * @throws Exception
      */
-    public function addDefaultValues($aParams)
+    public function addDefaultValues($aParams): array
     {
         $aParams = parent::addDefaultValues($aParams);
 

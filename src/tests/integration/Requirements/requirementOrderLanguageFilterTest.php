@@ -18,6 +18,7 @@ namespace D3\Usermanager\tests\integration\Requirements;
 
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ;
 use D3\Usermanager\Application\Model\d3usermanager;
 use Doctrine\DBAL\DBALException;
 use Exception;
@@ -52,6 +53,8 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -67,6 +70,16 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
      */
     public function createTestData()
     {
+        $languageIdList = array_keys(array_change_key_case(
+            oxNew(d3_cfg_usermanageritem_requ::class)->getLanguageList()
+        ));
+
+        if (false == count($languageIdList)) {
+            $this->markTestSkipped('no languages for tests available');
+        }
+        $langId1 = array_slice($languageIdList, 0, 1)[0];
+        $langId2 = array_slice($languageIdList, 1, 1)[0] ?? $langId1;
+
         $this->createManager(
             $this->sManagerId
         );
@@ -81,7 +94,7 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
                 'oxorderdate'   => '2018-01-01 00:00:00',
                 'oxuserid'      => $this->aUserIdList[0],
                 'oxbillcompany' => __CLASS__,
-                'oxlang'        => 99,
+                'oxlang'        => $langId1,
             )
         );
 
@@ -95,7 +108,7 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
                 'oxuserid'      => $this->aUserIdList[1],
                 'oxorderdate'   => '2018-01-01 00:00:00',
                 'oxbillcompany' => __CLASS__,
-                'oxlang'        => 98,
+                'oxlang'        => $langId2,
             )
         );
 
@@ -109,15 +122,13 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
                 'oxuserid'      => $this->aUserIdList[2],
                 'oxorderdate'   => '2018-01-01 00:00:00',
                 'oxbillcompany' => __CLASS__,
-                'oxlang'        => null,
+                'oxlang'        => '99',
             )
         );
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -140,15 +151,23 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
     {
         $oManager = $this->getManagerMock($this->sManagerId);
 
+        $languageIdList = array_keys(array_change_key_case(
+            oxNew(d3_cfg_usermanageritem_requ::class)->getLanguageList()
+        ));
+
+        if (false == count($languageIdList)) {
+            $this->markTestSkipped('no languages for tests available');
+        }
+        $langId1 = array_slice($languageIdList, 0, 1)[0];
+
         $oManager->setValue('blCheckOrderLanguage_status', true);
-        $oManager->setValue('aOrderInLanguageId', ['99']);
+        $oManager->setValue('aOrderInLanguageId', [$langId1]);
 
         return $oManager;
     }
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -178,15 +197,24 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
     {
         $oManager = $this->getManagerMock($this->sManagerId);
 
+        $languageIdList = array_keys(array_change_key_case(
+            oxNew(d3_cfg_usermanageritem_requ::class)->getLanguageList()
+        ));
+
+        if (false == count($languageIdList)) {
+            $this->markTestSkipped('no languages for tests available');
+        }
+        $langId1 = array_slice($languageIdList, 0, 1)[0];
+        $langId2 = array_slice($languageIdList, 1, 1)[0] ?? $langId1;
+
         $oManager->setValue('blCheckOrderLanguage_status', true);
-        $oManager->setValue('aOrderInLanguageId', ['99', '98']);
+        $oManager->setValue('aOrderInLanguageId', [$langId1, $langId2]);
 
         return $oManager;
     }
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

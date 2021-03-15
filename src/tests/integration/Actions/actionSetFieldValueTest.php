@@ -19,6 +19,7 @@ namespace D3\Usermanager\tests\integration\Actions;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
+use D3\Usermanager\Modules\Application\Model\d3_user_usermanager;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\User;
@@ -26,6 +27,7 @@ use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Model\ListModel;
+use OxidEsales\Eshop\Core\Registry;
 
 class actionSetFieldValueTest extends d3ActionIntegrationTestCase
 {
@@ -61,9 +63,7 @@ class actionSetFieldValueTest extends d3ActionIntegrationTestCase
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -131,7 +131,6 @@ class actionSetFieldValueTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -142,8 +141,13 @@ class actionSetFieldValueTest extends d3ActionIntegrationTestCase
      */
     public function actionChangeConcernedUserExistingSingleLangField()
     {
+        // prevent save trigger action in test
+        Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, true);
+
         $oExecute = $this->getExecuteMock($this->getConfiguredManagerExistingSingleLangField());
         $oExecute->startJobItemExecution();
+
+        Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, false);
 
         /** @var User $oUser */
         $oUser = d3GetModCfgDIC()->get('d3ox.usermanager.'.User::class);
@@ -164,7 +168,6 @@ class actionSetFieldValueTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -175,8 +178,13 @@ class actionSetFieldValueTest extends d3ActionIntegrationTestCase
      */
     public function actionChangeConcernedUserNotExistingSingleLangField()
     {
+        // prevent save trigger action in test
+        Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, true);
+
         $oExecute = $this->getExecuteMock($this->getConfiguredManagerNotExistingSingleLangField());
         $oExecute->startJobItemExecution();
+
+        Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, false);
 
         /** @var User $oUser */
         $oUser = d3GetModCfgDIC()->get('d3ox.usermanager.'.User::class);
@@ -195,7 +203,6 @@ class actionSetFieldValueTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -206,8 +213,13 @@ class actionSetFieldValueTest extends d3ActionIntegrationTestCase
      */
     public function actionChangeConcernedUserNotExistingMultiLangField()
     {
+        // prevent save trigger action in test
+        Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, true);
+
         $oExecute = $this->getExecuteMock($this->getConfiguredManagerNotExistingMultiLangField());
         $oExecute->startJobItemExecution();
+
+        Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, false);
 
         /** @var User $oUser */
         $oUser = d3GetModCfgDIC()->get('d3ox.usermanager.'.User::class);

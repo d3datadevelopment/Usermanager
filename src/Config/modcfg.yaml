@@ -34,3 +34,11 @@ services:
     factory:
       - 'D3\ModCfg\Application\Model\d3database'
       - 'getInstance'
+
+  # d3filesystem
+  d3ox.usermanager.D3\ModCfg\Application\Model\d3filesystem:
+    class: D3\ModCfg\Application\Model\d3filesystem
+    factory: 'oxNew'
+    shared: false
+    arguments:
+      - D3\ModCfg\Application\Model\d3filesystem

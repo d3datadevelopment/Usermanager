@@ -22,18 +22,17 @@
                     </SELECT>
                     <label for="RequOtherJobType" style="position: absolute; left: -2000px">[{oxmultilang ident="D3_USERMANAGER_REQU_OTHERJOB"}]</label>
                     <SELECT class="editinput" name="value[sOtherJob_Type]" id="RequOtherJobType" [{$blActionRestriction}] [{$readonly}]>
-                        <option value="exec" [{if "exec" == $edit->getValue('sOtherJob_Type')}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_OTHERJOB_EXECUTED"}]</option>
-                        <option value="notexec" [{if "notexec" == $edit->getValue('sOtherJob_Type')}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_OTHERJOB_NOTEXECUTED"}]</option>
+                        [{foreach from=$oRequ->getTypeList() key="type" item="translation"}]
+                            <option value="[{$type}]" [{if $edit->getValue('sOtherJob_Type') == $type}]selected[{/if}]>[{oxmultilang ident=$translation}]</option>
+                        [{/foreach}]
                     </SELECT>
                 [{/block}]
             [{else}]
                 [{block name="usermanager_admin_requ_otherjob_viewer"}]
                     [{oxmultilang ident="D3_USERMANAGER_REQU_OTHERJOB_NAME"}] "[{$oView->getManagerTitle($edit->getValue('sOtherJob_ID'))}]"&nbsp;
-                    [{if $edit->getValue('sOtherJob_Type') == 'exec' || $edit->getValue('sOtherJob_Type') == ''}]
-                        [{oxmultilang ident="D3_USERMANAGER_REQU_OTHERJOB_EXECUTED"}]
-                    [{elseif $edit->getValue('sOtherJob_Type') == 'notexec'}]
-                        [{oxmultilang ident="D3_USERMANAGER_REQU_OTHERJOB_NOTEXECUTED"}]
-                    [{/if}]
+                    [{foreach from=$oRequ->getTypeList() key="type" item="translation"}]
+                        [{if $edit->getValue('sOtherJob_Type') == $type}][{oxmultilang ident=$translation}][{/if}]
+                    [{/foreach}]
                 [{/block}]
             [{/if}]
             [{oxinputhelp ident="D3_USERMANAGER_REQU_OTHERJOB_DESC"}]

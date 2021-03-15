@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_list as setListController;
@@ -26,7 +28,7 @@ class d3_cfg_usermanagerset extends d3_cfg_mod_
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->addTplParam('sListClass', setListController::class);
         $this->addTplParam('sMainClass', setMainController::class);

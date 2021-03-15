@@ -15,23 +15,30 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_main;
+use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
+use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\Usermanager\Application\Model\d3usermanager_configurationcheck;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist as ActionListModel;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
+use D3\Usermanager\Application\Model\Exceptions\d3ActionRequirementInterface;
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist as RequirementListModel;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_action as ItemActionController;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ as ItemRequirementController;
 use Doctrine\DBAL\DBALException;
-use Exception;
 use OxidEsales\Eshop\Application\Model\User as ItemModel;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\UtilsView;
 
 class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 {
@@ -53,10 +60,41 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
     protected $_sRequestData;
 
     /**
-     * @return ItemActionController
-     * @throws Exception
+     * @return string
+     * @throws DBALException
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
+     * @throws StandardException
      */
-    public function getActionAdminController()
+    public function render(): string
+    {
+        try {
+            d3GetModCfgDIC()->set(
+                d3usermanager_configurationcheck::class.'.args.usermanager',
+                $this->getManager()
+            );
+            d3GetModCfgDIC()->setParameter(
+                d3usermanager_configurationcheck::class.'.args.checktypes',
+                d3usermanager_configurationcheck::REQUIREMENTS_AND_ACTIONS
+            );
+            /** @var d3usermanager_configurationcheck $confCheck */
+            $confCheck = d3GetModCfgDIC()->get(d3usermanager_configurationcheck::class);
+            $confCheck->checkThrowingExceptions();
+        } catch (d3ActionRequirementInterface $e) {
+            /** @var UtilsView $utilsView */
+            $utilsView = d3GetModCfgDIC()->get('d3ox.Usermanager.'.UtilsView::class);
+            $utilsView->addErrorToDisplay($e);
+        }
+
+        return parent::render();
+    }
+
+    /**
+     * @return ItemActionController
+     */
+    public function getActionAdminController(): d3_cfg_usermanageritem_action
     {
         /** @var ItemActionController $action */
         $action = d3GetModCfgDIC()->get(ItemActionController::class);
@@ -65,9 +103,8 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 
     /**
      * @return ItemRequirementController
-     * @throws Exception
      */
-    public function getRequirementAdminController()
+    public function getRequirementAdminController(): d3_cfg_usermanageritem_requ
     {
         /** @var ItemRequirementController $requ */
         $requ = d3GetModCfgDIC()->get(ItemRequirementController::class);
@@ -75,33 +112,31 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
     }
 
     /**
-     * @param $sName
-     * @param $aArguments
+     * @param $method
+     * @param $arguments
      *
      * @return mixed
-     * @throws Exception
      */
-    public function __call($sName, $aArguments)
+    public function __call($method, $arguments)
     {
         $oActionView = $this->getActionAdminController();
-        if (method_exists($oActionView, $sName)) {
-            return call_user_func_array(array($oActionView, $sName), $aArguments);
+        if (method_exists( $oActionView, $method)) {
+            return call_user_func_array( array( $oActionView, $method), $arguments);
         }
 
         $oRequView = $this->getRequirementAdminController();
-        if (method_exists($oRequView, $sName)) {
-            return call_user_func_array(array($oRequView, $sName), $aArguments);
+        if (method_exists( $oRequView, $method)) {
+            return call_user_func_array( array( $oRequView, $method), $arguments);
         }
 
-        return parent::__call($sName, $aArguments);
+        return parent::__call( $method, $arguments);
     }
 
     /**
      * @param Manager $oManager
      * @return RequirementListModel
-     * @throws Exception
      */
-    public function getRequirementListObject(Manager $oManager)
+    public function getRequirementListObject(Manager $oManager): RequirementListModel
     {
         d3GetModCfgDIC()->set(
             RequirementListModel::class.'.args.usermanager',
@@ -115,9 +150,8 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 
     /**
      * @return array
-     * @throws Exception
      */
-    public function getRequirementList()
+    public function getRequirementList(): array
     {
         /** @var Manager $oManager */
         $oManager = $this->getProfile();
@@ -130,9 +164,8 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
     /**
      * @param Manager $oManager
      * @return ActionListModel
-     * @throws Exception
      */
-    public function getActionListObject(Manager $oManager)
+    public function getActionListObject(Manager $oManager): ActionListModel
     {
         d3GetModCfgDIC()->set(
             ActionListModel::class.'.args.usermanager',
@@ -150,9 +183,8 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 
     /**
      * @return array
-     * @throws Exception
      */
-    public function getActionList()
+    public function getActionList(): array
     {
         /** @var Manager $oManager */
         $oManager = $this->getProfile();
@@ -165,14 +197,11 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
     /**
      * @return bool
      */
-    public function isEditMode()
+    public function isEditMode(): bool
     {
         return false;
     }
 
-    /**
-     * @throws Exception
-     */
     public function setRequestData()
     {
         /** @var Request $request */
@@ -183,7 +212,7 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
     /**
      * @return string
      */
-    protected function _getRequestData()
+    protected function _getRequestData(): string
     {
         return $this->_sRequestData;
     }
@@ -194,23 +223,22 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws d3ParameterNotFoundException
-     * @throws Exception
      */
-    public function getToFinishedCount()
+    public function getToFinishedCount(): int
     {
         /** @var Request $request */
         $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
-        $iRequestCount = $request->getRequestEscapedParameter('toFinishedCount');
+        $requestCount = $request->getRequestEscapedParameter('toFinishedCount');
 
         if ($this->canRequestData(__FUNCTION__)) {
             /** @var Manager $oProfile */
             $oProfile = $this->getProfile();
-            return $oProfile->getListGenerator()->getConcernedItemCount();
-        } elseif ($this->canUseRequestData($iRequestCount)) {
-            return $iRequestCount;
+            return (int) $oProfile->getListGenerator()->getConcernedItemCount();
+        } elseif ($this->canUseRequestData($requestCount)) {
+            return (int) $requestCount;
         }
 
-        return '';
+        return 0;
     }
 
     /**
@@ -219,23 +247,22 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws d3ParameterNotFoundException
-     * @throws Exception
      */
-    public function getFinishedCount()
+    public function getFinishedCount(): int
     {
         /** @var Request $request */
         $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
-        $iRequestCount = $request->getRequestEscapedParameter('finishedCount');
+        $requestCount = $request->getRequestEscapedParameter('finishedCount');
 
         if ($this->canRequestData(__FUNCTION__)) {
             /** @var Manager $oProfile */
             $oProfile = $this->getProfile();
-            return $oProfile->getListGenerator()->getFinishedItemCount();
-        } elseif ($this->canUseRequestData($iRequestCount)) {
-            return $iRequestCount;
+            return (int) $oProfile->getListGenerator()->getFinishedItemCount();
+        } elseif ($this->canUseRequestData($requestCount)) {
+            return (int) $requestCount;
         }
 
-        return '';
+        return 0;
     }
 
     /**
@@ -244,23 +271,22 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws d3ParameterNotFoundException
-     * @throws Exception
      */
-    public function getFinishedMonthCount()
+    public function getFinishedMonthCount(): int
     {
         /** @var Request $request */
         $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
-        $iRequestCount = $request->getRequestEscapedParameter('finishedMonthCount');
+        $requestCount = $request->getRequestEscapedParameter('finishedMonthCount');
 
         if ($this->canRequestData(__FUNCTION__)) {
             /** @var Manager $oProfile */
             $oProfile = $this->getProfile();
-            return $oProfile->getListGenerator()->getFinishedMonthItemCount();
-        } elseif ($this->canUseRequestData($iRequestCount)) {
-            return $iRequestCount;
+            return (int) $oProfile->getListGenerator()->getFinishedMonthItemCount();
+        } elseif ($this->canUseRequestData($requestCount)) {
+            return (int) $requestCount;
         }
 
-        return '';
+        return 0;
     }
 
     /**
@@ -269,23 +295,22 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws d3ParameterNotFoundException
-     * @throws Exception
      */
-    public function getNotFinishedCount()
+    public function getNotFinishedCount(): int
     {
         /** @var Request $request */
         $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
-        $iRequestCount = $request->getRequestEscapedParameter('notFinishedCount');
+        $requestCount = $request->getRequestEscapedParameter('notFinishedCount');
 
         if ($this->canRequestData(__FUNCTION__)) {
             /** @var Manager $oProfile */
             $oProfile = $this->getProfile();
-            return $oProfile->getListGenerator()->getNotFinishedItemCount();
-        } elseif ($this->canUseRequestData($iRequestCount)) {
-            return $iRequestCount;
+            return (int) $oProfile->getListGenerator()->getNotFinishedItemCount();
+        } elseif ($this->canUseRequestData($requestCount)) {
+            return (int) $requestCount;
         }
 
-        return '';
+        return 0;
     }
 
     /**
@@ -296,24 +321,24 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function canRequestData($sFunctionName)
+    public function canRequestData($sFunctionName): bool
     {
         return !$this->getDataOnDemand()
             || $this->_getRequestData() == $sFunctionName;
     }
 
     /**
-     * @param $iRequestCount
+     * @param $requestCount
      *
      * @return bool
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function canUseRequestData($iRequestCount)
+    public function canUseRequestData($requestCount): bool
     {
         return $this->getDataOnDemand()
-            && strlen($iRequestCount);
+            && isset( $requestCount ) && false !== $requestCount;
     }
 
     /**
@@ -322,9 +347,9 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @throws DBALException
      * @throws DatabaseErrorException
      */
-    public function getDataOnDemand()
+    public function getDataOnDemand(): bool
     {
-        return $this->d3GetSet()->getValue('blCalcStatOnDemand');
+        return (bool) $this->d3GetSet()->getValue('blCalcStatOnDemand');
     }
 
     /**
@@ -332,15 +357,14 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @param $sFunctionName
      *
      * @return bool
-     * @throws Exception
      */
-    public function hasRequestedData($sRequestName, $sFunctionName)
+    public function hasRequestedData($sRequestName, $sFunctionName): bool
     {
         /** @var Request $request */
         $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
-        $iRequestCount = $request->getRequestEscapedParameter($sRequestName);
+        $iRequestCount = (string) $request->getRequestEscapedParameter($sRequestName);
 
-        if (strlen($iRequestCount) || $this->_getRequestData() == $sFunctionName) {
+        if ((bool) strlen($iRequestCount) || $this->_getRequestData() == $sFunctionName) {
             return true;
         }
 
@@ -349,20 +373,19 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 
     /**
      * @return Manager
-     * @throws Exception
      */
-    public function getManager()
+    public function getManager(): Manager
     {
         /** @var Manager $manager */
         $manager = d3GetModCfgDIC()->get(Manager::class);
+        $manager->load($this->getEditObjectId());
         return $manager;
     }
 
     /**
      * @return Language
-     * @throws Exception
      */
-    public function getLang()
+    public function getLang(): Language
     {
         /** @var Language $lang */
         $lang = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
@@ -373,9 +396,8 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
     /**
      * @param $sManagerId
      * @return string
-     * @throws Exception
      */
-    public function getManagerTitle($sManagerId)
+    public function getManagerTitle($sManagerId): string
     {
         $oManager = $this->getManager();
         if ($oManager->load($sManagerId)) {

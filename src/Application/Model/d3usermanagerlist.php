@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Model;
 
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
@@ -26,7 +28,6 @@ use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -52,9 +53,8 @@ class d3usermanagerlist extends d3modprofilelist
      * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
-    public function d3GetManuallyManagerJobsByFolder($sFolderId)
+    public function d3GetManuallyManagerJobsByFolder($sFolderId): d3usermanagerlist
     {
         /** @var Manager $oListObject */
         $oListObject = $this->getBaseObject();
@@ -90,9 +90,8 @@ class d3usermanagerlist extends d3modprofilelist
      * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
-    public function d3GetUserSaveTriggeredManagerTasks()
+    public function d3GetUserSaveTriggeredManagerTasks(): d3usermanagerlist
     {
         if ($this->d3GetSet()->isDemo() ||
             in_array(
@@ -117,7 +116,7 @@ class d3usermanagerlist extends d3modprofilelist
                 ->orderBy($oListObject->getViewName() . ".oxsort", 'ASC')
                 ->addOrderBy($oListObject->getViewName() . ".oxfolder", "ASC");
 
-            $queryBuilder = $this->d3AddActiveSnippet($oListObject, $queryBuilder, true, false);
+            $queryBuilder = $this->d3AddActiveSnippet($oListObject, $queryBuilder, false, false);
 
             $this->selectString($queryBuilder->getSQL(), $queryBuilder->getParameters());
 
@@ -140,9 +139,8 @@ class d3usermanagerlist extends d3modprofilelist
      * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
-    public function d3GetOrderFinishTriggeredManagerTasks()
+    public function d3GetOrderFinishTriggeredManagerTasks(): d3usermanagerlist
     {
         if ($this->d3GetSet()->isDemo() ||
             in_array(
@@ -167,7 +165,7 @@ class d3usermanagerlist extends d3modprofilelist
                 ->orderBy($oListObject->getViewName() . ".oxsort", 'ASC')
                 ->addOrderBy($oListObject->getViewName() . ".oxfolder", 'ASC');
 
-            $queryBuilder = $this->d3AddActiveSnippet($oListObject, $queryBuilder, true, false);
+            $queryBuilder = $this->d3AddActiveSnippet($oListObject, $queryBuilder, false, false);
 
             $this->selectString($queryBuilder->getSQL(), $queryBuilder->getParameters());
 
@@ -193,7 +191,7 @@ class d3usermanagerlist extends d3modprofilelist
      * @throws DatabaseErrorException
      * @throws StandardException
      */
-    public function canExecutedManually(Manager $oManager)
+    public function canExecutedManually(Manager $oManager): bool
     {
         return $oManager->getFieldData('D3_UM_EXECMANUALLY') &&
                $oManager->getLicenseActive();
@@ -207,9 +205,8 @@ class d3usermanagerlist extends d3modprofilelist
      *
      * @return QueryBuilder
      * @throws DatabaseConnectionException
-     * @throws Exception
      */
-    public function d3AddActiveSnippet(Manager $oListObject, QueryBuilder $queryBuilder, $blManually = false, $blUseCommonActiveCheck = true)
+    public function d3AddActiveSnippet(Manager $oListObject, QueryBuilder $queryBuilder, $blManually = false, $blUseCommonActiveCheck = true): QueryBuilder
     {
         $sActiveSnippet = $oListObject->getSqlActiveSnippet();
 
@@ -240,7 +237,7 @@ class d3usermanagerlist extends d3modprofilelist
      *
      * @return QueryBuilder
      */
-    public function d3AddFolderSelection($sFolderId, Manager $oListObject, QueryBuilder $queryBuilder)
+    public function d3AddFolderSelection($sFolderId, Manager $oListObject, QueryBuilder $queryBuilder): QueryBuilder
     {
         if ($sFolderId && $sFolderId != '-1') {
             $queryBuilder->andWhere(
@@ -266,7 +263,6 @@ class d3usermanagerlist extends d3modprofilelist
 
     /**
      * @return d3_cfg_mod
-     * @throws Exception
      */
     public function d3GetSet()
     {
@@ -278,7 +274,7 @@ class d3usermanagerlist extends d3modprofilelist
     /**
      * @return ContainerInterface
      */
-    public function getDIContainer()
+    public function getDIContainer(): ContainerInterface
     {
         return ContainerFactory::getInstance()->getContainer();
     }

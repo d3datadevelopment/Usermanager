@@ -19,6 +19,7 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delgenderfilter;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -52,6 +53,8 @@ class requirementDelGenderFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -120,9 +123,7 @@ class requirementDelGenderFilterTest extends d3RequirementIntegrationTestCase
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -146,7 +147,7 @@ class requirementDelGenderFilterTest extends d3RequirementIntegrationTestCase
         $oManager = $this->getManagerMock($this->sManagerId);
 
         $oManager->setValue('blCheckDelGender_status', true);
-        $oManager->setValue('sCheckDelGenderType', 'MR');
+        $oManager->setValue('sCheckDelGenderType', d3usermanager_requirement_delgenderfilter::TYPE_MR);
 
         return $oManager;
     }
@@ -160,14 +161,13 @@ class requirementDelGenderFilterTest extends d3RequirementIntegrationTestCase
         $oManager = $this->getManagerMock($this->sManagerId);
 
         $oManager->setValue('blCheckDelGender_status', true);
-        $oManager->setValue('sCheckDelGenderType', 'MRS');
+        $oManager->setValue('sCheckDelGenderType', d3usermanager_requirement_delgenderfilter::TYPE_MRS);
 
         return $oManager;
     }
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -191,7 +191,6 @@ class requirementDelGenderFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

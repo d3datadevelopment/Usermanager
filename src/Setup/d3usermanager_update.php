@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Setup;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
@@ -42,19 +44,19 @@ class d3usermanager_update extends d3install_updatebase
 {
     public $sModKey = 'd3usermanager';
     public $sModName = 'Kundenmanager';
-    public $sModVersion = '4.1.1.0';
-    public $sModRevision = '4110';
+    public $sModVersion = '4.1.2.0';
+    public $sModRevision = '4120';
     public $sBaseConf = 
-    'WQHv2==WXZqaVh4cVVyTkdzVW9YYjFxZUxiWDhQZjhqL0xtdGROU0lKTUZ2UnpzVFYzOGYyYk9rMnphL
-040UWplR1UrRURlbW05UlA5azhydFdMNGdQSUZvam1EK0NaQTRNQ211dXRodURVRTRGK0tSZHIrbExWR
-mYrMVMyL1VmdWVSQUhPN1cxcUZ5WkQvMXFYTmhWWThSTjE1TzRoNGtoS0pnMkpQSDhaTEpZSU85TGFGQ
-m41OVlKV3dPUUNCQTc1WHIvWWNVNkZHWHU0bXhSTnlzTUlTWFkvNFhuMGZZeW1JbW9RbjZtaUw1eUthV
-0tFcklvOEJLbUU2enVSc1lyejBjM3lXSG4xSTRWTkRFS2Y4SFdwc0tjYW83NUM4QWhmMitybDE5cE0zT
-XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
+    'CGFv2==RDljU2J2K0crcXFjcTg4OXFWNFRsNEFMdzlNM3c1dXRjK2VEWWtyaU9zSWM0VzY0OGFSMkg4e
+SthM09EZE9NU2pQNFQ5YzdtN0F6MWFCUzdaR0tnU1QzSzJ1NFo0SUExK3NrRU5FcDZvdmN2akphUy9OS
+zY0a2hUbGRaWGVEU2pmVVZleHhtVldjdnYwOEZXbmkwR211RFdUbTkwYW9McXhTNG5lZEE3d2xIcWJxQ
+mJDcnh1YS9hbzIraVZFQnNERys4WWFPNzAvNG5mRmFEcWpxbTk3TnkybjJYcElUbVJUMEJOdmVkaEdtZ
+lpTOFBiUzdwRlZ1elJXNVNJaFdWZ1oyMXhCMGlhbGgxS0t4d0ZuY0RWUlhUOFh3NWNJOFFaWDFjOEo2b
+DlSTEJ6VjlrWHNPc0h2VjM1dTVZbmxETTkvb1QwbTFiajVvMHMyRk5kWmN6ZUVBPT0=';
     public $sRequirements = '';
     public $sBaseValue = 'TyUzQTglM0ElMjJzdGRDbGFzcyUyMiUzQTYlM0ElN0JzJTNBMjMlM0ElMjJkM19jZmdfbW9kX19hRm9sZGVyTGlzdCUyMiUzQmElM0E0JTNBJTdCaSUzQTAlM0JzJTNBMjMlM0ElMjJEM19VU0VSTUFOQUdFUl9VU0VSX05FVyUyMiUzQmklM0ExJTNCcyUzQTMwJTNBJTIyRDNfVVNFUk1BTkFHRVJfVVNFUl9FWFRSQUNUSU9OJTIyJTNCaSUzQTIlM0JzJTNBMjklM0ElMjJEM19VU0VSTUFOQUdFUl9VU0VSX1JFVEVOVElPTiUyMiUzQmklM0EzJTNCcyUzQTMxJTNBJTIyRDNfVVNFUk1BTkFHRVJfVVNFUl9NQUlOVEVOQU5DRSUyMiUzQiU3RHMlM0EyNCUzQSUyMmQzX2NmZ19tb2RfX2JsQ3JvbkFjdGl2ZSUyMiUzQnMlM0ExJTNBJTIyMCUyMiUzQnMlM0EyMyUzQSUyMmQzX2NmZ19tb2RfX2lNYXhVc2VyQ250JTIyJTNCcyUzQTIlM0ElMjI1MCUyMiUzQnMlM0EyNSUzQSUyMmQzX2NmZ19tb2RfX3NDcm9uUGFzc3dvcmQlMjIlM0JzJTNBMCUzQSUyMiUyMiUzQnMlM0EyOCUzQSUyMmQzX2NmZ19tb2RfX2FMaWNlbnNlSW5mb01haWwlMjIlM0JhJTNBMSUzQSU3QnMlM0E0MiUzQSUyMk5PTElDS0VZX180NzkzNjM4NzAyYjY3NzE1ZjFkZmJmYzgzMjQ2NjkxNCUyMiUzQnMlM0ExOSUzQSUyMjIwMjAtMTAtMTIlMjAwOSUzQTE2JTNBMDglMjIlM0IlN0RzJTNBMzAlM0ElMjJkM19jZmdfbW9kX19ibENhbGNTdGF0T25EZW1hbmQlMjIlM0JzJTNBMSUzQSUyMjAlMjIlM0IlN0Q=';
 
-    public $sMinModCfgVersion = '5.3.1.2';
+    public $sMinModCfgVersion = '5.3.6.0';
 
     protected $_aUpdateMethods = array(
         array('check' => 'doesUser2UserManagerTableNotExist',
@@ -265,7 +267,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function doesUser2UserManagerTableNotExist()
+    public function doesUser2UserManagerTableNotExist(): bool
     {
         return $this->_checkTableNotExist('d3user2usermanager');
     }
@@ -277,7 +279,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseErrorException
      * @throws ConnectionException
      */
-    public function addUser2UserManagerTable()
+    public function addUser2UserManagerTable(): bool
     {
         $blRet = false;
         if ($this->doesUser2UserManagerTableNotExist()) {
@@ -298,7 +300,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @return d3installdbrecord
      * @throws Exception
      */
-    public function d3GetInstallDbRecord()
+    public function d3GetInstallDbRecord(): d3installdbrecord
     {
         d3GetModCfgDIC()->set(
             d3installdbrecord::class.'.arg_updatebase',
@@ -315,7 +317,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @return Config
      * @throws Exception
      */
-    public function d3GetConfig()
+    public function d3GetConfig(): Config
     {
         /** @var Config $config */
         $config = d3GetModCfgDIC()->get('d3ox.usermanager.'.Config::class);
@@ -328,7 +330,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws Exception
      */
-    public function doesModCfgItemNotExist()
+    public function doesModCfgItemNotExist(): bool
     {
         $blRet = false;
         foreach ($this->d3GetConfig()->getShopIds() as $sShopId) {
@@ -341,7 +343,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
             $blRet = $this->d3GetInstallDbRecord()->checkTableRecordNotExist('d3_cfg_mod', $aWhere);
 
             if ($blRet == true) {
-                return $blRet;
+                return true;
             }
         }
 
@@ -355,7 +357,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function addModCfgItem()
+    public function addModCfgItem(): bool
     {
         $blRet = false;
 
@@ -479,11 +481,8 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
 
     /**
      * @return bool true, if new password must set
-     * @throws DBALException
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
      */
-    public function checkCronPasswordSet()
+    public function checkCronPasswordSet(): bool
     {
         /** @var d3_cfg_mod $set */
         $set = d3GetModCfgDIC()->get('d3.usermanager.modcfg');
@@ -500,7 +499,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
-    public function createCronPassword()
+    public function createCronPassword(): bool
     {
         $message = Registry::getLang()->translateString('D3_USERMANAGER_SETUP_CRONPASSWORD') . PHP_EOL.PHP_EOL;
         $this->setActionLog('msg', $message, __METHOD__);
@@ -524,7 +523,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DBALException
      * @throws Exception
      */
-    public function needExampleJobList()
+    public function needExampleJobList(): bool
     {
         $blRet = false;
 
@@ -550,7 +549,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function addExampleJobList()
+    public function addExampleJobList(): bool
     {
         $blRet = true;
 
@@ -571,15 +570,15 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @return bool true, if update is required
      * @throws Exception
      */
-    public function isExampleContentMissingInDatabase()
+    public function isExampleContentMissingInDatabase(): bool
     {
         $blRet = false;
 
-        $aIdentList = array();
+        $aIdentList = [];
         foreach ($this->getExampleContentInsertList() as $aJobContentInfos) {
             $aInsertFields = $this->{$aJobContentInfos['content']}($this->d3GetConfig()->getActiveShop());
             foreach ($aInsertFields as $aInsertField) {
-                if (strtoupper($aInsertField['fieldname']) == 'OXLOADID') {
+                if (is_string($aInsertField['fieldname']) && strtoupper($aInsertField['fieldname']) == 'OXLOADID') {
                     $aIdentList[] = $aInsertField['content'];
                 }
             }
@@ -615,7 +614,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function addExampleContentList()
+    public function addExampleContentList(): bool
     {
         $blRet = true;
 
@@ -639,7 +638,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws d3ParameterNotFoundException
      * @throws ConnectionException
      */
-    public function requireExample2ShopRelation()
+    public function requireExample2ShopRelation(): bool
     {
         startProfile(__METHOD__);
 
@@ -669,7 +668,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws d3ParameterNotFoundException
      * @throws ConnectionException
      */
-    public function addExample2ShopRelation()
+    public function addExample2ShopRelation(): bool
     {
         $blRet = true;
 
@@ -694,7 +693,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
     /**
      * @return array
      */
-    public function getExampleJobInsertList()
+    public function getExampleJobInsertList(): array
     {
         return array(
             array(
@@ -723,7 +722,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
     /**
      * @return array
      */
-    public function getExampleContentInsertList()
+    public function getExampleContentInsertList(): array
     {
         return array(
             array(
@@ -741,7 +740,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @return d3bitmask
      * @throws Exception
      */
-    public function getD3BitMask()
+    public function getD3BitMask(): d3bitmask
     {
         /** @var d3bitmask $bitMask */
         $bitMask = d3GetModCfgDIC()->get(d3bitmask::class);
@@ -757,7 +756,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function getExampleJobItem1InsertFields(Shop $oShop)
+    public function getExampleJobItem1InsertFields(Shop $oShop): array
     {
         $sShopId = $oShop->getId();
         $iShopBit = strlen($sShopId) == 1 ? $this->getD3BitMask()->getIntByBitPosition((int) $sShopId) : '1';
@@ -943,7 +942,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function getExampleJobItem2InsertFields(Shop $oShop)
+    public function getExampleJobItem2InsertFields(Shop $oShop): array
     {
         $sShopId = $oShop->getId();
         $iShopBit = strlen($sShopId) == 1 ? $this->getD3BitMask()->getIntByBitPosition((int) $sShopId) : '1';
@@ -1128,7 +1127,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function getExampleJobItem3InsertFields(Shop $oShop)
+    public function getExampleJobItem3InsertFields(Shop $oShop): array
     {
         $sShopId = $oShop->getId();
         $iShopBit = strlen($sShopId) == 1 ? $this->getD3BitMask()->getIntByBitPosition((int) $sShopId) : '1';
@@ -1314,7 +1313,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function getExampleJobItem4InsertFields(Shop $oShop)
+    public function getExampleJobItem4InsertFields(Shop $oShop): array
     {
         $sShopId = $oShop->getId();
         $iShopBit = strlen($sShopId) == 1 ? $this->getD3BitMask()->getIntByBitPosition((int) $sShopId) : '1';
@@ -1499,7 +1498,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function getExampleJobItem5InsertFields(Shop $oShop)
+    public function getExampleJobItem5InsertFields(Shop $oShop): array
     {
         $sShopId = $oShop->getId();
         $iShopBit = strlen($sShopId) == 1 ? $this->getD3BitMask()->getIntByBitPosition((int) $sShopId) : '1';
@@ -1684,7 +1683,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function getExampleContent1InsertFields(Shop $oShop)
+    public function getExampleContent1InsertFields(Shop $oShop): array
     {
         $sShopId = $oShop->getId();
 
@@ -1791,7 +1790,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    public function getExampleContent2InsertFields(Shop $oShop)
+    public function getExampleContent2InsertFields(Shop $oShop): array
     {
         $sShopId = $oShop->getId();
 
@@ -1900,7 +1899,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
-    protected function _addExampleJobItem($sTableName, $sGetFieldContentMethodName)
+    protected function _addExampleJobItem($sTableName, $sGetFieldContentMethodName): bool
     {
         $blRet = false;
 
@@ -1931,7 +1930,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
-    public function hasUnregisteredFiles()
+    public function hasUnregisteredFiles(): bool
     {
         return $this->_hasUnregisteredFiles('d3usermanager', array('d3FileRegister'));
     }
@@ -1946,7 +1945,7 @@ XNDSEdKUWUwV1dNSE5XK2VaNkNJbnhkU0gxaGdCbFJRckVWc3JzNWE1RHF6UXV3PT0=';
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
-    public function showUnregisteredFiles()
+    public function showUnregisteredFiles(): bool
     {
         return $this->_showUnregisteredFiles('d3usermanager', array('d3FileRegister'));
     }

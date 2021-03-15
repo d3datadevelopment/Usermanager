@@ -244,16 +244,6 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                             </dl>
                             <dl>
                                 <dt>
-                                    [{oxmultilang ident="D3_USERMANAGER_SET_CRON_CRONLINK"}]
-                                </dt>
-                                <dd>
-                                    [{$oView->getCronLink(false, $aCronJobIds.id)}]
-                                    [{oxinputhelp ident="D3_USERMANAGER_SET_CRON_CRONLINK_DESC"}]
-                                </dd>
-                                <div class="spacer"></div>
-                            </dl>
-                            <dl>
-                                <dt>
                                     [{oxmultilang ident="D3_USERMANAGER_SET_CRON_LASTEXEC"}]
                                 </dt>
                                 <dd>

@@ -24,8 +24,14 @@ use D3\ModCfg\Tests\unit\d3ModCfgUnitTestCase;
 use D3\Usermanager\Application\Model\d3usermanager;
 use Doctrine\DBAL\DBALException;
 use Exception as ExceptionAlias;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\DataObject\ShopConfiguration;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\ShopConfigurationDaoBridgeInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\State\ModuleStateService;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\State\ModuleStateServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 
@@ -37,6 +43,29 @@ abstract class d3UsermanagerUnitTestCase extends d3ModCfgUnitTestCase
     protected $_sCurrentLicenseKeyBackup;
 
     public $sModId = 'd3usermanager';
+
+    /**
+     * check for dependent 3rd party modules required for coverage report
+     */
+    public function setUpBeforeTestSuite()
+    {
+        parent::setUpBeforeTestSuite();
+
+        $container = ContainerFactory::getInstance()->getContainer();
+        /** @var ShopConfiguration $shopConfiguration */
+        $shopConfiguration = $container->get(ShopConfigurationDaoBridgeInterface::class)->get();
+
+        /** @var ModuleStateService $moduleState */
+        $moduleState = $container->get(ModuleStateServiceInterface::class);
+
+        if (true === $shopConfiguration->hasModuleConfiguration('d3_ordermanager') &&
+            true === $moduleState->isActive('d3_ordermanager', Registry::getConfig()->getShopId())
+        ) {
+            echo self::D3CLI_COLOR_YELLOW.
+                PHP_EOL."      - inaccurate test results possible due to installed and activated \"OrderManager\" module".
+                PHP_EOL.PHP_EOL.self::D3CLI_COLOR_DEFAULT;
+        }
+    }
 
     /**
      * setup basic requirements

@@ -55,6 +55,8 @@ class requirementOrderMaxTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -132,9 +134,7 @@ class requirementOrderMaxTimespanTest extends d3RequirementIntegrationTestCase
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -166,7 +166,6 @@ class requirementOrderMaxTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -207,7 +206,6 @@ class requirementOrderMaxTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -248,7 +246,6 @@ class requirementOrderMaxTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

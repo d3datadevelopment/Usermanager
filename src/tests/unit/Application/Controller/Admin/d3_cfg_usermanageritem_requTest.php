@@ -28,6 +28,7 @@ use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\Delivery;
 use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Application\Model\PaymentList;
+use OxidEsales\Eshop\Core\Config;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 
@@ -390,5 +391,21 @@ class d3_cfg_usermanageritem_requTest extends d3UsermanagerUnitTestCase
     protected function _setModuleLicenseKey($sLicenseKey, $oManager = null)
     {
         return null;
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ::d3GetConfig
+     * @test
+     * @throws ReflectionException
+     */
+    public function d3GetConfigReturnsRightInstance()
+    {
+        $this->assertInstanceOf(
+            Config::class,
+            $this->callMethod(
+                $this->_oController,
+                'd3GetConfig'
+            )
+        );
     }
 }

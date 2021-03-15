@@ -151,7 +151,6 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -213,7 +212,6 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -274,7 +272,6 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -325,7 +322,6 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -396,7 +392,6 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

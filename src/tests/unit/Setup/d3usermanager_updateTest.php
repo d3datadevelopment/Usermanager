@@ -399,6 +399,8 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     /**
      * @covers \D3\Usermanager\Setup\d3usermanager_update::checkCronPasswordSet
      * @test
+     * @param $testPW
+     * @param $expected
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -670,19 +672,22 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers \D3\Usermanager\Setup\d3usermanager_update::isExampleContentMissingInDatabase
+     * @covers       \D3\Usermanager\Setup\d3usermanager_update::isExampleContentMissingInDatabase
      * @test
+     * @param $fetchReturn
+     * @param $expected
      * @throws DBALException
      * @throws ReflectionException
+     * @dataProvider checkisExampleContentMissingInDatabaseDataProvider
      */
-    public function checkisExampleContentMissingInDatabasePositive()
+    public function checkisExampleContentMissingInDatabasePositive($fetchReturn, $expected)
     {
         /** @var PDOStatement|MockObject $oStmtMock */
         $oStmtMock = $this->getMockBuilder(PDOStatement::class)
             ->setMethods(['fetchColumn'])
             ->disableOriginalConstructor()
             ->getMock();
-        $oStmtMock->expects($this->once())->method('fetchColumn')->willReturn(1);
+        $oStmtMock->expects($this->once())->method('fetchColumn')->willReturn($fetchReturn);
 
         /** @var QueryBuilder|MockObject $oQBMock */
         $oQBMock = $this->getMockBuilder(QueryBuilder::class)
@@ -697,6 +702,8 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
             ->getMock();
         $od3databaseMock->expects($this->once())->method('getQueryBuilder')->willReturn($oQBMock);
 
+        $definitions = d3GetModCfgDIC()->getDefinitions();
+
         d3GetModCfgDIC()->set('d3.usermanager.database', $od3databaseMock);
 
         /** @var d3usermanager_update|MockObject $oModelMock */
@@ -707,114 +714,55 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
             ])
             ->getMock();
         $oModelMock->method('getExampleContentInsertList')->willReturn(
-            array(
-                array(
+            [
+                [
                     'content'   => 'getExampleJobItem1InsertFields',
                     'table'     => 'd3modprofile'
-                )
-            )
+                ]
+            ]
         );
         $oModelMock->method('getExampleJobItem1InsertFields')->willReturn(
-            array(
-                array (
+            [
+                [
                     'fieldname'     => 'OXID',
                     'content'       => "foobar",
                     'force_update'  => false,
                     'use_quote'     => false,
                     'use_multilang' => false,
-                ),
-                array (
+                ],
+                [
                     'fieldname'     => 'OXLOADID',
                     'content'       => "d3unknownContentId",
                     'force_update'  => false,
                     'use_quote'     => true,
                     'use_multilang' => false,
-                )
-            )
+                ]
+            ]
         );
 
         $this->_oModel = $oModelMock;
 
-        $this->assertTrue(
+        $this->assertSame(
+            $expected,
             $this->callMethod(
                 $this->_oModel,
                 'isExampleContentMissingInDatabase'
             )
         );
+
+        d3GetModCfgDIC()->reset();
+        d3GetModCfgDIC()->setDefinitions($definitions);
     }
 
     /**
-     * @covers \D3\Usermanager\Setup\d3usermanager_update::isExampleContentMissingInDatabase
-     * @test
-     * @throws DBALException
-     * @throws ReflectionException
+     * @return array[]
      */
-    public function checkisExampleContentMissingInDatabaseNegative()
+    public function checkisExampleContentMissingInDatabaseDataProvider(): array
     {
-        /** @var PDOStatement|MockObject $oStmtMock */
-        $oStmtMock = $this->getMockBuilder(PDOStatement::class)
-            ->setMethods(['fetchColumn'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $oStmtMock->expects($this->once())->method('fetchColumn')->willReturn(0);
-
-        /** @var QueryBuilder|MockObject $oQBMock */
-        $oQBMock = $this->getMockBuilder(QueryBuilder::class)
-            ->setMethods(['execute'])
-            ->setConstructorArgs([d3database::getInstance()->getConnection()])
-            ->getMock();
-        $oQBMock->method('execute')->willReturn($oStmtMock);
-
-        /** @var d3database|MockObject $od3databaseMock */
-        $od3databaseMock = $this->getMockBuilder(d3database::class)
-            ->setMethods(['getQueryBuilder'])
-            ->getMock();
-        $od3databaseMock->expects($this->once())->method('getQueryBuilder')->willReturn($oQBMock);
-
-        d3GetModCfgDIC()->set('d3.usermanager.database', $od3databaseMock);
-
-        /** @var d3usermanager_update|MockObject $oModelMock */
-        $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
-                'getExampleContentInsertList',
-                'getExampleJobItem1InsertFields'
-            ])
-            ->getMock();
-        $oModelMock->method('getExampleContentInsertList')->willReturn(
-            array(
-                array(
-                    'content'   => 'getExampleJobItem1InsertFields',
-                    'table'     => 'd3modprofile'
-                )
-            )
-        );
-        $oModelMock->method('getExampleJobItem1InsertFields')->willReturn(
-            array(
-                array (
-                    'fieldname'     => 'OXID',
-                    'content'       => "foobar",
-                    'force_update'  => false,
-                    'use_quote'     => false,
-                    'use_multilang' => false,
-                ),
-                array (
-                    'fieldname'     => 'OXLOADID',
-                    'content'       => "d3unknownContentId",
-                    'force_update'  => false,
-                    'use_quote'     => true,
-                    'use_multilang' => false,
-                )
-            )
-        );
-
-        $this->_oModel = $oModelMock;
-
-        $this->assertFalse(
-            $this->callMethod(
-                $this->_oModel,
-                'isExampleContentMissingInDatabase'
-            )
-        );
+        return [
+            'positive'  => [1, true],
+            'negative'  => [0, false],
+        ];
     }
 
     /**
@@ -935,7 +883,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
                 )
             )
         );
-        $oModelMock->expects($this->once())->method('getExampleJobItem1InsertFields')->willReturn(true);
+        $oModelMock->expects($this->once())->method('getExampleJobItem1InsertFields')->willReturn(['fields']);
         $oModelMock->expects($this->once())->method('_require2ShopRelation')->willReturn(true);
 
         $this->_oModel = $oModelMock;
@@ -975,7 +923,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
                 )
             )
         );
-        $oModelMock->expects($this->exactly(3))->method('getExampleJobItem1InsertFields')->willReturn(true);
+        $oModelMock->expects($this->exactly(3))->method('getExampleJobItem1InsertFields')->willReturn(['fields']);
         $oModelMock->expects($this->exactly(3))->method('_require2ShopRelation')->willReturn(false);
         $oModelMock->expects($this->atLeastOnce())->method('getShopListByActiveModule')->willReturn(
             array(
@@ -1260,13 +1208,13 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
 
         $oModelMock->method('jobFieldMethodName')->willReturn(true);
         $oModelMock->method('setInitialExecMethod')->willReturn(true);
-        $oModelMock->expects($this->exactly(2))->method('_updateTableItem2')->willReturn('returnValue');
+        $oModelMock->expects($this->exactly(2))->method('_updateTableItem2')->willReturn(true);
         $oModelMock->method('getStepByStepMode')->willReturn(false);
 
         $this->_oModel = $oModelMock;
 
         $this->assertSame(
-            'returnValue',
+            true,
             $this->callMethod(
                 $this->_oModel,
                 '_addExampleJobItem',
@@ -1318,13 +1266,13 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
 
         $oModelMock->method('jobFieldMethodName')->willReturn(true);
         $oModelMock->method('setInitialExecMethod')->willReturn(true);
-        $oModelMock->expects($this->once())->method('_updateTableItem2')->willReturn('returnValue');
+        $oModelMock->expects($this->once())->method('_updateTableItem2')->willReturn(true);
         $oModelMock->method('getStepByStepMode')->willReturn(true);
 
         $this->_oModel = $oModelMock;
 
         $this->assertSame(
-            'returnValue',
+            true,
             $this->callMethod(
                 $this->_oModel,
                 '_addExampleJobItem',

@@ -15,18 +15,22 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanagerlist as ManagerList;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
-use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_abstract as RequirementAbstractModel;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_interface as RequirementModelInterface;
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist as RequirementGroupListModel;
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist as RequirementListModel;
-use Exception;
+use Doctrine\DBAL\DBALException;
 use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Application\Model\PaymentList;
 use OxidEsales\Eshop\Application\Model\CountryList;
+use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Model\ListModel;
 
@@ -47,10 +51,15 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
         // @codeCoverageIgnoreEnd
 
         $aMissingRequiredValues = array();
-        /** @var RequirementAbstractModel $oRequirement */
+        /** @var RequirementModelInterface $oRequirement */
         foreach ($this->getRequirementList() as $sId => $oRequirement) {
-            if ($this->getProfile()->getValue($oRequirement->getActiveSwitchParameter()) && false == $oRequirement->hasRequiredValues()) {
-                $aMissingRequiredValues[] = $sId;
+            if ($this->getProfile()->getValue($oRequirement->getActiveSwitchParameter())) {
+                try {
+                    $oRequirement->throwUnvalidConfigurationException();
+                } catch (d3usermanager_requirementException $e) {
+                    unset($e);
+                    $aMissingRequiredValues[] = $sId;
+                }
             }
         }
 
@@ -60,10 +69,21 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
     }
 
     /**
-     * @return ListModel
-     * @throws Exception
+     * @return Config
      */
-    public function getPaymentList()
+    public function d3GetConfig() : Config
+    {
+        /** @var Config $config */
+        $config = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Config::class);
+
+        return $config;
+    }
+
+    /**
+     * @return ListModel
+     * @throws DBALException
+     */
+    public function getPaymentList(): ListModel
     {
         /** @var PaymentList $oPaymentList */
         $oPaymentList = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.PaymentList::class);
@@ -72,9 +92,8 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
 
     /**
      * @return ListModel
-     * @throws Exception
      */
-    public function getDeliveryList()
+    public function getDeliveryList(): ListModel
     {
         /** @var DeliveryList $oDeliveryList */
         $oDeliveryList = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.DeliveryList::class);
@@ -83,9 +102,8 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
 
     /**
      * @return ListModel
-     * @throws Exception
      */
-    public function getCountryList()
+    public function getCountryList(): ListModel
     {
         /** @var CountryList $oCountryList */
         $oCountryList = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.CountryList::class);
@@ -94,9 +112,8 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
 
     /**
      * @return ManagerList
-     * @throws Exception
      */
-    public function getJobList()
+    public function getJobList(): ManagerList
     {
         $sCurrentId = $this->getViewDataElement('edit')->getId();
         /** @var $oManagerList ManagerList */
@@ -109,9 +126,8 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
 
     /**
      * @return array
-     * @throws Exception
      */
-    public function getLanguageList()
+    public function getLanguageList(): array
     {
         $oLang = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
         return $oLang->getLanguageArray();
@@ -120,7 +136,7 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
     /**
      * @return array
      */
-    public function getTransStatusList()
+    public function getTransStatusList(): array
     {
         return $this->_aTransStatus;
     }
@@ -133,7 +149,7 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
      *
      * @return array
      */
-    public function addDefaultValues($aParams)
+    public function addDefaultValues($aParams): array
     {
         return $aParams;
     }
@@ -141,9 +157,8 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
     /**
      * @param Manager $oManager
      * @return RequirementGroupListModel
-     * @throws Exception
      */
-    public function getRequirementGroupList(Manager $oManager)
+    public function getRequirementGroupList(Manager $oManager): RequirementGroupListModel
     {
         d3GetModCfgDIC()->set(
             RequirementGroupListModel::class.'.args.usermanager',
@@ -158,9 +173,8 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
     /**
      * @param Manager $oManager
      * @return RequirementListModel
-     * @throws Exception
      */
-    public function getRequirementListObject(Manager $oManager)
+    public function getRequirementListObject(Manager $oManager): RequirementListModel
     {
         d3GetModCfgDIC()->set(
             RequirementListModel::class.'.args.usermanager',
@@ -174,7 +188,6 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
 
     /**
      * @return array
-     * @throws Exception
      */
     public function getGroupedRequirementList(): array
     {
@@ -188,9 +201,8 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
 
     /**
      * @return array
-     * @throws Exception
      */
-    public function getRequirementList()
+    public function getRequirementList(): array
     {
         /** @var Manager $oManager */
         $oManager = $this->getProfile();

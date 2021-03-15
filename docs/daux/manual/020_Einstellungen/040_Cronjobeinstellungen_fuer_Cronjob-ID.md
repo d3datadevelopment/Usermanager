@@ -6,9 +6,9 @@ Der Kundenmanager stellt verschiedene Cronjobs zur Verfügung. Je nach Einrichtu
 
 Für jeden verfügbaren Cronjob sehen Sie in den Einstellungen die für Einrichtung benötigten Informationen:
 
-Den Link mit allen erforderlichen Parametern für den manuellen Aufruf des Bearbeitungsskripts finden Sie in der Zeile "externer Link". Über den blauen Button können Sie die Ausführung in einem neuen Browser-Tab sofort starten.
+Den Shellaufruf mit allen erforderlichen Parametern des Ausführungsskripts finden Sie in der Zeile "interner Cronaufruf". Direkt darunter finden Sie die Möglichkeit, passende Shell-Scripte für die Einrichtung Ihrer Cronjobs zu erstellen.
 
-Direkt darunter finden Sie den Link, den Sie für die Einrichtung des Cronjobs benötigen. Dort ist das Passwort nicht nötigt, da Ihr Server die Identifizierung selbst durchführen kann.
+Mit dem "externen Link" können Sie die Ausführung manuell im Browser starten. Beachten Sie, dass dieser Link nicht für Cronjobaufrufe verwendet werden kann. Über den blauen Button können Sie die Ausführung in einem neuen Browser-Tab sofort starten. Dieser Link ist abgekündigt und wird in Zukunft entfernt werden. Ändern Sie Ihre Cronjobs bitte auf den "internen Link" ab.
 
 Nachfolgend wird ebenfalls die Zeit gezeigt, zu der dieser Cronjob das letzte Mal erfolgreich gestartet wurde. Haben Sie Zweifel an der Cronjob-Einrichtung bei Ihrem Provider, können Sie dies hier kontrollieren.
 

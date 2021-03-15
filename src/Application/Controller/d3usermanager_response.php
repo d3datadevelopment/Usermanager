@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
@@ -28,7 +30,6 @@ use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
 use D3\Usermanager\Application\Model\d3usermanagerlist as ManagerList;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException as cronUnavailableException;
 use Doctrine\DBAL\DBALException;
-use Exception;
 use OxidEsales\Eshop\Core\Base;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -38,6 +39,8 @@ use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\Session;
+use OxidEsales\EshopCommunity\Core\ShopControl;
+use ReflectionClass;
 
 class d3usermanager_response extends Base
 {
@@ -56,83 +59,111 @@ class d3usermanager_response extends Base
 
     /**
      * @throws DBALException
-     * @throws Exception
      */
     public function init()
     {
         startProfile(__METHOD__);
 
-        $blExceptionThrown = $this->_startExecution();
+        try {
+            /** @var Language $lang */
+            $lang = d3GetModCfgDIC()->get('d3ox.usermanager.'.Language::class);
+            if (false === $this->isBrowserCall()) {
+                echo $lang->translateString('D3_USERMANAGER_CLI_DEPRECATED').PHP_EOL;
+            }
 
-        if ($this->isBrowserCall() && false == $blExceptionThrown) {
-            echo "script successfully finished".PHP_EOL;
+            $this->_startExecution();
+
+            if ($this->isBrowserCall()) {
+                echo $lang->translateString('D3_USERMANAGER_CLI_FINISHED_SUCCESSFULLY').'<br><br>';
+            }
+        } catch (cronUnavailableException $oEx) {
+            /** @var cronUnavailableException $oEx */
+            $oEx->d3showMessage();
+        } catch (StandardException $oEx) {
+            /** @var StandardException $oEx */
+            $logger = Registry::getLogger();
+            $logger->error($oEx);
+            $oEx->debugOut();
+            echo $oEx->getMessage().PHP_EOL;
+        } finally {
+            /** @var Session $session */
+            $session = d3GetModCfgDIC()->get('d3ox.usermanager.' . Session::class);
+            $session->freeze();
+
+            stopProfile(__METHOD__);
+
+            /** @var d3log $oLog */
+            $oLog = d3GetModCfgDIC()->get('d3.usermanager.log');
+            $oLog->d3GetProfiling();
         }
 
-        /** @var Session $session */
-        $session =  d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Session::class);
-        $session->freeze();
+        $shopControl = oxNew(ShopControl::class);
+        d3GetModCfgDIC()->set(ReflectionClass::class.'.args.object', $shopControl);
+        /** @var ReflectionClass $shopControlReflection */
+        $shopControlReflection = d3GetModCfgDIC()->get(ReflectionClass::class);
+        $method = $shopControlReflection->getMethod('_getFormattedErrors');
+        $method->setAccessible(true);
+        $errors = $method->invokeArgs($shopControl, [Registry::getConfig()->getActiveView()->getClassKey()]);
+
+        if (isset($errors['default'])) {
+            echo $lang->translateString('D3_USERMANAGER_CLI_FINISHED_ERRORS')."<br><br>";
+            foreach ($errors['default'] as $error) {
+                echo $error . "<br>";
+            }
+        }
+    }
+
+    public function initCli()
+    {
+        startProfile(__METHOD__);
+
+        $this->_startExecution();
 
         stopProfile(__METHOD__);
-
-        /** @var d3log $oLog */
-        $oLog = d3GetModCfgDIC()->get($this->_DIC_Instance_Id.'log');
-        $oLog->d3GetProfiling();
     }
 
     /**
-     * @return bool
      * @throws DBALException
-     * @throws Exception
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
+     * @throws DatabaseException
+     * @throws StandardException
+     * @throws cronUnavailableException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
      */
     protected function _startExecution()
     {
         startProfile(__METHOD__);
 
-        $blExc = false;
-
-        try {
-            $iStartTime = microtime(true);
+        $iStartTime = microtime(true);
 
             /** @var d3LogInterface $oLog */
             $oLog = d3GetModCfgDIC()->get($this->_DIC_Instance_Id.'log');
             $oLog->info(__CLASS__, __FUNCTION__, __LINE__, "start cron", "");
 
-            $this->_checkUnavailableCronjob();
-            $this->_getSet()->setValue($this->_getCronTimestampVarName(), date('Y-m-d H:i:s'));
-            $this->_getSet()->saveNoLicenseRefresh();
+        $this->_checkUnavailableCronjob();
+        $this->_getSet()->setValue($this->_getCronTimestampVarName(), date('Y-m-d H:i:s'));
+        $this->_getSet()->saveNoLicenseRefresh();
 
-            $this->_startJobs();
+        $this->_startJobs();
 
-            $iExecTime = microtime(true) - $iStartTime;
-            $oLog->info(
-                __CLASS__,
-                __FUNCTION__,
-                __LINE__,
-                "end cron",
-                'execution time: '.$iExecTime." sec"
-            );
-
-        } catch (cronUnavailableException $oEx) {
-            /** @var cronUnavailableException $oEx */
-            $oEx->d3showMessage();
-            $blExc = true;
-        } catch (StandardException $oEx) {
-            /** @var StandardException $oEx */
-            $logger = Registry::getLogger();
-            $logger->error($oEx);
-            $blExc = true;
-        }
+        $iExecTime = microtime(true) - $iStartTime;
+        $oLog->info(
+            __CLASS__,
+            __FUNCTION__,
+            __LINE__,
+            "end cron",
+            'execution time: '.$iExecTime." sec"
+        );
 
         stopProfile(__METHOD__);
-
-        return $blExc;
     }
 
     /**
      * @return ManagerList
-     * @throws Exception
      */
-    public function getManagerList()
+    public function getManagerList(): ManagerList
     {
         /** @var ManagerList $managerList */
         $managerList = d3GetModCfgDIC()->get(ManagerList::class);
@@ -143,9 +174,8 @@ class d3usermanager_response extends Base
     /**
      * @param Manager $oManager
      * @return ManagerExecuteModel
-     * @throws Exception
      */
-    public function getManagerExecute(Manager $oManager)
+    public function getManagerExecute(Manager $oManager): ManagerExecuteModel
     {
         d3GetModCfgDIC()->set(
             ManagerExecuteModel::class.'.args.usermanager',
@@ -165,7 +195,6 @@ class d3usermanager_response extends Base
      * @throws DatabaseException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
     protected function _startJobs()
     {
@@ -196,6 +225,7 @@ class d3usermanager_response extends Base
         /** @var $oManager Manager */
         foreach ($oManagerList->getList() as $oManager) {
             $oHandleManager = $this->getManager();
+            $oHandleManager->setLanguage(Registry::getLang()->getTplLanguage());
             $oHandleManager->load($oManager->getId());
             $oHandleManagerExec->setManager($oHandleManager);
 
@@ -212,9 +242,8 @@ class d3usermanager_response extends Base
 
     /**
      * @return Manager
-     * @throws Exception
      */
-    public function getManager()
+    public function getManager(): Manager
     {
         /** @var Manager $manager */
         $manager = d3GetModCfgDIC()->get(Manager::class);
@@ -224,23 +253,22 @@ class d3usermanager_response extends Base
 
     /**
      * @return bool
-     * @throws Exception
      */
-    protected function _checkAccessKey()
+    protected function _checkAccessKey(): bool
     {
         $sSetCronPassword = $this->_getSet()->getValue('sCronPassword');
 
         /** @var Request $request */
         $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
         $sGetAccessKey  = $request->getRequestEscapedParameter("key");
-        $sRegisteredAccessKey = $sSetCronPassword ? $sSetCronPassword : $this->getManager()->getBaseCronPW();
+        $sRegisteredAccessKey = $sSetCronPassword ?: $this->getManager()->getBaseCronPW();
 
         return $this->hasValidAccessKey($sRegisteredAccessKey, $sGetAccessKey);
     }
 
     /**
+     * return type can't defined, because of unmockable d3_cfg_mod class, use stdClass in test
      * @return d3_cfg_mod
-     * @throws Exception
      */
     protected function _getSet()
     {
@@ -252,23 +280,11 @@ class d3usermanager_response extends Base
 
     /**
      * @return bool
-     * @throws DBALException
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
      */
-    public function showDisabledMessage()
+    public function isBrowserCall(): bool
     {
-        return false == $this->_getSet()->getValue('blCronActive') &&
-        ($this->_getSet()->hasDebugMode() || $this->isBrowserCall());
-    }
-
-    /**
-     * @return bool
-     */
-    public function isBrowserCall()
-    {
-        return $_SERVER['REMOTE_ADDR'] || $_SERVER['HTTP_USER_AGENT'];
+        return (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']) ||
+            (isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
@@ -277,7 +293,7 @@ class d3usermanager_response extends Base
      *
      * @return bool
      */
-    protected function hasValidAccessKey($sRegisteredAccessKey, $sGetAccessKey)
+    protected function hasValidAccessKey($sRegisteredAccessKey, $sGetAccessKey): bool
     {
         return (
             false == $this->isBrowserCall()
@@ -295,56 +311,29 @@ class d3usermanager_response extends Base
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      * @throws cronUnavailableException
-     * @throws Exception
      */
     protected function _checkUnavailableCronjob()
     {
         if (false == $this->_getSet()->isActive()) {
-            $oEx = $this->getCronUnavailableException('user manager module is disabled');
-            $oEx->d3enableScreenMessage();
-            $oEx->debugOut();
-            throw $oEx;
+            throw $this->getCronUnavailableException(
+                $this->getLang()->translateString('D3_USERMANAGER_EXC_CRON_MODULEDISABLED')
+            );
         } elseif (false == $this->_checkAccessKey()) {
-            $oEx = $this->getCronUnavailableException('cron via browser: missing or wrong identification');
-            $oEx->d3enableScreenMessage();
-            $oEx->debugOut();
-            throw $oEx;
-        } else {
-            $this->_checkDisabledCronjob();
-        }
-    }
-
-    /**
-     * @throws DBALException
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws StandardException
-     * @throws d3ShopCompatibilityAdapterException
-     * @throws d3_cfg_mod_exception
-     * @throws cronUnavailableException
-     * @throws Exception
-     */
-    public function _checkDisabledCronjob()
-    {
-        if ($this->showDisabledMessage()) {
-            $oEx = $this->getCronUnavailableException('cronjob script is disabled');
-            $oEx->d3enableScreenMessage();
-            $oEx->debugOut();
-            throw $oEx;
+            throw $this->getCronUnavailableException(
+                $this->getLang()->translateString('D3_USERMANAGER_EXC_CRON_WRONGPASSWORD')
+            );
         } elseif (false == $this->_getSet()->getValue('blCronActive')) {
-            $oEx = $this->getCronUnavailableException('cron via browser: missing or wrong identification');
-            $oEx->d3disableScreenMessage();
-            $oEx->debugOut();
-            throw $oEx;
+            throw $this->getCronUnavailableException(
+                $this->getLang()->translateString('D3_USERMANAGER_EXC_CRON_UNAVAILABLE')
+            );
         }
     }
 
     /**
      * @param $sMessage
      * @return cronUnavailableException
-     * @throws Exception
      */
-    public function getCronUnavailableException($sMessage)
+    public function getCronUnavailableException($sMessage): cronUnavailableException
     {
         d3GetModCfgDIC()->setParameter(
             cronUnavailableException::class.'.args.message',
@@ -359,7 +348,6 @@ class d3usermanager_response extends Base
 
     /**
      * @return string
-     * @throws Exception
      */
     protected function _getCronJobIdParameter()
     {
@@ -376,9 +364,8 @@ class d3usermanager_response extends Base
 
     /**
      * @return string
-     * @throws Exception
      */
-    protected function _getCronTimestampVarName()
+    protected function _getCronTimestampVarName(): string
     {
         $sVarName = "sCronExecTimestamp";
 
@@ -389,18 +376,17 @@ class d3usermanager_response extends Base
         return $sVarName;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function getLastExecDate()
+    public function getLastExecDate(): string
     {
         return $this->_getSet()->getValue($this->_getCronTimestampVarName());
     }
 
     /**
-     * @throws Exception
+     * @return array
+     * @throws DBALException
+     * @throws DatabaseConnectionException
      */
-    public function getLastExecDateInfo()
+    public function getLastExecDateInfo(): array
     {
         $sCronJobId = $this->_getCronJobIdParameter();
         $taskCount = current(
@@ -428,9 +414,8 @@ class d3usermanager_response extends Base
 
     /**
      * @return Language
-     * @throws Exception
      */
-    public function getLang()
+    public function getLang(): Language
     {
         /** @var Language $lang */
         $lang = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);

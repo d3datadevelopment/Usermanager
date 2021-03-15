@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_main;
@@ -26,7 +28,6 @@ use D3\ModCfg\Application\Model\Shopcompatibility\d3ShopCompatibilityAdapterHand
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
 use Doctrine\DBAL\DBALException;
-use Exception;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -61,9 +62,8 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
 
     /**
      * @return Manager
-     * @throws Exception
      */
-    public function getManager()
+    public function getManager(): Manager
     {
         /** @var Manager $manager */
         $manager = d3GetModCfgDIC()->get(Manager::class);
@@ -75,18 +75,16 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      * get basic cronjob access password; for cases only, if no password is set
      *
      * @return string
-     * @throws Exception
      */
-    public function getBaseCronPW()
+    public function getBaseCronPW(): string
     {
         return $this->getManager()->getBaseCronPW();
     }
 
     /**
      * @return ViewConfig
-     * @throws Exception
      */
-    public function getViewConfig()
+    public function getViewConfig(): ViewConfig
     {
         // don't use DIC because of circular reference
         if ($this->_oViewConf === null) {
@@ -98,9 +96,8 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
 
     /**
      * @return d3str
-     * @throws Exception
      */
-    public function getD3Str()
+    public function getD3Str(): d3str
     {
         /** @var d3str $d3str */
         $d3str = d3GetModCfgDIC()->get(d3str::class);
@@ -116,9 +113,8 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws FileException
-     * @throws Exception
      */
-    public function getCronLink($blUsePw, $iCronJobId = false)
+    public function getCronLink($blUsePw = true, $iCronJobId = false): string
     {
         $sBaseUrl = $this->getViewConfig()->getModuleUrl('d3usermanager').'public/d3_usermanager_cron.php';
 
@@ -143,9 +139,8 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      * @param bool|int $iCronJobId
      *
      * @return string
-     * @throws Exception
      */
-    public function getCronPath($iCronJobId = false)
+    public function getCronPath($iCronJobId = false): string
     {
         $sScriptPath = VENDOR_PATH.'bin/d3_usermanager_cron';
 
@@ -163,11 +158,9 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
 
     /**
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
-     * @throws Exception
      */
-    public function getAvailableCronjobIds()
+    public function getAvailableCronjobIds(): array
     {
         return $this->getManager()->getAvailableCronjobIds();
     }
@@ -175,9 +168,8 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
     /**
      * @param bool|array $aCJID
      * @return string
-     * @throws Exception
      */
-    public function getCJIDDesc($aCJID)
+    public function getCJIDDesc($aCJID): string
     {
         /** @var Language $oLang */
         $oLang = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
@@ -201,7 +193,7 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      *
      * @return string
      */
-    public function getCronTimestampVarName($iCronJobId = false)
+    public function getCronTimestampVarName($iCronJobId = false): string
     {
         $sVarName = "sCronExecTimestamp";
 
@@ -214,9 +206,8 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
 
     /**
      * @return d3filegeneratorcronsh
-     * @throws Exception
      */
-    public function getFileGeneratorCronSh()
+    public function getFileGeneratorCronSh(): d3filegeneratorcronsh
     {
         /** @var d3filegeneratorcronsh $filegenerator */
         $filegenerator = d3GetModCfgDIC()->get(d3filegeneratorcronsh::class);
@@ -226,18 +217,16 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
 
     /**
      * @return array
-     * @throws Exception
      */
-    public function getCronProviderList()
+    public function getCronProviderList(): array
     {
         return $this->getFileGeneratorCronSh()->getContentList();
     }
 
     /**
      * @return d3ShopCompatibilityAdapterHandler
-     * @throws Exception
      */
-    public function getCompatibilityAdapterHandler()
+    public function getCompatibilityAdapterHandler(): d3ShopCompatibilityAdapterHandler
     {
         /** @var d3ShopCompatibilityAdapterHandler $compatiblityHandler */
         $compatiblityHandler = d3GetModCfgDIC()->get(d3ShopCompatibilityAdapterHandler::class);
@@ -246,9 +235,8 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
 
     /**
      * @return Shop
-     * @throws Exception
      */
-    public function d3GetActiveShop()
+    public function d3GetActiveShop(): Shop
     {
         /** @var Config $config */
         $config = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Config::class);
@@ -263,7 +251,6 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
     public function generateCronShFile()
     {

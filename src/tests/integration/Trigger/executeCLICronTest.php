@@ -1,12 +1,29 @@
 <?php
+/**
+ * This Software is the property of Data Development and is protected
+ * by copyright law - it is NOT Freeware.
+ *
+ * Any unauthorized use of this software without a valid license
+ * is a violation of the license agreement and will be prosecuted by
+ * civil and criminal law.
+ *
+ * https://www.d3data.de
+ *
+ * @copyright (C) D3 Data Development (Inh. Thomas Dartsch)
+ * @author    D3 Data Development - Daniel Seifert <support@shopmodule.com>
+ * @link      https://www.oxidmodule.com
+ */
 
 namespace D3\Usermanager\tests\integration;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
-use D3\Usermanager\Application\Controller\d3usermanager_response as ResponseController;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
+use D3\Usermanager\Application\Model\Output\d3usermanager_debugoutput;
+use D3\Usermanager\Application\Model\Output\d3usermanager_nulloutput;
+use D3\Usermanager\publicDir\d3_usermanager_cron;
+use D3\Usermanager\tests\tools\Intercept;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as Item;
@@ -17,13 +34,27 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 class executeCronTest extends d3IntegrationTestCase
 {
     public $sManagerId = 'managerTestId';
+    public $aCountryIdList = [
+        'testCountryId1Pass',
+        'testCountryId2Pass'
+    ];
     public $aUserIdList = array(
         'userTestIdNo1',
         'userTestIdNo2',
     );
 
-    public $dCurrentValue = '1';
-    public $dExpectedValue = '0';
+    public $sCurrentValue = 'current';
+    public $sExpectedValue = 'expected';
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        d3GetModCfgDIC()->set(
+            d3usermanager_debugoutput::class,
+            oxNew(d3usermanager_nulloutput::class)
+        );
+    }
 
     /**
      * @throws Exception
@@ -32,23 +63,27 @@ class executeCronTest extends d3IntegrationTestCase
     {
         $this->createManager($this->sManagerId);
 
+        foreach ($this->aCountryIdList as $sId) {
+            $this->createBaseModelObject( 'oxcountry', $sId, [ 'oxtitle' => __METHOD__ ] );
+        }
+
         $this->createUser(
             $this->aUserIdList[0],
             array(
-                'oxactive'  => $this->dCurrentValue,
-                'oxzip'     => '09381',
-                'oxcompany' => __CLASS__,
-                'oxshopid'  => '1'
+                'oxactive'     => 1,
+                'oxcountryid'   => $this->aCountryIdList[0],
+                'oxfname' => __CLASS__,
+                'oxlname' => $this->sCurrentValue,
             )
         );
 
         $this->createUser(
             $this->aUserIdList[1],
             array(
-                'oxactive'  => $this->dCurrentValue,
-                'oxzip'     => '09382',
-                'oxcompany' => __CLASS__,
-                'oxshopid'  => '1'
+                'oxactive'     => 1,
+                'oxcountryid'   => $this->aCountryIdList[1],
+                'oxfname' => __CLASS__,
+                'oxlname' => $this->sCurrentValue,
             )
         );
 
@@ -59,28 +94,20 @@ class executeCronTest extends d3IntegrationTestCase
             )
         );
 
-        $oManager->setValue('blActionCustActivate_status', true);
-        $oManager->setValue('sActionCustActivateType', 'notset');
-
-        $oManager->setValue('blCheckInvZipRange_status', true);
-        $oManager->setValue('sInvZipRangeFromValue', '09381');
-        $oManager->setValue('sInvZipRangeToValue', '09381');
-
-        $oManager->setValue('blItemExecute', true);
-
-        $oManager->save();
+        $this->getConfiguredManager()->save();
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
         $this->deleteManager($this->sManagerId);
         $this->deleteUser( $this->aUserIdList[0]);
         $this->deleteUser( $this->aUserIdList[1]);
+        foreach ($this->aCountryIdList as $sId) {
+            $this->deleteBaseModelObject( 'oxcountry', $sId);
+        }
     }
 
     /**
@@ -91,12 +118,18 @@ class executeCronTest extends d3IntegrationTestCase
     {
         $oManager = $this->getManagerMock($this->sManagerId);
 
-        $oManager->setValue('blActionCustActivate_status', true);
-        $oManager->setValue('sActionCustActivateType', 'notset');
+        $oManager->assign(
+            array(
+                'D3_CRONJOBID'    => 'testId'
+            )
+        );
 
-        $oManager->setValue('blCheckInvZipRange_status', true);
-        $oManager->setValue('sInvZipRangeFromValue', '09381');
-        $oManager->setValue('sInvZipRangeToValue', '09381');
+        $oManager->setValue('blActionUserAddFieldValue_status', true);
+        $oManager->setValue('sActionAddField_field', 'oxlname');
+        $oManager->setValue('sActionAddField_value', $this->sExpectedValue);
+
+        $oManager->setValue('blCheckInvCountry_status', true);
+        $oManager->setValue( 'aInvCountryId', [ $this->aCountryIdList[0] ] );
 
         $oManager->setValue('blItemExecute', true);
 
@@ -105,7 +138,6 @@ class executeCronTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -119,41 +151,41 @@ class executeCronTest extends d3IntegrationTestCase
         $set = d3_cfg_mod::get('d3usermanager');
         $blCurrentCronStatus = $set->getValue('blCronActive');
         $set->setValue('blCronActive', true);
-        $set->assign(array('oxactive' => 1));
+        $set->assign( [ 'oxactive' => 1 ] );
         $set->saveNoLicenseRefresh();
-
-        /** @var $oResponse ResponseController */
-        $oResponse = d3GetModCfgDIC()->get(ResponseController::class);
 
         $_GET['shp'] = 1;
         $_GET['cjid'] = 'testId';
 
-        $oResponse->init();
+        $this->setCLIArguments(['script', '-q', 'run', 1, 'testId']);
+
+        /** @var d3_usermanager_cron $cron */
+        $cron = oxNew(d3_usermanager_cron::class);
+        $cron->run();
 
         $set->setValue('blCronActive', $blCurrentCronStatus);
-        $set->assign(array('oxactive' => 1));
+        $set->assign( [ 'oxactive' => 1 ] );
         $set->saveNoLicenseRefresh();
 
         /** @var Item $oItem */
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
-            $this->dExpectedValue,
-            $oItem->getFieldData('oxactive')
+            $this->sExpectedValue,
+            $oItem->getFieldData('oxlname')
         );
 
         /** @var Item $oItem */
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[1]);
         $this->assertSame(
-            $this->dCurrentValue,
-            $oItem->getFieldData('oxactive')
+            $this->sCurrentValue,
+            $oItem->getFieldData('oxlname')
         );
     }
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -171,15 +203,23 @@ class executeCronTest extends d3IntegrationTestCase
         $set->assign(array('oxactive' => 0));
         $set->saveNoLicenseRefresh();
 
-        /** @var $oResponse ResponseController */
-        $oResponse = d3GetModCfgDIC()->get(ResponseController::class);
-
         $_GET['shp'] = 1;
         $_GET['cjid'] = 'testId';
 
-        ob_start();
-        $oResponse->init();
-        ob_end_clean();
+        $this->setCLIArguments(['script', 'run', 1, 'testId']);
+
+        stream_filter_register("intercept", Intercept::class);
+        stream_filter_append(STDERR, "intercept");  // for warning messages and above
+        //stream_filter_append(STDOUT, "intercept");  // for messages below warning level
+
+        /** @var d3_usermanager_cron $cron */
+        $cron = oxNew(d3_usermanager_cron::class);
+        $cron->run();
+
+        $this->assertRegExp(
+            '@.*MODULEDISABLED.*@',
+            Intercept::$cache
+        );
 
         $set->setValue('blCronActive', $blCurrentCronStatus);
         $set->assign(array('oxactive' => 1));
@@ -189,22 +229,21 @@ class executeCronTest extends d3IntegrationTestCase
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
-            $this->dCurrentValue,
-            $oItem->getFieldData('oxactive')
+            $this->sCurrentValue,
+            $oItem->getFieldData('oxlname')
         );
 
         /** @var Item $oItem */
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[1]);
         $this->assertSame(
-            $this->dCurrentValue,
-            $oItem->getFieldData('oxactive')
+            $this->sCurrentValue,
+            $oItem->getFieldData('oxlname')
         );
     }
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -221,13 +260,20 @@ class executeCronTest extends d3IntegrationTestCase
         $set->assign(array('oxactive' => 1));
         $set->saveNoLicenseRefresh();
 
-        /** @var $oResponse ResponseController */
-        $oResponse = d3GetModCfgDIC()->get(ResponseController::class);
+        $this->setCLIArguments(['script', 'run', 1, 'testId']);
 
-        $_GET['shp'] = 1;
-        $_GET['cjid'] = 'testId';
+        stream_filter_register("intercept", Intercept::class);
+        stream_filter_append(STDERR, "intercept");  // for warning messages and above
+        //stream_filter_append(STDOUT, "intercept");  // for messages below warning level
 
-        $oResponse->init();
+        /** @var d3_usermanager_cron $cron */
+        $cron = oxNew(d3_usermanager_cron::class);
+        $cron->run();
+
+        $this->assertRegExp(
+            '@.*UNAVAILABLE.*@',
+            Intercept::$cache
+        );
 
         $set->setValue('blCronActive', $blCurrentCronStatus);
         $set->assign(array('oxactive' => 1));
@@ -237,16 +283,25 @@ class executeCronTest extends d3IntegrationTestCase
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
-            $this->dCurrentValue,
-            $oItem->getFieldData('oxactive')
+            $this->sCurrentValue,
+            $oItem->getFieldData('oxlname')
         );
 
         /** @var Item $oItem */
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[1]);
         $this->assertSame(
-            $this->dCurrentValue,
-            $oItem->getFieldData('oxactive')
+            $this->sCurrentValue,
+            $oItem->getFieldData('oxlname')
         );
+    }
+
+    /**
+     * @param array $arguments
+     */
+    public function setCLIArguments($arguments)
+    {
+        global $argv;
+        $argv = $_SERVER['argv'] = $GLOBALS['HTTP_SERVER_VARS']['argv'] = $arguments;
     }
 }

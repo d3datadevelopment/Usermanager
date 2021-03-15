@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Modules\Application\Model;
 
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
@@ -22,12 +24,14 @@ use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\ModCfg\Application\Model\Log\d3LogInterface;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
+use D3\Usermanager\Application\Model\d3usermanager_renderererrorhandler;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_templaterendererExceptionInterface;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\d3str;
 use Html2Text\Html2Text;
-use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Application\Model\Content as Content;
 use OxidEsales\Eshop\Application\Model\Remark;
 use OxidEsales\Eshop\Application\Model\Shop as Shop;
@@ -43,6 +47,7 @@ use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Path\ModulePathResolver;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Path\ModulePathResolverInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Smarty\Legacy\LegacySmartyEngine;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateEngineInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateRendererBridgeInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateRendererInterface;
@@ -70,7 +75,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     /**
      * @return TemplateEngineInterface
      */
-    protected function _getTemplateEngine()
+    protected function _getTemplateEngine(): TemplateEngineInterface
     {
         /** @var TemplateRendererInterface $renderer */
         $renderer = $this->d3getUserManagerDIContainer()
@@ -84,13 +89,11 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return bool
      * @throws Exception
      */
-    public function d3sendUserManagerEmail($aManagerNotes)
+    public function d3sendUserManagerEmail($aManagerNotes): bool
     {
         startProfile(__METHOD__);
 
         $oShop = $this->_getShop();
-
-        $templateEngine = $this->_getTemplateEngine();
 
         /** @var Config $config */
         $config = d3GetModCfgDIC()->get('d3ox.usermanager.'.Config::class);
@@ -102,8 +105,20 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
 
         $this->_processViewArray();
 
-        $this->setBody($templateEngine->render($this->_sUserManagerInfoTemplate));
-        $this->setAltBody($templateEngine->render($this->_sUserManagerInfoPlainTemplate));
+        /** @var LegacySmartyEngine $templateEngine */
+        $templateEngine = $this->_getTemplateEngine();
+        foreach ($this->getViewData() as $key => $value) {
+            $templateEngine->addGlobal($key, $value);
+        }
+
+        set_error_handler(
+            [d3GetModCfgDIC()->get(d3usermanager_renderererrorhandler::class), 'd3HandleTemplateEngineErrors']
+        );
+
+        $this->d3UMsetBody($templateEngine->render($this->_sUserManagerInfoTemplate));
+        $this->d3UMsetAltBody($templateEngine->render($this->_sUserManagerInfoPlainTemplate));
+
+        restore_error_handler();
 
         /** @var d3LogInterface $oLog */
         $oLog = d3GetModCfgDIC()->get('d3.usermanager.log');
@@ -136,7 +151,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return Item
      * @throws Exception
      */
-    public function d3GetUserManagerUser($sOxId)
+    public function d3GetUserManagerUser($sOxId): Item
     {
         if (strstr($sOxId, '@@')) {
             $aOxId = explode('@@', $sOxId);
@@ -155,7 +170,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return Manager
      * @throws Exception
      */
-    public function d3getUserManager($sOxId)
+    public function d3getUserManager($sOxId): Manager
     {
         /** @var $oManager Manager */
         $oManager = d3GetModCfgDIC()->get(Manager::class);
@@ -175,15 +190,15 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @throws d3_cfg_mod_exception
      * @throws Exception
      */
-    public function sendUserManagerMail(Manager $oManager)
+    public function sendUserManagerMail(Manager $oManager): bool
     {
         $this->oUserManager = $oManager;
         $aContent = $this->getUserManagerMailContent($oManager);
 
         $oShop = $this->_getShop();
-        $this->setBody($aContent['html']);
-        $this->setAltBody($aContent['plain']);
-        $this->setSubject($aContent['subject']);
+        $this->d3UMsetBody($aContent['html']);
+        $this->d3UMsetAltBody($aContent['plain']);
+        $this->d3UMsetSubject($aContent['subject']);
 
         $this->_d3SetUserManagerReplyAddress($oManager, $oShop);
 
@@ -199,12 +214,54 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     }
 
     /**
+     * @param $content
+     *
+     * @throws d3usermanager_smartyException
+     */
+    protected function d3UMsetBody($content)
+    {
+        $this->setBody($content);
+
+        if ((bool) strlen($content) && false === (bool) strlen($this->getBody())) {
+            $this->throwUnequalContentException();
+        }
+    }
+
+    /**
+     * @param $content
+     *
+     * @throws d3usermanager_smartyException
+     */
+    protected function d3UMsetAltBody($content)
+    {
+        $this->setAltBody($content);
+
+        if ((bool) strlen($content) && false === (bool) strlen($this->getAltBody())) {
+            $this->throwUnequalContentException();
+        }
+    }
+
+    /**
+     * @param $content
+     *
+     * @throws d3usermanager_smartyException
+     */
+    protected function d3UMsetSubject($content)
+    {
+        $this->setSubject($content);
+
+        if ((bool) strlen($content) && false === (bool) strlen($this->getSubject())) {
+            $this->throwUnequalContentException();
+        }
+    }
+
+    /**
      * @param Shop $oShop
      *
      * @return null|Remark
      * @throws d3ParameterNotFoundException
      */
-    protected function _d3SetUserManagerMailRecipients(Shop $oShop)
+    protected function _d3SetUserManagerMailRecipients(Shop $oShop): ?Remark
     {
         $oRemark = null;
         if ($this->_d3hasUserManagerCustomerRecipient()) {
@@ -227,7 +284,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     protected function _d3getUserManagerMailOption($sVarName)
     {
         $aEditedValues = $this->oUserManager->getEditedValues();
-        return $aEditedValues[$sVarName] === false || $aEditedValues[$sVarName] === null ?
+        return false === isset($aEditedValues[$sVarName]) || $aEditedValues[$sVarName] === false || $aEditedValues[$sVarName] === null ?
             $this->oUserManager->getValue($sVarName) :
             $aEditedValues[$sVarName];
     }
@@ -283,7 +340,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return Language
      * @throws Exception
      */
-    public function d3GetUserManagerLanguageObject()
+    public function d3GetUserManagerLanguageObject(): Language
     {
         /** @var Language $language */
         $language = d3GetModCfgDIC()->get('d3ox.usermanager.'.Language::class);
@@ -295,7 +352,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return Config
      * @throws Exception
      */
-    public function d3GetUserManagerConfigObject()
+    public function d3GetUserManagerConfigObject(): Config
     {
         /** @var Config $config */
         $config = d3GetModCfgDIC()->get('d3ox.usermanager.'.Config::class);
@@ -314,11 +371,12 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      * @throws Exception
+     * @throws d3usermanager_templaterendererExceptionInterface
      */
-    public function getUserManagerMailContent(Manager $oManager)
+    public function getUserManagerMailContent(Manager $oManager): array
     {
         $this->oUserManager = $oManager;
-        $aContent = array();
+        $aContent = [];
 
         $blTplFromAdmin = $oManager->getValue('sSendMailFromTheme') == 'admin';
 
@@ -350,6 +408,10 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
         }
         $this->_processViewArray();
 
+        foreach ($this->getViewData() as $id => $value) {
+            $templateEngine->addGlobal($id, $value);
+        }
+
         if (false == $this->d3GetUserManagerSet()->getLicenseConfigData('blUseMailSendOnly', 0)) {
             $templateEngine = $this->d3SendMailHook($templateEngine);
         }
@@ -364,7 +426,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return d3str
      * @throws Exception
      */
-    public function getD3UserManagerStrObject()
+    public function getD3UserManagerStrObject(): d3str
     {
         /** @var d3str $d3str */
         $d3str = d3GetModCfgDIC()->get(d3str::class);
@@ -377,7 +439,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return string
      * @throws Exception
      */
-    public function getTemplateDir4UserManager($oManager)
+    public function getTemplateDir4UserManager($oManager): string
     {
         if ($oManager->getValue('sSendMailFromTheme') == 'module') {
             $sModuleId = $oManager->getValue('sSendMailFromModulePath');
@@ -399,7 +461,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @param TemplateEngineInterface $templateEngine
      * @return TemplateEngineInterface
      */
-    public function d3SendMailHook(TemplateEngineInterface $templateEngine)
+    public function d3SendMailHook(TemplateEngineInterface $templateEngine): TemplateEngineInterface
     {
         // available objects:
         // oxEmail:                $this
@@ -415,7 +477,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return UtilsView
      * @throws Exception
      */
-    public function d3GetUserManagerUtilsView()
+    public function d3GetUserManagerUtilsView(): UtilsView
     {
         /** @var UtilsView $utilsView */
         $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
@@ -426,7 +488,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return Content
      * @throws Exception
      */
-    public function d3GetUserManagerContentObject()
+    public function d3GetUserManagerContentObject(): Content
     {
         /** @var Content $content */
         $content = d3GetModCfgDIC()->get('d3ox.usermanager.'.Content::class);
@@ -434,14 +496,15 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     }
 
     /**
-     * @param               $aContent
+     * @param array $aContent
      * @param TemplateEngineInterface $templateEngine
-     *
      * @return mixed
+     *
      * @throws d3ParameterNotFoundException
      * @throws Exception
+     * @throws d3usermanager_templaterendererExceptionInterface
      */
-    protected function _d3GenerateUserManagerMailContent($aContent, TemplateEngineInterface $templateEngine)
+    protected function _d3GenerateUserManagerMailContent(array $aContent, TemplateEngineInterface $templateEngine)
     {
         $aEditedValues = $this->oUserManager->getEditedValues();
 
@@ -452,6 +515,10 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
 
         $oLang->setTplLanguage($iUserLangId);
         $oLang->setBaseLanguage($iUserLangId);
+
+        set_error_handler(
+            [d3GetModCfgDIC()->get(d3usermanager_renderererrorhandler::class), 'd3HandleTemplateEngineErrors']
+        );
 
         if ($this->d3HasUserManagerEditorMailContent($aEditedValues)) {
             $aContent = $aEditedValues['mail'];
@@ -464,12 +531,9 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
             $oContent = $this->d3GetUserManagerContentObject();
             $oContent->loadInLang($iUserLangId, $this->oUserManager->getValue('sSendMailFromContentname'));
 
-            $oActView = oxNew(FrontendController::class);
-            $oActView->addGlobalParams();
-
             $aContent['html']    = $oUtilsView->getRenderedContent(
                 $oContent->getFieldData('oxcontent'),
-                $oActView->getViewData(),
+                $this->getViewData(),
                 $oContent->getId() . 'oxcontent'
             );
 
@@ -477,7 +541,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
             $oContent->loadInLang($iUserLangId, $this->oUserManager->getValue('sSendMailFromContentnamePlain'));
             $aContent['plain'] = $oUtilsView->getRenderedContent(
                 $oContent->getFieldData('oxcontent'),
-                $oActView->getViewData(),
+                $this->getViewData(),
                 $oContent->getId() . 'oxcontent'
             );
         } elseif ($this->oUserManager->getValue('sSendMailFromSource') == 'template') {
@@ -485,6 +549,8 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
             $aContent['plain']   = $templateEngine->render($this->oUserManager->getValue('sSendMailFromTemplatenamePlain'));
             $aContent['subject'] = $templateEngine->render($this->oUserManager->getValue('sSendMailFromSubject'));
         }
+
+        restore_error_handler();
 
         $oLang->setTplLanguage($iCurrentTplLang);
         $oLang->setBaseLanguage($iCurrentBaseLang);
@@ -497,7 +563,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      *
      * @return bool
      */
-    public function d3HasUserManagerEditorMailContent($aEditedValues)
+    public function d3HasUserManagerEditorMailContent($aEditedValues): bool
     {
         return $this->d3isUserManagerArrayEditorMailContent($aEditedValues) &&
                $aEditedValues['mail']['subject'] &&
@@ -513,9 +579,9 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      *
      * @return bool
      */
-    public function d3isUserManagerArrayEditorMailContent($aEditedValues)
+    public function d3isUserManagerArrayEditorMailContent($aEditedValues): bool
     {
-        return is_array($aEditedValues) && is_array($aEditedValues['mail']);
+        return is_array($aEditedValues) && isset($aEditedValues['mail'])  && is_array($aEditedValues['mail']);
     }
 
     /**
@@ -523,7 +589,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return string
      * @throws Exception
      */
-    public function d3generateUserManagerPlainContent($html)
+    public function d3generateUserManagerPlainContent($html): string
     {
         d3GetModCfgDIC()->setParameter(Html2Text::class.'.args.html', $html);
 
@@ -536,7 +602,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return Remark
      * @throws Exception
      */
-    public function d3GetUserManagerRemark()
+    public function d3GetUserManagerRemark(): Remark
     {
         /** @var Remark $remark */
         $remark = d3GetModCfgDIC()->get('d3ox.usermanager.'.Remark::class);
@@ -550,7 +616,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @throws d3ParameterNotFoundException
      * @throws Exception
      */
-    protected function _d3sendUserManagerMailToCustomer(Shop $oShop)
+    protected function _d3sendUserManagerMailToCustomer(Shop $oShop): Remark
     {
         $sFullName = $this->oUserManager->getCurrentItem()->__get('oxuser__oxfname')->getRawValue() . " " .
             $this->oUserManager->getCurrentItem()->__get('oxuser__oxlname')->getRawValue();
@@ -576,7 +642,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @throws d3ParameterNotFoundException
      * @throws Exception
      */
-    protected function _d3sendUserManagerMailToOwner(Shop $oShop)
+    protected function _d3sendUserManagerMailToOwner(Shop $oShop): Remark
     {
         $sFullName = $oShop->__get('oxshops__oxname')->getRawValue();
         $this->setRecipient($oShop->getFieldData('oxinfoemail'), $sFullName);
@@ -593,7 +659,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     /**
      * @throws d3ParameterNotFoundException
      */
-    protected function _d3sendUserManagerMailToCustom()
+    protected function _d3sendUserManagerMailToCustom(): Remark
     {
         if ($this->_d3HasUserManagerCustomMailAddresses()) {
             foreach ($this->_d3getUserManagerCustomMailAddressList() as $sMailAdr) {
@@ -608,7 +674,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return array
      * @throws d3ParameterNotFoundException
      */
-    protected function _d3getUserManagerCustomMailAddressList()
+    protected function _d3getUserManagerCustomMailAddressList(): array
     {
         $aMailAddressList = array();
 
@@ -625,7 +691,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return bool
      * @throws d3ParameterNotFoundException
      */
-    public function _d3HasUserManagerCustomMailAddresses()
+    public function _d3HasUserManagerCustomMailAddresses(): bool
     {
         return $this->_d3hasUserManagerCustomRecipient() && $this->_d3getUserManagerCustomRecipientList();
     }
@@ -636,10 +702,10 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      */
     protected function _d3SetUserManagerReplyAddress(Manager $oManager, Shop $oShop)
     {
-        if (strlen(trim($oManager->getValue('sSendMailReplyAddress')))) {
+        if (strlen(trim((string) $oManager->getValue('sSendMailReplyAddress')))) {
             $this->setFrom(trim($oManager->getValue('sSendMailReplyAddress')));
             $this->setReplyTo(
-                trim($oManager->getValue('sSendMailReplyAddress')),
+                trim((string) $oManager->getValue('sSendMailReplyAddress')),
                 $oShop->__get('oxshops__oxname')->getRawValue()
             );
         } else {
@@ -653,7 +719,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @throws d3ParameterNotFoundException
      * @throws Exception
      */
-    public function d3generateUserManagerRemark()
+    public function d3generateUserManagerRemark(): Remark
     {
         $oRemark        = $this->d3GetUserManagerRemark();
         $aRemarkContent = array(
@@ -669,7 +735,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     /**
      * @return string
      */
-    public function d3GetUserManagerRemarkText()
+    public function d3GetUserManagerRemarkText(): string
     {
         return implode(
             PHP_EOL.'---'.PHP_EOL,
@@ -687,8 +753,22 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     /**
      * @return ContainerInterface
      */
-    public function d3getUserManagerDIContainer()
+    public function d3getUserManagerDIContainer(): ContainerInterface
     {
         return ContainerFactory::getInstance()->getContainer();
+    }
+
+    /**
+     * @throws d3usermanager_smartyException
+     */
+    protected function throwUnequalContentException() : void
+    {
+        d3GetModCfgDIC()->setParameter(
+            d3usermanager_smartyException::class . '.args.message',
+            'empty mail content, possible file encoding error'
+        );
+        /** @var d3usermanager_smartyException $e */
+        $e = d3GetModCfgDIC()->get( d3usermanager_smartyException::class );
+        throw $e;
     }
 }

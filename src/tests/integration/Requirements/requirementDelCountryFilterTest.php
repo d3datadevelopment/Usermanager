@@ -40,6 +40,10 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
         'addressAssignIdNo3',
         'addressAssignIdNo4',
     );
+    public $aCountryIdList = [
+        'testCountry1',
+        'testCountry2'
+    ];
 
     /**
      * Set up fixture.
@@ -54,6 +58,8 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -135,12 +141,14 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
                 'oxcompany' => __CLASS__,
             )
         );
+
+        foreach ($this->aCountryIdList as $sId) {
+            $this->createBaseModelObject('oxcountry', $sId);
+        }
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -152,6 +160,10 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
 
         foreach ($this->aAddressIdList as $sAddressAssignId) {
             $this->deleteBaseModelObject('oxaddress', $sAddressAssignId);
+        }
+
+        foreach ($this->aCountryIdList as $sId) {
+            $this->deleteBaseModelObject('oxcountry', $sId);
         }
     }
 
@@ -185,7 +197,6 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -210,7 +221,6 @@ class requirementDelCountryFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

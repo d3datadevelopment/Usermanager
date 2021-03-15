@@ -19,6 +19,7 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermintimespan;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -55,6 +56,8 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -132,9 +135,7 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -158,7 +159,7 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
         $oManager = $this->getManagerMock($this->sManagerId);
 
         $oManager->setValue('blCheckOrderMinTimespan_status', true);
-        $oManager->setValue('sOrderMinTimespanUnit', 'minute');
+        $oManager->setValue('sOrderMinTimespanUnit', d3usermanager_requirement_ordermintimespan::UNIT_MINUTE);
         $oManager->setValue('sOrderMinTimespanValue', '5');
 
         return $oManager;
@@ -166,7 +167,6 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -178,16 +178,15 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
     public function requirementsSelectsRightUsersMinute()
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManagerMinute());
+
         $oUserList = $oListGenerator->getConcernedItems();
 
-        $this->assertTrue(
-            $oUserList->count() >= 3
-            && false == $oUserList->offsetExists( $this->aUserIdList[0])
-            && $oUserList->offsetExists( $this->aUserIdList[1])
-            && $oUserList->offsetExists( $this->aUserIdList[2])
-            && $oUserList->offsetExists( $this->aUserIdList[3])
-            && false == $oUserList->offsetExists( $this->aUserIdList[4])
-        );
+        $this->assertTrue($oUserList->count() >= 3);
+        $this->assertFalse($oUserList->offsetExists( $this->aUserIdList[0]));
+        $this->assertTrue($oUserList->offsetExists( $this->aUserIdList[1]));
+        $this->assertTrue($oUserList->offsetExists( $this->aUserIdList[2]));
+        $this->assertTrue($oUserList->offsetExists( $this->aUserIdList[3]));
+        $this->assertFalse($oUserList->offsetExists( $this->aUserIdList[4]));
     }
 
     /**
@@ -207,7 +206,6 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -248,7 +246,6 @@ class requirementOrderMinTimespanTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

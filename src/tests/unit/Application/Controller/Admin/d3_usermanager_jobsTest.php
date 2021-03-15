@@ -21,19 +21,23 @@ use D3\ModCfg\Application\Model\d3filesystem;
 use D3\ModCfg\Application\Model\d3str;
 use D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs;
 use D3\Usermanager\Application\Model\d3usermanager;
+use D3\Usermanager\Application\Model\d3usermanager_configurationcheck;
 use D3\Usermanager\Application\Model\d3usermanager_execute;
 use D3\Usermanager\Application\Model\d3usermanager_touserassignment;
 use D3\Usermanager\Application\Model\d3usermanagerlist;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_templaterendererExceptionInterface;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
 use Doctrine\DBAL\DBALException;
 use Exception;
-use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Session;
 use OxidEsales\Eshop\Core\Model\ListModel;
+use OxidEsales\Eshop\Core\UtilsView;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use stdClass;
@@ -109,11 +113,16 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
      */
     public function renderPass()
     {
-        /** @var Order|MockObject $oOrderMock */
-        $oOrderMock = $this->getMockBuilder(Order::class)
-            ->setMethods(['load'])
+        /** @var d3usermanagerlist|MockObject $oManagerListMock */
+        $oManagerListMock = $this->getMockBuilder(d3usermanagerlist::class)
+            ->disableOriginalConstructor()
             ->getMock();
-        $oOrderMock->expects($this->once())->method('load')->willReturn(true);
+
+        /** @var User|MockObject $oItemMock */
+        $oItemMock = $this->getMockBuilder(User::class)
+                           ->setMethods(['load'])
+                           ->getMock();
+        $oItemMock->expects($this->once())->method('load')->willReturn(true);
 
         /** @var d3_usermanager_jobs|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
@@ -124,8 +133,8 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
             ])
             ->getMock();
         $oControllerMock->method('getEditObjectId')->willReturn('testOxId');
-        $oControllerMock->method('getItemObject')->willReturn($oOrderMock);
-        $oControllerMock->method('_d3GetManuallyManagerJobs')->willReturn($oOrderMock);
+        $oControllerMock->method('getItemObject')->willReturn($oItemMock);
+        $oControllerMock->method('_d3GetManuallyManagerJobs')->willReturn($oManagerListMock);
 
         $this->_oController = $oControllerMock;
 
@@ -225,19 +234,14 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
             ->getMock();
         $oManagerExecuteMock->method('userMeetsConditions')->willReturn(true);
 
-        /** @var ListModel|MockObject $oListMock */
-        $oListMock = $this->getMockBuilder(ListModel::class)
-            ->setMethods(['offsetUnset'])
-            ->getMock();
-        $oListMock->expects($this->never())->method('offsetUnset');
-        $oListMock->offsetSet('No1', $oManagerMock);
-        $oListMock->offsetSet('No2', $oManagerMock);
-
         /** @var d3usermanagerlist|MockObject $oManagerListMock */
         $oManagerListMock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetManuallyManagerJobsByFolder'])
+            ->setMethods(['d3GetManuallyManagerJobsByFolder', 'offsetUnset'])
             ->getMock();
-        $oManagerListMock->expects($this->once())->method('d3GetManuallyManagerJobsByFolder')->willReturn($oListMock);
+        $oManagerListMock->expects($this->once())->method('d3GetManuallyManagerJobsByFolder')->willReturnSelf();
+        $oManagerListMock->expects($this->never())->method('offsetUnset');
+        $oManagerListMock->offsetSet('No1', $oManagerMock);
+        $oManagerListMock->offsetSet('No2', $oManagerMock);
 
         /** @var d3_usermanager_jobs|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
@@ -284,19 +288,14 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
             ->getMock();
         $oManagerExecuteMock->method('userMeetsConditions')->will($this->onConsecutiveCalls(false, true));
 
-        /** @var ListModel|MockObject $oListMock */
-        $oListMock = $this->getMockBuilder(ListModel::class)
-            ->setMethods(['offsetUnset'])
-            ->getMock();
-        $oListMock->expects($this->never())->method('offsetUnset');
-        $oListMock->offsetSet('No1', $oManagerMock);
-        $oListMock->offsetSet('No2', $oManagerMock);
-
         /** @var d3usermanagerlist|MockObject $oManagerListMock */
         $oManagerListMock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetManuallyManagerJobsByFolder'])
+            ->setMethods(['d3GetManuallyManagerJobsByFolder', 'offsetUnset'])
             ->getMock();
-        $oManagerListMock->expects($this->once())->method('d3GetManuallyManagerJobsByFolder')->willReturn($oListMock);
+        $oManagerListMock->expects($this->once())->method('d3GetManuallyManagerJobsByFolder')->willReturnSelf();
+        $oManagerListMock->expects($this->never())->method('offsetUnset');
+        $oManagerListMock->offsetSet('No1', $oManagerMock);
+        $oManagerListMock->offsetSet('No2', $oManagerMock);
 
         /** @var d3_usermanager_jobs|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
@@ -343,19 +342,14 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
             ->getMock();
         $oManagerExecuteMock->method('userMeetsConditions')->will($this->onConsecutiveCalls(false, true));
 
-        /** @var ListModel|MockObject $oListMock */
-        $oListMock = $this->getMockBuilder(ListModel::class)
-            ->setMethods(['offsetUnset'])
-            ->getMock();
-        $oListMock->expects($this->once())->method('offsetUnset');
-        $oListMock->offsetSet('No1', $oManagerMock);
-        $oListMock->offsetSet('No2', $oManagerMock);
-
         /** @var d3usermanagerlist|MockObject $oManagerListMock */
         $oManagerListMock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetManuallyManagerJobsByFolder'])
+            ->setMethods(['d3GetManuallyManagerJobsByFolder', 'offsetUnset'])
             ->getMock();
-        $oManagerListMock->expects($this->once())->method('d3GetManuallyManagerJobsByFolder')->willReturn($oListMock);
+        $oManagerListMock->expects($this->once())->method('d3GetManuallyManagerJobsByFolder')->willReturnSelf();
+        $oManagerListMock->expects($this->once())->method('offsetUnset');
+        $oManagerListMock->offsetSet('No1', $oManagerMock);
+        $oManagerListMock->offsetSet('No2', $oManagerMock);
 
         /** @var d3_usermanager_jobs|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
@@ -378,6 +372,74 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
             ListModel::class,
             $generatedList
         );
+        // offsetUnset doesn't work, because it's mocked
+        // $this->assertCount(1, $generatedList);
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs::_d3GetManuallyManagerJobs
+     * @test
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    public function cannotGetManuallyExecutableManagerJobsBecauseUnvalidConfiguration()
+    {
+        /** @var d3usermanager|MockObject $oManagerMock */
+        $oManagerMock = $this->getMockBuilder(d3usermanager::class)
+            ->setMethods(['getValue'])
+            ->getMock();
+        $oManagerMock->method('getValue')->willReturn(true);
+
+        /** @var d3usermanager_requirementException|MockObject $exception */
+        $exception = $this->getMockBuilder(d3usermanager_requirementException::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        /** @var UtilsView|MockObject $utilsViewMock */
+        $utilsViewMock = $this->getMockBuilder(UtilsView::class)
+            ->setMethods(['addErrorToDisplay'])
+            ->getMock();
+        $utilsViewMock->expects($this->atLeastOnce())->method('addErrorToDisplay')->willReturn(true);
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.UtilsView::class, $utilsViewMock);
+
+        /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
+        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
+            ->setMethods(['orderMeetsConditions'])
+            ->setConstructorArgs([$oManagerMock])
+            ->getMock();
+        $oManagerExecuteMock->method('orderMeetsConditions')->willThrowException($exception);
+
+        /** @var d3usermanagerlist|MockObject $oManagerListMock */
+        $oManagerListMock = $this->getMockBuilder(d3usermanagerlist::class)
+            ->setMethods(['d3GetManuallyManagerJobsByFolder', 'offsetUnset'])
+            ->getMock();
+        $oManagerListMock->expects($this->once())->method('d3GetManuallyManagerJobsByFolder')->willReturnSelf();
+        $oManagerListMock->expects($this->never())->method('offsetUnset');
+        $oManagerListMock->offsetSet('No1', $oManagerMock);
+        $oManagerListMock->offsetSet('No2', $oManagerMock);
+
+        /** @var d3_usermanager_jobs|MockObject $oControllerMock */
+        $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
+            ->setMethods([
+                'getManagerList',
+                'getManagerExecute'
+            ])
+            ->getMock();
+        $oControllerMock->method('getManagerList')->willReturn($oManagerListMock);
+        $oControllerMock->method('getManagerExecute')->willReturn($oManagerExecuteMock);
+
+        $this->_oController = $oControllerMock;
+
+        $generatedList = $this->callMethod(
+            $this->_oController,
+            '_d3GetManuallyManagerJobs',
+            array('sTestFolderId')
+        );
+        $this->assertInstanceOf(
+            ListModel::class,
+            $generatedList
+        );
+        $this->assertTrue(count($generatedList) === 0);
         // offsetUnset doesn't work, because it's mocked
         // $this->assertCount(1, $generatedList);
     }
@@ -461,12 +523,13 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
         $oManagerMock->method('getValue')->willReturn(false);
 
         /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
-        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager::class)
+        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
             ->setMethods([
                 'exec4user',
                 'finishJobExecution',
                 'userMeetsConditions'
             ])
+            ->setConstructorArgs([$oManagerMock])
             ->getMock();
         $oManagerExecuteMock->expects($this->once())->method('exec4user')->willReturn(true);
         $oManagerExecuteMock->expects($this->once())->method('finishJobExecution')->willReturn(true);
@@ -510,12 +573,13 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
         $oManagerMock->method('getValue')->willReturn(true);
 
         /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
-        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager::class)
+        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
             ->setMethods([
                 'exec4user',
                 'finishJobExecution',
                 'userMeetsConditions'
             ])
+            ->setConstructorArgs([$oManagerMock])
             ->getMock();
         $oManagerExecuteMock->expects($this->once())->method('exec4user')->willReturn(true);
         $oManagerExecuteMock->expects($this->once())->method('finishJobExecution')->willReturn(true);
@@ -525,11 +589,13 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
         $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
             ->setMethods([
                 'getManager',
-                'getManagerExecute'
+                'getManagerExecute',
+                'checkForConfigurationException'
             ])
             ->getMock();
         $oControllerMock->method('getManager')->willReturn($oManagerMock);
         $oControllerMock->method('getManagerExecute')->willReturn($oManagerExecuteMock);
+        $oControllerMock->method('checkForConfigurationException')->willReturn(true);
 
         $this->_oController = $oControllerMock;
 
@@ -542,9 +608,11 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
     /**
      * @covers \D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs::d3execusermanager
      * @test
+     * @param $exceptionClass
      * @throws ReflectionException
+     * @dataProvider cannotExecChangedContentsBecauseOfExceptionDataProvider
      */
-    public function usermanagerStartExecutionConditionCheckFailed()
+    public function usermanagerStartExecutionConditionCheckFailed($exceptionClass)
     {
         /** @var d3usermanager|MockObject $oManagerMock */
         $oManagerMock = $this->getMockBuilder(d3usermanager::class)
@@ -559,26 +627,36 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
         $oManagerMock->method('getValue')->willReturn(true);
 
         /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
-        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager::class)
+        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
             ->setMethods([
                 'exec4user',
                 'finishJobExecution',
                 'userMeetsConditions'
             ])
+            ->setConstructorArgs([$oManagerMock])
             ->getMock();
         $oManagerExecuteMock->expects($this->never())->method('exec4user')->willReturn(true);
         $oManagerExecuteMock->expects($this->never())->method('finishJobExecution')->willReturn(true);
         $oManagerExecuteMock->method('userMeetsConditions')->willReturn(false);
 
+        /** @var d3usermanager_requirementException|d3usermanager_templaterendererExceptionInterface|MockObject $exception */
+        $exception = $this->getMockBuilder($exceptionClass)
+            ->disableOriginalConstructor()
+            ->setMethods(['debugOut'])
+            ->getMock();
+        $exception->expects($this->atLeastOnce())->method('debugOut')->willReturn(true);
+
         /** @var d3_usermanager_jobs|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
             ->setMethods([
                 'getManager',
-                'getManagerExecute'
+                'getManagerExecute',
+                'checkForConfigurationException'
             ])
             ->getMock();
         $oControllerMock->method('getManager')->willReturn($oManagerMock);
         $oControllerMock->method('getManagerExecute')->willReturn($oManagerExecuteMock);
+        $oControllerMock->method('checkForConfigurationException')->willThrowException($exception);
 
         $this->_oController = $oControllerMock;
 
@@ -608,12 +686,13 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
         $oManagerMock->method('getValue')->willReturn(false);
 
         /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
-        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager::class)
+        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
             ->setMethods([
                 'exec4user',
                 'finishJobExecution',
                 'userMeetsConditions'
             ])
+            ->setConstructorArgs([$oManagerMock])
             ->getMock();
         $oManagerExecuteMock->expects($this->once())->method('exec4user')->willReturn(true);
         $oManagerExecuteMock->expects($this->once())->method('finishJobExecution')->willReturn(true);
@@ -657,12 +736,13 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
         $oManagerMock->method('getValue')->willReturn(true);
 
         /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
-        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager::class)
+        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
             ->setMethods([
                 'exec4user',
                 'finishJobExecution',
                 'userMeetsConditions'
             ])
+            ->setConstructorArgs([$oManagerMock])
             ->getMock();
         $oManagerExecuteMock->expects($this->once())->method('exec4user')->willReturn(true);
         $oManagerExecuteMock->expects($this->once())->method('finishJobExecution')->willReturn(true);
@@ -672,11 +752,13 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
         $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
             ->setMethods([
                 'getManager',
-                'getManagerExecute'
+                'getManagerExecute',
+                'checkForConfigurationException'
             ])
             ->getMock();
         $oControllerMock->method('getManager')->willReturn($oManagerMock);
         $oControllerMock->method('getManagerExecute')->willReturn($oManagerExecuteMock);
+        $oControllerMock->method('checkForConfigurationException')->willReturn(true);
 
         $this->_oController = $oControllerMock;
 
@@ -687,11 +769,13 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers \D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs::d3ExecChangedUserManager
+     * @covers       \D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs::d3ExecChangedUserManager
      * @test
+     * @param $exceptionClass
      * @throws ReflectionException
+     * @dataProvider cannotExecChangedContentsBecauseOfExceptionDataProvider
      */
-    public function changedUsermanagerStartExecutionConditionCheckFailed()
+    public function changedUsermanagerStartExecutionConditionCheckFailed($exceptionClass)
     {
         /** @var d3usermanager|MockObject $oManagerMock */
         $oManagerMock = $this->getMockBuilder(d3usermanager::class)
@@ -706,26 +790,36 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
         $oManagerMock->method('getValue')->willReturn(true);
 
         /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
-        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager::class)
+        $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
             ->setMethods([
                 'exec4user',
                 'finishJobExecution',
                 'userMeetsConditions'
             ])
+            ->setConstructorArgs([$oManagerMock])
             ->getMock();
         $oManagerExecuteMock->expects($this->never())->method('exec4user')->willReturn(true);
         $oManagerExecuteMock->expects($this->never())->method('finishJobExecution')->willReturn(true);
         $oManagerExecuteMock->method('userMeetsConditions')->willReturn(false);
 
+        /** @var d3usermanager_requirementException|d3usermanager_templaterendererExceptionInterface|MockObject $exception */
+        $exception = $this->getMockBuilder($exceptionClass)
+            ->disableOriginalConstructor()
+            ->setMethods(['debugOut'])
+            ->getMock();
+        $exception->expects($this->atLeastOnce())->method('debugOut')->willReturn(true);
+
         /** @var d3_usermanager_jobs|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
             ->setMethods([
                 'getManager',
-                'getManagerExecute'
+                'getManagerExecute',
+                'checkForConfigurationException'
             ])
             ->getMock();
         $oControllerMock->method('getManager')->willReturn($oManagerMock);
         $oControllerMock->method('getManagerExecute')->willReturn($oManagerExecuteMock);
+        $oControllerMock->method('checkForConfigurationException')->willThrowException($exception);
 
         $this->_oController = $oControllerMock;
 
@@ -838,7 +932,7 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
             ])
             ->getMock();
         $oManagerMock->expects($this->once())->method('load')->willReturn(true);
-        $oManagerMock->expects($this->exactly(2))->method('getEditableContent')->with(
+        $oManagerMock->expects($this->once())->method('getEditableContent')->with(
             $this->stringContains('testItemId')
         )->willReturn(['foo123' => 'bar']);
 
@@ -854,6 +948,67 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
             $this->_oController,
             'execChangedContents'
         );
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs::execChangedContents
+     * @test
+     * @param $exceptionClass
+     * @throws ReflectionException
+     * @dataProvider cannotExecChangedContentsBecauseOfExceptionDataProvider
+     */
+    public function cannotExecChangedContentsBecauseOfException($exceptionClass)
+    {
+        $_POST['oxid'] = 'testItemId';
+
+        /** @var d3usermanager|MockObject $oManagerMock */
+        $oManagerMock = $this->getMockBuilder(d3usermanager::class)
+            ->setMethods([
+                'load',
+                'getEditableContent'
+            ])
+            ->getMock();
+        $oManagerMock->expects($this->once())->method('load')->willReturn(true);
+        $oManagerMock->expects($this->never())->method('getEditableContent')->with(
+            $this->stringContains('testItemId')
+        )->willReturn(true);
+
+        /** @var d3usermanager_requirementException|MockObject $exception */
+        $exception = $this->getMockBuilder($exceptionClass)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        /** @var UtilsView|MockObject $utilsViewMock */
+        $utilsViewMock = $this->getMockBuilder(UtilsView::class)
+            ->setMethods(['addErrorToDisplay'])
+            ->getMock();
+        $utilsViewMock->expects($this->atLeastOnce())->method('addErrorToDisplay')->willReturn(true);
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.UtilsView::class, $utilsViewMock);
+
+        /** @var d3_usermanager_jobs|MockObject $oControllerMock */
+        $oControllerMock = $this->getMockBuilder(d3_usermanager_jobs::class)
+            ->setMethods(['getManager', 'checkForConfigurationException'])
+            ->getMock();
+        $oControllerMock->method('getManager')->willReturn($oManagerMock);
+        $oControllerMock->method('checkForConfigurationException')->willThrowException($exception);
+
+        $this->_oController = $oControllerMock;
+
+        $this->callMethod(
+            $this->_oController,
+            'execChangedContents'
+        );
+    }
+
+    /**
+     * @return string[][]
+     */
+    public function cannotExecChangedContentsBecauseOfExceptionDataProvider(): array
+    {
+        return [
+            'unvalid configuration' => [d3usermanager_requirementException::class],
+            'smarty rendering error'    => [d3usermanager_smartyException::class]
+        ];
     }
 
     /**
@@ -1056,5 +1211,46 @@ class d3_usermanager_jobsTest extends d3UsermanagerUnitTestCase
     protected function _setModuleLicenseKey($sLicenseKey, $oManager = null)
     {
         return null;
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs::checkForConfigurationException
+     * @test
+     * @param $configuration
+     * @throws ReflectionException
+     * @dataProvider canCheckForConfigurationExceptionDataProvider
+     */
+    public function canCheckForConfigurationException($configuration)
+    {
+        /** @var d3usermanager_configurationcheck|MockObject $confCheckMock */
+        $confCheckMock = $this->getMockBuilder(d3usermanager_configurationcheck::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['checkThrowingExceptions'])
+            ->getMock();
+        $confCheckMock->expects($this->once())->method('checkThrowingExceptions')->willReturn(true);
+        d3GetModCfgDIC()->set(d3usermanager_configurationcheck::class, $confCheckMock);
+
+        /** @var d3usermanager|MockObject $oManagerMock */
+        $oManagerMock = $this->getMockBuilder(d3usermanager::class)
+            ->setMethods(['getValue'])
+            ->getMock();
+        $oManagerMock->method('getValue')->willReturn($configuration);
+
+        $this->callMethod(
+            $this->_oController,
+            'checkForConfigurationException',
+            [$oManagerMock]
+        );
+    }
+
+    /**
+     * @return array[]
+     */
+    public function canCheckForConfigurationExceptionDataProvider(): array
+    {
+        return [
+            [d3usermanager_configurationcheck::REQUIREMENTS_AND_ACTIONS],
+            [d3usermanager_configurationcheck::ACTIONS_ONLY]
+        ];
     }
 }

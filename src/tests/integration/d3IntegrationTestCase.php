@@ -21,6 +21,7 @@ use D3\ModCfg\Application\Model\Log\d3log;
 use D3\ModCfg\Tests\unit\d3ModCfgUnitTestCase;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_listgenerator as Manager_Listgenerator;
+use D3\Usermanager\Modules\Application\Model\d3_user_usermanager;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\FetchMode;
 use Exception;
@@ -30,6 +31,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Model\BaseModel;
+use OxidEsales\Eshop\Core\Registry;
 use PHPUnit\Framework\MockObject\MockObject;
 
 abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
@@ -138,7 +140,12 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
      */
     public function createOrder($sId, $aFields = array(), $aOrderArticles = array())
     {
+        // prevent trigger action in test preparation
+        Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, true);
+
         $this->createObject('d3ox.usermanager.'.Order::class, $sId, $aFields);
+
+        Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, false);
 
         if (is_array($aOrderArticles) && count($aOrderArticles)) {
             foreach ($aOrderArticles as $sOArtId => $aOArtFields) {
@@ -180,6 +187,9 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
         try {
             /** @var BaseModel $oObject */
             $oObject = d3GetModCfgDIC()->get($sClass);
+            if (method_exists($oObject, 'setRights')) {
+                $oObject->setRights(null);
+            }
             if ($oObject->exists($sId)) {
                 $oObject->delete($sId);
             }
@@ -196,6 +206,9 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
             /** @var BaseModel $oObject */
             $oObject = d3GetModCfgDIC()->get('d3ox.usermanager.' . BaseModel::class);
             $oObject->init($sTableName);
+            if (method_exists($oObject, 'setRights')) {
+                $oObject->setRights(null);
+            }
             if ($oObject->exists($sId)) {
                 $oObject->delete($sId);
             }
@@ -222,7 +235,6 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
 
     /**
      * @param $sId
-     * @throws Exception
      */
     public function deleteArticle($sId)
     {
@@ -231,7 +243,6 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
 
     /**
      * @param $sId
-     * @throws Exception
      */
     public function deleteOrder($sId)
     {
@@ -240,7 +251,6 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
 
     /**
      * @param $sId
-     * @throws Exception
      */
     public function deleteUser($sId)
     {

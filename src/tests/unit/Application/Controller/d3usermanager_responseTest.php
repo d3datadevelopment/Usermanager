@@ -18,11 +18,14 @@ namespace D3\Usermanager\tests\unit\Application\Controller;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Log\d3log;
+use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\Usermanager\Application\Controller\d3usermanager_response;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\Application\Model\d3usermanager_execute;
 use D3\Usermanager\Application\Model\d3usermanagerlist;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_bonifilter;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
 use Doctrine\DBAL\DBALException;
 use Exception;
@@ -30,6 +33,7 @@ use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Language;
+use OxidEsales\Eshop\Core\Registry;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use stdClass;
@@ -88,7 +92,7 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
             ])
             ->getMock();
         $oControllerMock->expects($this->once())->method('_startExecution')->willReturn(false);
-        $oControllerMock->expects($this->once())->method('isBrowserCall')->willReturn(true);
+        $oControllerMock->expects($this->atLeast(2))->method('isBrowserCall')->willReturn(true);
 
         $this->_oController = $oControllerMock;
 
@@ -101,7 +105,7 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
      * @test
      * @throws ReflectionException
      */
-    public function initDontOutputSuccessMessageToServer()
+    public function initOutputErrorMessageToBrowser()
     {
         /** @var d3usermanager_response|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
@@ -110,12 +114,74 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
                 'isBrowserCall'
             ])
             ->getMock();
-        $oControllerMock->expects($this->once())->method('_startExecution')->willReturn(false);
-        $oControllerMock->expects($this->once())->method('isBrowserCall')->willReturn(false);
+        $oControllerMock->expects($this->once())->method('_startExecution')->willReturn(true);
+        $oControllerMock->expects($this->atLeast(2))->method('isBrowserCall')->willReturn(false);
 
         $this->_oController = $oControllerMock;
 
-        $this->expectOutputRegex('@^$@'); // output is empty
+        Registry::getUtilsView()->addErrorToDisplay(new Exception('excMessage1'));
+
+        $this->expectOutputRegex('@.*ERRORS<br><br>excMessage1.*@i'); // output not empty
+
+        $this->callMethod($this->_oController, 'init');
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::init
+     * @test
+     * @throws ReflectionException
+     */
+    public function initcantRunBecauseOfInvalidConfiguration()
+    {
+        /** @var d3usermanager_requirement_bonifilter|MockObject $requirement */
+        $requirement = $this->getMockBuilder(d3usermanager_requirement_bonifilter::class)
+            ->setConstructorArgs([$this->_oController->getManager()])
+            ->getMock();
+
+        /** @var d3usermanager_requirementException|MockObject $exception */
+        $exception = $this->getMockBuilder(d3usermanager_requirementException::class)
+            ->setConstructorArgs([$requirement])
+            ->setMethods(['debugOut', 'getMessage'])
+            ->getMock();
+        $exception->expects($this->once())->method('debugOut')->willReturn(true);
+
+        /** @var d3usermanager_response|MockObject $oControllerMock */
+        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
+            ->setMethods([
+                '_startExecution',
+                'isBrowserCall'
+            ])
+            ->getMock();
+        $oControllerMock->expects($this->once())->method('_startExecution')->willThrowException($exception);
+        $oControllerMock->expects($this->atLeast(1))->method('isBrowserCall')->willReturn(true);
+
+        $this->_oController = $oControllerMock;
+        Registry::set('logger', oxNew(d3NullLogger::class));
+
+        $this->expectOutputRegex('@[a-z0-9]{1,}@i'); // output not empty
+        $this->callMethod($this->_oController, 'init');
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::init
+     * @test
+     * @throws ReflectionException
+     */
+    public function initThrowExecptionAtServerCall()
+    {
+        /** @var d3usermanager_response|MockObject $oControllerMock */
+        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
+            ->setMethods([
+                '_startExecution',
+                'isBrowserCall'
+            ])
+            ->getMock();
+        $oControllerMock->expects($this->once())->method('_startExecution')->willReturn(true);
+        $oControllerMock->expects($this->atLeast(2))->method('isBrowserCall')->willReturn(false);
+
+        $this->_oController = $oControllerMock;
+
+        $this->expectOutputRegex('@.*DEPRECATED.*@');
         $this->callMethod($this->_oController, 'init');
     }
 
@@ -126,6 +192,9 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
      */
     public function initDontOutputSuccessMessageInCaseOfException()
     {
+        /** @var d3usermanager_cronUnavailableException $exc */
+        $exc = d3GetModCfgDIC()->get(d3usermanager_cronUnavailableException::class);
+
         /** @var d3usermanager_response|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
             ->setMethods([
@@ -133,13 +202,34 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
                 'isBrowserCall'
             ])
             ->getMock();
-        $oControllerMock->expects($this->once())->method('_startExecution')->willReturn(true);
-        $oControllerMock->expects($this->once())->method('isBrowserCall')->willReturn(true);
+        $oControllerMock->expects($this->once())->method('_startExecution')->willThrowException($exc);
+        $oControllerMock->expects($this->atLeastOnce())->method('isBrowserCall')->willReturn(true);
 
         $this->_oController = $oControllerMock;
 
         $this->expectOutputRegex('@^$@'); // output is empty
         $this->callMethod($this->_oController, 'init');
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::initCli
+     * @test
+     * @throws ReflectionException
+     */
+    public function canRunInitCli()
+    {
+        /** @var d3usermanager_response|MockObject $oControllerMock */
+        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
+            ->setMethods(['_startExecution'])
+            ->getMock();
+        $oControllerMock->expects($this->once())->method('_startExecution')->willReturn(true);
+
+        $this->_oController = $oControllerMock;
+
+        $this->callMethod(
+            $this->_oController,
+            'initCli'
+        );
     }
 
     /**
@@ -176,17 +266,15 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
                 '_startJobs'])
             ->getMock();
         $oControllerMock->method('_getSet')->willReturn($oModCfgMock);
-        $oControllerMock->method('_checkUnavailableCronjob')->willReturn(true);
+        $oControllerMock->method('_checkUnavailableCronjob')->willReturn(null);
         $oControllerMock->method('_getCronTimestampVarName')->willReturn(true);
         $oControllerMock->expects($this->once())->method('_startJobs')->willReturn(true);
 
         $this->_oController = $oControllerMock;
 
-        $this->assertFalse(
-            $this->callMethod(
-                $this->_oController,
-                '_startExecution'
-            )
+        $this->callMethod(
+            $this->_oController,
+            '_startExecution'
         );
     }
 
@@ -230,53 +318,7 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
 
         $this->_oController = $oControllerMock;
 
-        $this->assertTrue(
-            $this->callMethod(
-                $this->_oController,
-                '_startExecution'
-            )
-        );
-    }
-
-    /**
-     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::_startExecution
-     * @test
-     * @throws ReflectionException
-     */
-    public function startExecutionPassWithStandardException()
-    {
-        /** @var d3log|MockObject $oLogMock */
-        $oLogMock = $this->getMockBuilder(d3log::class)
-            ->setMethods(['log'])
-            ->getMock();
-        $oLogMock->method('log')->willReturn(true);
-
-        /** @var stdClass|MockObject $oModCfgMock */
-        $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods([
-                'd3getLog',
-                'setValue',
-                'saveNoLicenseRefresh'
-            ])
-            ->getMock();
-        $oModCfgMock->method('d3getLog')->willReturn($oLogMock);
-        $oModCfgMock->method('setValue')->willReturn(true);
-        $oModCfgMock->method('saveNoLicenseRefresh')->willReturn(true);
-
-        /** @var d3usermanager_response|MockObject $oControllerMock */
-        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods([
-                '_getSet',
-                '_checkUnavailableCronjob',
-                '_getCronTimestampVarName',
-                '_startJobs'])
-            ->getMock();
-        $oControllerMock->method('_getSet')->willReturn($oModCfgMock);
-        $oControllerMock->method('_checkUnavailableCronjob')->will($this->returnCallback(array($this, 'standardExceptionCallback')));
-        $oControllerMock->method('_getCronTimestampVarName')->willReturn(true);
-        $oControllerMock->expects($this->never())->method('_startJobs')->willReturn(true);
-
-        $this->_oController = $oControllerMock;
+        $this->expectException(d3usermanager_cronUnavailableException::class);
 
         $this->assertTrue(
             $this->callMethod(
@@ -284,23 +326,6 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
                 '_startExecution'
             )
         );
-
-        $fileName = 'd3usermanagerExceptionsTest.txt';
-        $sLogFolder = str_replace(basename(OX_LOG_FILE), '', OX_LOG_FILE);
-        $sLogFile = $sLogFolder.$fileName;
-
-        // backward compatibility for OXID < 6.1
-        if (method_exists(StandardException::class, 'setLogFileName')
-            && file_exists($sLogFile)
-        ) {
-            $file = file_get_contents($sLogFile);
-            unlink($sLogFile);
-            $this->assertContains('cron unavailable', $file);
-        } elseif (file_exists(OX_LOG_FILE)) {
-            $file = file_get_contents(OX_LOG_FILE);
-            file_put_contents(OX_LOG_FILE, '');
-            $this->assertContains('cron unavailable', $file);
-        }
     }
 
     /**
@@ -333,7 +358,6 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanager_cronUnavailableException $oException */
         $oException = d3GetModCfgDIC()->get(d3usermanager_cronUnavailableException::class);
-        $oException->d3disableScreenMessage();
 
         throw $oException;
     }
@@ -561,111 +585,6 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::showDisabledMessage
-     * @test
-     * @throws ReflectionException
-     */
-    public function disabledMessageWillNotShow()
-    {
-        /** @var stdClass|MockObject $oModCfgMock */
-        $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods([
-                'getValue',
-                'hasDebugMode'
-            ])
-            ->getMock();
-        $map = [
-            ['blCronActive', false],
-        ];
-        $oModCfgMock->method('getValue')->willReturnMap($map);
-        $oModCfgMock->method('hasDebugMode')->willReturn(false);
-
-        /** @var d3usermanager_response|MockObject $oControllerMock */
-        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods([
-                'isBrowserCall',
-                '_getSet'
-            ])
-            ->getMock();
-        $oControllerMock->method('isBrowserCall')->willReturn(false);
-        $oControllerMock->method('_getSet')->willReturn($oModCfgMock);
-
-        $this->_oController = $oControllerMock;
-
-        $this->assertFalse($this->callMethod($this->_oController, 'showDisabledMessage'));
-    }
-
-    /**
-     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::showDisabledMessage
-     * @test
-     * @throws ReflectionException
-     */
-    public function disabledMessageWillShowBecauseDebug()
-    {
-        /** @var stdClass|MockObject $oModCfgMock */
-        $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods([
-                'getValue',
-                'hasDebugMode'
-            ])
-            ->getMock();
-        $map = [
-            ['blCronActive', false],
-        ];
-        $oModCfgMock->method('getValue')->willReturnMap($map);
-        $oModCfgMock->method('hasDebugMode')->willReturn(true);
-
-        /** @var d3usermanager_response|MockObject $oControllerMock */
-        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods([
-                'isBrowserCall',
-                '_getSet'
-            ])
-            ->getMock();
-        $oControllerMock->method('isBrowserCall')->willReturn(false);
-        $oControllerMock->method('_getSet')->willReturn($oModCfgMock);
-
-        $this->_oController = $oControllerMock;
-
-        $this->assertTrue($this->callMethod($this->_oController, 'showDisabledMessage'));
-    }
-
-    /**
-     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::showDisabledMessage
-     * @test
-     * @throws ReflectionException
-     */
-    public function disabledMessageWillShowBecauseBrowserCall()
-    {
-        /** @var stdClass|MockObject $oModCfgMock */
-        $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods([
-                'getValue',
-                'hasDebugMode'
-            ])
-            ->getMock();
-        $map = [
-            ['blCronActive', false],
-        ];
-        $oModCfgMock->method('getValue')->willReturnMap($map);
-        $oModCfgMock->method('hasDebugMode')->willReturn(false);
-
-        /** @var d3usermanager_response|MockObject $oControllerMock */
-        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods([
-                'isBrowserCall',
-                '_getSet'
-            ])
-            ->getMock();
-        $oControllerMock->method('isBrowserCall')->willReturn(true);
-        $oControllerMock->method('_getSet')->willReturn($oModCfgMock);
-
-        $this->_oController = $oControllerMock;
-
-        $this->assertTrue($this->callMethod($this->_oController, 'showDisabledMessage'));
-    }
-
-    /**
      * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::isBrowserCall
      * @test
      * @throws ReflectionException
@@ -822,7 +741,7 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
 
         $this->_oController = $oControllerMock;
 
-        $this->expectException(d3usermanager_cronunavailableexception::class);
+        $this->expectException(d3usermanager_cronUnavailableException::class);
 
         $this->callMethod($this->_oController, '_checkUnavailableCronjob');
     }
@@ -860,7 +779,46 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
 
         $this->_oController = $oControllerMock;
 
-        $this->expectException(d3usermanager_cronunavailableexception::class);
+        $this->expectException(d3usermanager_cronUnavailableException::class);
+
+        $this->callMethod($this->_oController, '_checkUnavailableCronjob');
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::_checkUnavailableCronjob
+     * @test
+     * @throws ReflectionException
+     */
+    public function unavailableCronjobInactiveCronPass()
+    {
+        /** @var d3usermanager_cronUnavailableException|MockObject $oExceptionMock */
+        $oExceptionMock = $this->getMockBuilder(d3usermanager_cronUnavailableException::class)
+            ->setMethods(['debugOut'])
+            ->getMock();
+        $oExceptionMock->method('debugOut')->willReturn(true);
+
+        /** @var stdClass|MockObject $oModCfgMock */
+        $oModCfgMock = $this->getMockBuilder(stdClass::class)
+            ->setMethods(['isActive', 'getValue'])
+            ->getMock();
+        $oModCfgMock->method('isActive')->willReturn(true);
+        $oModCfgMock->method('getValue')->willReturn(false);
+
+        /** @var d3usermanager_response|MockObject $oControllerMock */
+        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
+            ->setMethods([
+                '_checkAccessKey',
+                'getCronUnavailableException',
+                '_getSet'
+            ])
+            ->getMock();
+        $oControllerMock->method('_checkAccessKey')->willReturn(true);
+        $oControllerMock->method('getCronUnavailableException')->willReturn($oExceptionMock);
+        $oControllerMock->method('_getSet')->willReturn($oModCfgMock);
+
+        $this->_oController = $oControllerMock;
+
+        $this->expectException(d3usermanager_cronUnavailableException::class);
 
         $this->callMethod($this->_oController, '_checkUnavailableCronjob');
     }
@@ -880,9 +838,10 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
 
         /** @var stdClass|MockObject $oModCfgMock */
         $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods(['isActive'])
+            ->setMethods(['isActive', 'getValue'])
             ->getMock();
         $oModCfgMock->expects($this->atLeastOnce())->method('isActive')->willReturn(true);
+        $oModCfgMock->expects($this->atLeastOnce())->method('getValue')->willReturn(true);
 
         /** @var d3usermanager_response|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
@@ -892,10 +851,9 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
                 '_getSet',
                 '_checkDisabledCronjob'])
             ->getMock();
-        $oControllerMock->expects($this->any())->method('_checkAccessKey')->willReturn(true);
+        $oControllerMock->expects($this->atLeastOnce())->method('_checkAccessKey')->willReturn(true);
         $oControllerMock->method('getCronUnavailableException')->willReturn($oExceptionMock);
         $oControllerMock->method('_getSet')->willReturn($oModCfgMock);
-        $oControllerMock->expects($this->any())->method('_checkDisabledCronjob')->willReturn(true);
 
         $this->_oController = $oControllerMock;
 
@@ -903,117 +861,6 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
             $this->_oController,
             '_checkUnavailableCronjob'
         );
-    }
-
-    /**
-     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::_checkDisabledCronjob
-     * @test
-     * @throws ReflectionException
-     */
-    public function disabledCronjobWithDisabledMessagePass()
-    {
-        /** @var d3usermanager_cronUnavailableException|MockObject $oExceptionMock */
-        $oExceptionMock = $this->getMockBuilder(d3usermanager_cronUnavailableException::class)
-            ->setMethods(['debugOut'])
-            ->getMock();
-        $oExceptionMock->method('debugOut')->willReturn(true);
-
-        /** @var d3usermanager_response|MockObject $oControllerMock */
-        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods([
-                'showDisabledMessage',
-                'getCronUnavailableException'
-            ])
-            ->getMock();
-        $oControllerMock->method('showDisabledMessage')->willReturn(true);
-        $oControllerMock->method('getCronUnavailableException')->willReturn($oExceptionMock);
-
-        $this->_oController = $oControllerMock;
-
-        $this->expectException(d3usermanager_cronunavailableexception::class);
-
-        $this->callMethod($this->_oController, '_checkDisabledCronjob');
-    }
-
-    /**
-     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::_checkDisabledCronjob
-     * @test
-     * @throws ReflectionException
-     */
-    public function disabledCronjobWithInactiveCronPass()
-    {
-        /** @var d3usermanager_cronUnavailableException|MockObject $oExceptionMock */
-        $oExceptionMock = $this->getMockBuilder(d3usermanager_cronUnavailableException::class)
-            ->setMethods(['debugOut'])
-            ->getMock();
-        $oExceptionMock->method('debugOut')->willReturn(true);
-
-        /** @var stdClass|MockObject $oModCfgMock */
-        $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods(['getValue'])
-            ->getMock();
-        $map = [
-            ['blCronActive', false]
-        ];
-        $oModCfgMock->method('getValue')->willReturnMap($map);
-
-        /** @var d3usermanager_response|MockObject $oControllerMock */
-        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods([
-                'showDisabledMessage',
-                'getCronUnavailableException',
-                '_getSet'
-            ])
-            ->getMock();
-        $oControllerMock->method('showDisabledMessage')->willReturn(false);
-        $oControllerMock->method('getCronUnavailableException')->willReturn($oExceptionMock);
-        $oControllerMock->method('_getSet')->willReturn($oModCfgMock);
-
-        $this->_oController = $oControllerMock;
-
-        $this->expectException(d3usermanager_cronunavailableexception::class);
-
-        $this->callMethod($this->_oController, '_checkDisabledCronjob');
-    }
-
-    /**
-     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::_checkDisabledCronjob
-     * @test
-     * @throws ReflectionException
-     */
-    public function disabledCronjobCheckDontPassWithEnabledCronjob()
-    {
-        /** @var d3usermanager_cronUnavailableException|MockObject $oExceptionMock */
-        $oExceptionMock = $this->getMockBuilder(d3usermanager_cronUnavailableException::class)
-            ->setMethods(['debugOut'])
-            ->getMock();
-        $oExceptionMock->method('debugOut')->willReturn(true);
-
-        /** @var stdClass|MockObject $oModCfgMock */
-        $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods(['getValue'])
-            ->getMock();
-        $map = [
-            ['blCronActive', true]
-        ];
-        $oModCfgMock->expects($this->atLeastOnce())->method('getValue')
-                                           ->with($this->equalTo('blCronActive'))->willReturnMap($map);
-
-        /** @var d3usermanager_response|MockObject $oControllerMock */
-        $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods([
-                'showDisabledMessage',
-                'getCronUnavailableException',
-                '_getSet'
-            ])
-            ->getMock();
-        $oControllerMock->expects($this->any())->method('showDisabledMessage')->willReturn(false);
-        $oControllerMock->method('getCronUnavailableException')->willReturn($oExceptionMock);
-        $oControllerMock->method('_getSet')->willReturn($oModCfgMock);
-
-        $this->_oController = $oControllerMock;
-
-        $this->callMethod($this->_oController, '_checkDisabledCronjob');
     }
 
     /**

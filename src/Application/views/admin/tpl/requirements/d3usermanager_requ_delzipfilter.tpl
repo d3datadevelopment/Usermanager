@@ -4,10 +4,10 @@
         <dd>
             [{if $oView->isEditMode()}]
                 [{block name="usermanager_admin_requ_delzipfilter_editor"}]
-                    [{oxmultilang ident="D3_USERMANAGER_REQU_INVZIPRANGEFROM"}]
-                    <input style="text-align: right;" class="edittext ext_edittext" type="text" size="10" maxlength="10" name="value[sDelZipRangeFromValue]" value='[{$edit->getValue('sDelZipRangeFromValue')}]' [{$blActionRestriction}] [{$readonly}]>
-                    [{oxmultilang ident="D3_USERMANAGER_REQU_INVZIPRANGETO"}]
-                    <input style="text-align: right;" class="edittext ext_edittext" type="text" size="10" maxlength="10" name="value[sDelZipRangeToValue]" value='[{$edit->getValue('sDelZipRangeToValue')}]' [{$blActionRestriction}] [{$readonly}]>
+                    <label for="sDelZipRangeFromValue">[{oxmultilang ident="D3_USERMANAGER_REQU_INVZIPRANGEFROM"}]</label>
+                    <input id="sDelZipRangeFromValue" style="text-align: right;" class="edittext ext_edittext" type="text" size="10" maxlength="10" name="value[sDelZipRangeFromValue]" value='[{$edit->getValue('sDelZipRangeFromValue')}]' [{$blActionRestriction}] [{$readonly}]>
+                    <label for="sDelZipRangeToValue">[{oxmultilang ident="D3_USERMANAGER_REQU_INVZIPRANGETO"}]</label>
+                    <input id="sDelZipRangeToValue" style="text-align: right;" class="edittext ext_edittext" type="text" size="10" maxlength="10" name="value[sDelZipRangeToValue]" value='[{$edit->getValue('sDelZipRangeToValue')}]' [{$blActionRestriction}] [{$readonly}]>
                 [{/block}]
             [{else}]
                 [{block name="usermanager_admin_requ_delzipfilter_viewer"}]

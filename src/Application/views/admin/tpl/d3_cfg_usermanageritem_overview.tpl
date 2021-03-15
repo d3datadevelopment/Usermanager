@@ -83,15 +83,24 @@
         margin-left: 42%;
     }
 
-    details {
+    details, .restrictioninfo {
         margin: 0 0 15px;
         padding: 6px 9px 2px 18px;
         border: 1px solid silver;
         color: silver;
+        border-radius: .25rem;
+        border-left: .25rem #028fe8 solid;
     }
     details summary {
         margin: 0 0 3px -12px;
         cursor: pointer;
+    }
+    .restrictioninfo {
+        color: black;
+    }
+
+    .fixConfigError {
+        padding: 10px;
     }
     -->
 </style>
@@ -117,7 +126,7 @@
         <input type="hidden" name="editval[d3_cfg_mod__oxid]" value="[{$oxid}]">
 [{/if}]
 
-    <table style="border: none; width: 98%">
+    <table style="border: none; width: 100%">
         [{if $edit->getId() && !$edit->getLicenseActive()}]
             <tr>
                 <td  style="vertical-align: top;" class="edittext" colspan="2">
@@ -134,107 +143,119 @@
                     [{oxmultilang ident="d3tbclusermanager_items_overview_desc"}]
                 </details>
 
-                <div class="groupExp">
-                    <div class="exp">
-                        <a class="rc" onclick="_groupExp(this); return false;" href="#">
-                            <b>
-                                [{oxmultilang ident="D3_USERMANAGER_OVERVIEW_STAT"}]
-                            </b>
-                        </a>
-                        <dl>
-                            <dt>
-                                [{oxmultilang ident="D3_USERMANAGER_STAT_FINISHED"}] [{oxinputhelp ident="D3_USERMANAGER_STAT_FINISHED_DESC"}]
-                            </dt>
-                            <dd>
-                                [{assign var="mFinishedCount" value=$oView->getFinishedCount()}]
-                                [{$mFinishedCount}]
-                                [{if $oView->getDataOnDemand()}]
-                                    <input type="hidden" name="finishedCount" value="[{$mFinishedCount}]">
-                                    [{if false == $oView->hasRequestedData('finishedCount', 'getFinishedCount')}]
-                                        <span style="float: left;">
-                                            <span class="d3modcfg_btn icon d3color-green">
-                                                <button type="submit" name="requestData" onclick="oForm = document.getElementById('myedit'); oForm.sRequestData.value='getFinishedCount'; oForm.submit();">
-                                                    <i class="fa fa-check-circle fa-inverse"></i>
-                                                    [{oxmultilang ident="D3_USERMANAGER_STAT_REQUESTDATA"}]
-                                                </button>
-                                            </span>
-                                        </span>
-                                    [{/if}]
-                                [{/if}]
-                            </dd>
-                            <div class="spacer"></div>
-                        </dl>
-                        <dl>
-                            <dt>
-                                [{oxmultilang ident="D3_USERMANAGER_STAT_FINISHEDMONTH"}] [{oxinputhelp ident="D3_USERMANAGER_STAT_FINISHEDMONTH_DESC"}]
-                            </dt>
-                            <dd>
-                                [{assign var="mFinishedMonthCount" value=$oView->getFinishedMonthCount()}]
-                                [{$mFinishedMonthCount}]
-                                [{if $oView->getDataOnDemand()}]
-                                    <input type="hidden" name="finishedMonthCount" value="[{$mFinishedMonthCount}]">
-                                    [{if false == $oView->hasRequestedData('finishedMonthCount', 'getFinishedMonthCount')}]
-                                        <span style="float: left;">
-                                            <span class="d3modcfg_btn icon d3color-green">
-                                                <button type="submit" name="requestData" onclick="oForm = document.getElementById('myedit'); oForm.sRequestData.value='getFinishedMonthCount'; oForm.submit();">
-                                                    <i class="fa fa-check-circle fa-inverse"></i>
-                                                    [{oxmultilang ident="D3_USERMANAGER_STAT_REQUESTDATA"}]
-                                                </button>
-                                            </span>
-                                        </span>
-                                    [{/if}]
-                                [{/if}]
-                            </dd>
-                            <div class="spacer"></div>
-                        </dl>
-                        <dl>
-                            <dt>
-                                [{oxmultilang ident="D3_USERMANAGER_STAT_TOFINISHED"}] [{oxinputhelp ident="D3_USERMANAGER_STAT_TOFINISHED_DESC"}]
-                            </dt>
-                            <dd>
-                                [{assign var="mToFinishedCount" value=$oView->getToFinishedCount()}]
-                                [{$mToFinishedCount}]
-                                [{if $oView->getDataOnDemand()}]
-                                    <input type="hidden" name="toFinishedCount" value="[{$mToFinishedCount}]">
-                                    [{if false == $oView->hasRequestedData('toFinishedCount', 'getToFinishedCount')}]
-                                        <span style="float: left;">
-                                            <span class="d3modcfg_btn icon d3color-green">
-                                                <button type="submit" name="requestData" onclick="oForm = document.getElementById('myedit'); oForm.sRequestData.value='getToFinishedCount'; oForm.submit();">
-                                                    <i class="fa fa-check-circle fa-inverse"></i>
-                                                    [{oxmultilang ident="D3_USERMANAGER_STAT_REQUESTDATA"}]
-                                                </button>
-                                            </span>
-                                        </span>
-                                    [{/if}]
-                                [{/if}]
-                            </dd>
-                            <div class="spacer"></div>
-                        </dl>
-                        <dl>
-                            <dt>
-                                [{oxmultilang ident="D3_USERMANAGER_STAT_NOTFINISHED"}] [{oxinputhelp ident="D3_USERMANAGER_STAT_NOTFINISHED_DESC"}]
-                            </dt>
-                            <dd>
-                                [{assign var="mNotFinishedCount" value=$oView->getNotFinishedCount()}]
-                                [{$mNotFinishedCount}]
-                                [{if $oView->getDataOnDemand()}]
-                                    <input type="hidden" name="notFinishedCount" value="[{$mNotFinishedCount}]">
-                                    [{if false == $oView->hasRequestedData('notFinishedCount', 'getNotFinishedCount')}]
-                                        <span style="float: left;">
-                                            <span class="d3modcfg_btn icon d3color-green">
-                                                <button type="submit" name="requestData" onclick="oForm = document.getElementById('myedit'); oForm.sRequestData.value='getNotFinishedCount'; oForm.submit();">
-                                                    <i class="fa fa-check-circle fa-inverse"></i>
-                                                    [{oxmultilang ident="D3_USERMANAGER_STAT_REQUESTDATA"}]
-                                                </button>
-                                            </span>
-                                        </span>
-                                    [{/if}]
-                                [{/if}]
-                            </dd>
-                            <div class="spacer"></div>
-                        </dl>
+                [{if $edit->getBasicRestrictionSettings()}]
+                    <div class="restrictioninfo">
+                        [{oxmultilang ident="D3_GENERAL_USERMANAGER_BASICRESTRICTIONS"}]
                     </div>
-                </div>
+                [{/if}]
+
+                [{if false === is_array($Errors.default) || count($Errors.default) === 0}]
+                    <div class="groupExp">
+                        <div class="exp">
+                            <a class="rc" onclick="_groupExp(this); return false;" href="#">
+                                <b>
+                                    [{oxmultilang ident="D3_USERMANAGER_OVERVIEW_STAT"}]
+                                </b>
+                            </a>
+                            <dl>
+                                <dt>
+                                    [{oxmultilang ident="D3_USERMANAGER_STAT_FINISHED"}] [{oxinputhelp ident="D3_USERMANAGER_STAT_FINISHED_DESC"}]
+                                </dt>
+                                <dd>
+                                    [{assign var="mFinishedCount" value=$oView->getFinishedCount()}]
+                                    [{$mFinishedCount}]
+                                    [{if $oView->getDataOnDemand()}]
+                                        <input type="hidden" name="finishedCount" value="[{$mFinishedCount}]">
+                                        [{if false == $oView->hasRequestedData('finishedCount', 'getFinishedCount')}]
+                                            <span style="float: left;">
+                                                <span class="d3modcfg_btn icon d3color-green">
+                                                    <button type="submit" name="requestData" onclick="oForm = document.getElementById('myedit'); oForm.sRequestData.value='getFinishedCount'; oForm.submit();">
+                                                        <i class="fa fa-check-circle fa-inverse"></i>
+                                                        [{oxmultilang ident="D3_USERMANAGER_STAT_REQUESTDATA"}]
+                                                    </button>
+                                                </span>
+                                            </span>
+                                        [{/if}]
+                                    [{/if}]
+                                </dd>
+                                <div class="spacer"></div>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    [{oxmultilang ident="D3_USERMANAGER_STAT_FINISHEDMONTH"}] [{oxinputhelp ident="D3_USERMANAGER_STAT_FINISHEDMONTH_DESC"}]
+                                </dt>
+                                <dd>
+                                    [{assign var="mFinishedMonthCount" value=$oView->getFinishedMonthCount()}]
+                                    [{$mFinishedMonthCount}]
+                                    [{if $oView->getDataOnDemand()}]
+                                        <input type="hidden" name="finishedMonthCount" value="[{$mFinishedMonthCount}]">
+                                        [{if false == $oView->hasRequestedData('finishedMonthCount', 'getFinishedMonthCount')}]
+                                            <span style="float: left;">
+                                                <span class="d3modcfg_btn icon d3color-green">
+                                                    <button type="submit" name="requestData" onclick="oForm = document.getElementById('myedit'); oForm.sRequestData.value='getFinishedMonthCount'; oForm.submit();">
+                                                        <i class="fa fa-check-circle fa-inverse"></i>
+                                                        [{oxmultilang ident="D3_USERMANAGER_STAT_REQUESTDATA"}]
+                                                    </button>
+                                                </span>
+                                            </span>
+                                        [{/if}]
+                                    [{/if}]
+                                </dd>
+                                <div class="spacer"></div>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    [{oxmultilang ident="D3_USERMANAGER_STAT_TOFINISHED"}] [{oxinputhelp ident="D3_USERMANAGER_STAT_TOFINISHED_DESC"}]
+                                </dt>
+                                <dd>
+                                    [{assign var="mToFinishedCount" value=$oView->getToFinishedCount()}]
+                                    [{$mToFinishedCount}]
+                                    [{if $oView->getDataOnDemand()}]
+                                        <input type="hidden" name="toFinishedCount" value="[{$mToFinishedCount}]">
+                                        [{if false == $oView->hasRequestedData('toFinishedCount', 'getToFinishedCount')}]
+                                            <span style="float: left;">
+                                                <span class="d3modcfg_btn icon d3color-green">
+                                                    <button type="submit" name="requestData" onclick="oForm = document.getElementById('myedit'); oForm.sRequestData.value='getToFinishedCount'; oForm.submit();">
+                                                        <i class="fa fa-check-circle fa-inverse"></i>
+                                                        [{oxmultilang ident="D3_USERMANAGER_STAT_REQUESTDATA"}]
+                                                    </button>
+                                                </span>
+                                            </span>
+                                        [{/if}]
+                                    [{/if}]
+                                </dd>
+                                <div class="spacer"></div>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    [{oxmultilang ident="D3_USERMANAGER_STAT_NOTFINISHED"}] [{oxinputhelp ident="D3_USERMANAGER_STAT_NOTFINISHED_DESC"}]
+                                </dt>
+                                <dd>
+                                    [{assign var="mNotFinishedCount" value=$oView->getNotFinishedCount()}]
+                                    [{$mNotFinishedCount}]
+                                    [{if $oView->getDataOnDemand()}]
+                                        <input type="hidden" name="notFinishedCount" value="[{$mNotFinishedCount}]">
+                                        [{if false == $oView->hasRequestedData('notFinishedCount', 'getNotFinishedCount')}]
+                                            <span style="float: left;">
+                                                <span class="d3modcfg_btn icon d3color-green">
+                                                    <button type="submit" name="requestData" onclick="oForm = document.getElementById('myedit'); oForm.sRequestData.value='getNotFinishedCount'; oForm.submit();">
+                                                        <i class="fa fa-check-circle fa-inverse"></i>
+                                                        [{oxmultilang ident="D3_USERMANAGER_STAT_REQUESTDATA"}]
+                                                    </button>
+                                                </span>
+                                            </span>
+                                        [{/if}]
+                                    [{/if}]
+                                </dd>
+                                <div class="spacer"></div>
+                            </dl>
+                        </div>
+                    </div>
+                [{else}]
+                    <div class="fixConfigError errorbox" role="alert">
+                        [{oxmultilang ident="D3_USERMANAGER_OVERVIEW_STAT_FIXSETTINGS"}]
+                    </div>
+                [{/if}]
 
                 <div class="groupExp">
                     <div class="">

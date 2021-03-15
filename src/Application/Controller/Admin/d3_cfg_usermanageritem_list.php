@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_list;
@@ -31,7 +33,10 @@ class d3_cfg_usermanageritem_list extends d3_cfg_mod_list
     protected $_sMenuItemTitle = 'd3mxusermanager';
     protected $_sMenuSubItemTitle = 'd3mxusermanager_items';
 
-    public function buildWhere()
+    /**
+     * @return array|null
+     */
+    public function buildWhere(): ?array
     {
         $aWhere = parent::buildWhere();
 

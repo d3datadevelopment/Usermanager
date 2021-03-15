@@ -4,10 +4,10 @@
         <dd>
             [{if $oView->isEditMode()}]
                 [{block name="usermanager_admin_requ_invzipfilter_editor"}]
-                    [{oxmultilang ident="D3_USERMANAGER_REQU_INVZIPRANGEFROM"}]
-                    <input style="text-align: right;" class="edittext ext_edittext" type="text" size="10" maxlength="10" name="value[sInvZipRangeFromValue]" value='[{$edit->getValue('sInvZipRangeFromValue')}]' [{$blActionRestriction}] [{$readonly}]>
-                    [{oxmultilang ident="D3_USERMANAGER_REQU_INVZIPRANGETO"}]
-                    <input style="text-align: right;" class="edittext ext_edittext" type="text" size="10" maxlength="10" name="value[sInvZipRangeToValue]" value='[{$edit->getValue('sInvZipRangeToValue')}]' [{$blActionRestriction}] [{$readonly}]>
+                    <label for="sInvZipRangeFromValue">[{oxmultilang ident="D3_USERMANAGER_REQU_INVZIPRANGEFROM"}]</label>
+                    <input id="sInvZipRangeFromValue" style="text-align: right;" class="edittext ext_edittext" type="text" size="10" maxlength="10" name="value[sInvZipRangeFromValue]" value='[{$edit->getValue('sInvZipRangeFromValue')}]' [{$blActionRestriction}] [{$readonly}]>
+                    <label for="sInvZipRangeToValue">[{oxmultilang ident="D3_USERMANAGER_REQU_INVZIPRANGETO"}]</label>
+                    <input id="sInvZipRangeToValue" style="text-align: right;" class="edittext ext_edittext" type="text" size="10" maxlength="10" name="value[sInvZipRangeToValue]" value='[{$edit->getValue('sInvZipRangeToValue')}]' [{$blActionRestriction}] [{$readonly}]>
                 [{/block}]
             [{else}]
                 [{block name="usermanager_admin_requ_invzipfilter_viewer"}]

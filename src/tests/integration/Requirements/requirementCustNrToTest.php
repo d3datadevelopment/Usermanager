@@ -32,6 +32,7 @@ class requirementCustNrToTest extends d3RequirementIntegrationTestCase
         'userTestIdNo1',
         'userTestIdNo2',
         'userTestIdNo3',
+        'userTestIdNo4',
     );
 
     /**
@@ -47,6 +48,8 @@ class requirementCustNrToTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -89,12 +92,18 @@ class requirementCustNrToTest extends d3RequirementIntegrationTestCase
                 'oxcustnr'     => '5431',
             )
         );
+
+        $this->createUser(
+            $this->aUserIdList[3],
+            array(
+                'oxcompany' => __CLASS__,
+                'oxcustnr'      => '5430',
+            )
+        );
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -121,7 +130,6 @@ class requirementCustNrToTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -138,8 +146,9 @@ class requirementCustNrToTest extends d3RequirementIntegrationTestCase
         $this->assertTrue(
             $oUserList->count() >= 2
             && $oUserList->offsetExists( $this->aUserIdList[0])
-            && false == $oUserList->offsetExists( $this->aUserIdList[1])
+            && false === $oUserList->offsetExists( $this->aUserIdList[1])
             && $oUserList->offsetExists( $this->aUserIdList[2])
+            && $oUserList->offsetExists( $this->aUserIdList[3])
         );
     }
 }

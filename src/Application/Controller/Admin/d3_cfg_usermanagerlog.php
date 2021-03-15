@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Controller\Admin\Log\d3_cfg_log;
@@ -26,7 +28,7 @@ class d3_cfg_usermanagerlog extends d3_cfg_log
     /**
      * @return string
      */
-    public function d3getAdditionalUrlParams()
+    public function d3getAdditionalUrlParams(): string
     {
         $sRet = parent::d3getAdditionalUrlParams();
 

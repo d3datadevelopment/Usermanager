@@ -112,16 +112,20 @@
     .edittext select.editinput {
         width: auto;
     }
-
-    details {
+    details, .restrictioninfo {
         margin: 0 0 15px;
         padding: 6px 9px 2px 18px;
         border: 1px solid silver;
         color: silver;
+        border-radius: .25rem;
+        border-left: .25rem #028fe8 solid;
     }
     details summary {
         margin: 0 0 3px -12px;
         cursor: pointer;
+    }
+    .restrictioninfo {
+        color: black;
     }
     -->
 </style>
@@ -172,6 +176,12 @@
                     <summary>[{oxmultilang ident="D3_GENERAL_USERMANAGER_DESCRIPTION"}]</summary>
                     [{oxmultilang ident="d3tbclusermanager_items_requ_desc"}]
                 </details>
+
+                [{if $edit->getBasicRestrictionSettings()}]
+                    <div class="restrictioninfo">
+                        [{oxmultilang ident="D3_GENERAL_USERMANAGER_BASICRESTRICTIONS"}]
+                    </div>
+                [{/if}]
 
                 [{assign var="blRestricted" value=false}]
                 [{foreach from=$oView->getGroupedRequirementList() key="sGroupId" item="oRequList"}]

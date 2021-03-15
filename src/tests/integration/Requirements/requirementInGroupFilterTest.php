@@ -38,6 +38,11 @@ class requirementInGroupFilterTest extends d3RequirementIntegrationTestCase
         'groupAssignIdNo2',
         'groupAssignIdNo3',
     );
+    public $aGroupIdList = [
+        'sGroupId1Pass',
+        'sGroupId2Pass',
+        'sGroupId3Pass'
+    ];
 
     /**
      * Set up fixture.
@@ -52,6 +57,8 @@ class requirementInGroupFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -118,12 +125,14 @@ class requirementInGroupFilterTest extends d3RequirementIntegrationTestCase
                 'oxgroupsid'    => 'sGroupId3Pass',
             )
         );
+
+        foreach ($this->aGroupIdList as $sId) {
+            $this->createBaseModelObject('oxgroups', $sId);
+        }
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -135,6 +144,10 @@ class requirementInGroupFilterTest extends d3RequirementIntegrationTestCase
 
         foreach ($this->aGroupAssignIdList as $sGroupAssignId) {
             $this->deleteBaseModelObject('oxobject2group', $sGroupAssignId);
+        }
+
+        foreach ($this->aGroupIdList as $sId) {
+            $this->deleteBaseModelObject('oxgroups', $sId);
         }
     }
 
@@ -168,7 +181,6 @@ class requirementInGroupFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -192,7 +204,6 @@ class requirementInGroupFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

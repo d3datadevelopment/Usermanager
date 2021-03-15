@@ -21,11 +21,11 @@ use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
 use Doctrine\DBAL\DBALException;
 use Exception;
+use OxidEsales\Eshop\Application\Model\UserList;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
-use OxidEsales\Eshop\Core\Model\ListModel;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCase
 {
@@ -48,8 +48,8 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
 
     /**
      * Tear down fixture.
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
+     *
+     * @throws DBALException
      */
     public function tearDown()
     {
@@ -85,9 +85,7 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -102,7 +100,7 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
      * @return d3usermanager
      * @throws Exception
      */
-    public function getConfiguredManager()
+    public function getConfiguredManager(): d3usermanager
     {
         $oManager = $this->getManagerMock($this->sManagerId);
 
@@ -115,7 +113,6 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -128,14 +125,19 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManager());
 
-        /** @var ListModel|PHPUnit_Framework_MockObject_MockObject $oListMock */
-        $oListMock = $this->getMockBuilder(ListModel::class)
+        $definitions = d3GetModCfgDIC()->getDefinitions();
+
+        /** @var UserList|MockObject $oListMock */
+        $oListMock = $this->getMockBuilder(UserList::class)
             ->setMethods(['testChangeUserList'])
             ->getMock();
         $oListMock->expects($this->once())->method('testChangeUserList')->willReturn(null);
-        d3GetModCfgDIC()->set('d3ox.usermanager.'.ListModel::class, $oListMock);
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.UserList::class, $oListMock);
 
         $oUserList = $oListGenerator->getConcernedItems();
+
+        d3GetModCfgDIC()->reset();
+        d3GetModCfgDIC()->setDefinitions($definitions);
 
         $this->assertTrue(
             $oUserList->count() >= 2

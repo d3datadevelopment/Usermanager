@@ -1,7 +1,7 @@
 [{include file="headitem.tpl" title="GENERAL_ADMIN_TITLE"|oxmultilangassign}]
 
 <script type="text/javascript">
-<!--
+    <!--
     [{if $updatelist == 1}]
         UpdateList('[{$oxid}]');
     [{/if}]
@@ -33,7 +33,7 @@
         if (document.search != null && document.search.lstrt != null)
             oSearch.lstrt.value=0;
     }
-//-->
+    -->
 </script>
 
 <style type="text/css">
@@ -54,16 +54,20 @@
         width: 20%;
         text-align: right;
     }
-
-    details {
+    details, .restrictioninfo {
         margin: 0 0 15px;
         padding: 6px 9px 2px 18px;
         border: 1px solid silver;
         color: silver;
+        border-radius: .25rem;
+        border-left: .25rem #028fe8 solid;
     }
     details summary {
         margin: 0 0 3px -12px;
         cursor: pointer;
+    }
+    .restrictioninfo {
+        color: black;
     }
 </style>
 
@@ -106,6 +110,14 @@
                 </details>
             </td>
         </tr>
+
+        [{if $edit->getBasicRestrictionSettings()}]
+            <tr>
+                <td class="restrictioninfo" colspan="2">
+                    [{oxmultilang ident="D3_GENERAL_USERMANAGER_BASICRESTRICTIONS"}]
+                </td>
+            </tr>
+        [{/if}]
 
         <tr>
             <td class="edittext" style="text-align:left; vertical-align:top; height:99%;padding-left:5px;padding-bottom:30px;padding-top:10px;">
@@ -206,6 +218,16 @@
                                 <input type="hidden" name="value[blItemMailSend]" value="0">
                                 <input id="MainMailsend" type="checkbox" class="edittext ext_edittext" name="value[blItemMailSend]" value="1" [{if $edit->getValue('blItemMailSend')}]checked[{/if}] [{$readonly}]>
                                 [{oxinputhelp ident="D3_USERMANAGER_MAIN_MAILSEND_DESC"}]
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="edittext">
+                                <label for="AddHistory">[{oxmultilang ident="D3_USERMANAGER_MAIN_ADDHISTORYITEM"}]</label>
+                            </td>
+                            <td class="edittext">
+                                <input type="hidden" name="value[blAddHistory]" value="0">
+                                <input id="AddHistory" type="checkbox" class="edittext ext_edittext" name="value[blAddHistory]" value="1" [{if $edit->getValue('blAddHistory')}]checked[{/if}] [{$readonly}]>
+                                [{oxinputhelp ident="D3_USERMANAGER_MAIN_ADDHISTORYITEM_DESC"}]
                             </td>
                         </tr>
                     </table>

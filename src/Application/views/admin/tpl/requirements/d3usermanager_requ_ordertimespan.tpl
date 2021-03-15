@@ -7,8 +7,9 @@
             [{if $oView->isEditMode()}]
                 [{block name="usermanager_admin_requ_ordertimespan1_editor"}]
                     <SELECT id="RequOrderTimespanOrderType" class="editinput" name="value[sOrderTimespanOrderType]" size="1" [{$blActionRestriction}] [{$readonly}]>
-                        <option value="first" [{if $edit->getValue('sOrderTimespanOrderType') == 'first'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_ORDERTIMESPAN_FIRST"}]</option>
-                        <option value="last" [{if $edit->getValue('sOrderTimespanOrderType') == 'last'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_ORDERTIMESPAN_LAST"}]</option>
+                        [{foreach from=$oRequ->getOrderTypeList() key="type" item="translation"}]
+                            <option value="[{$type}]" [{if $edit->getValue('sOrderTimespanOrderType') == $type}]selected[{/if}]>[{oxmultilang ident=$translation}]</option>
+                        [{/foreach}]
                     </SELECT>
                 [{/block}]
             [{else}]
@@ -27,31 +28,26 @@
             [{if $oView->isEditMode()}]
                 [{block name="usermanager_admin_requ_ordertimespan2_editor"}]
                     <SELECT id="RequOrderTimespanType" class="editinput" name="value[sOrderTimespanType]" size="1" [{$blActionRestriction}] [{$readonly}]>
-                        <option value="minimum" [{if $edit->getValue('sOrderTimespanType') == 'minimum'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_ORDERTIMESPAN_MINIMUM"}]</option>
-                        <option value="maximum" [{if $edit->getValue('sOrderTimespanType') == 'maximum'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_ORDERTIMESPAN_MAXIMUM"}]</option>
+                        [{foreach from=$oRequ->getTypeList() key="type" item="translation"}]
+                            <option value="[{$type}]" [{if $edit->getValue('sOrderTimespanType') == $type}]selected[{/if}]>[{oxmultilang ident=$translation}]</option>
+                        [{/foreach}]
                     </SELECT>
                     <input id="RequOrderTimespanMax" style="text-align: right;" class="edittext ext_edittext" type="text" size="4" maxlength="3" name="value[sOrderTimespanValue]" value='[{$edit->getValue('sOrderTimespanValue')}]' [{$blActionRestriction}] [{$readonly}]>
                     <SELECT id="RequOrderTimespanUnit" class="editinput" name="value[sOrderTimespanUnit]" size="1" [{$blActionRestriction}] [{$readonly}]>
-                        <option value="minute" [{if $edit->getValue('sOrderTimespanUnit') == 'minute'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_TIMESPAN_MINUTE"}]</option>
-                        <option value="hour" [{if $edit->getValue('sOrderTimespanUnit') == 'hour'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_TIMESPAN_HOUR"}]</option>
-                        <option value="day" [{if $edit->getValue('sOrderTimespanUnit') == 'day'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_TIMESPAN_DAY"}]</option>
+                        [{foreach from=$oRequ->getUnitList() key="type" item="translation"}]
+                            <option value="[{$type}]" [{if $edit->getValue('sOrderTimespanUnit') == $type}]selected[{/if}]>[{oxmultilang ident=$translation}]</option>
+                        [{/foreach}]
                     </SELECT>
                 [{/block}]
             [{else}]
                 [{block name="usermanager_admin_requ_ordertimespan2_viewer"}]
-                    [{if $edit->getValue('sOrderTimespanType') == 'minimum'}]
-                        [{oxmultilang ident="D3_USERMANAGER_REQU_ORDERTIMESPAN_MINIMUM"}]
-                    [{elseif $edit->getValue('sOrderTimespanType') == 'maximum'}]
-                        [{oxmultilang ident="D3_USERMANAGER_REQU_ORDERTIMESPAN_MAXIMUM"}]
-                    [{/if}]
+                    [{foreach from=$oRequ->getTypeList() key="type" item="translation"}]
+                        [{if $edit->getValue('sOrderTimespanType') == $type}][{oxmultilang ident=$translation}][{/if}]
+                    [{/foreach}]
                     [{$edit->getValue('sOrderTimespanValue')}]
-                    [{if $edit->getValue('sOrderTimespanUnit') == 'minute'}]
-                        [{oxmultilang ident="D3_USERMANAGER_REQU_TIMESPAN_MINUTE"}]
-                    [{elseif $edit->getValue('sOrderTimespanUnit') == 'hour'}]
-                        [{oxmultilang ident="D3_USERMANAGER_REQU_TIMESPAN_HOUR"}]
-                    [{elseif $edit->getValue('sOrderTimespanUnit') == 'day'}]
-                        [{oxmultilang ident="D3_USERMANAGER_REQU_TIMESPAN_DAY"}]
-                    [{/if}]
+                    [{foreach from=$oRequ->getUnitList() key="type" item="translation"}]
+                        [{if $edit->getValue('sOrderTimespanUnit') == $type}][{oxmultilang ident=$translation}][{/if}]
+                    [{/foreach}]
                 [{/block}]
             [{/if}]
             [{oxinputhelp ident="D3_USERMANAGER_REQU_ORDERTIMESPAN_DESC"}]

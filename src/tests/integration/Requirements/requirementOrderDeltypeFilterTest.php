@@ -38,6 +38,10 @@ class requirementOrderDeltypeFilterTest extends d3RequirementIntegrationTestCase
         'orderTestIdNo2',
         'orderTestIdNo3',
     );
+    public $aDeliveryIdList = [
+        'testDelType',
+        'testFailedDelType'
+    ];
 
     /**
      * Set up fixture.
@@ -52,6 +56,8 @@ class requirementOrderDeltypeFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -112,12 +118,14 @@ class requirementOrderDeltypeFilterTest extends d3RequirementIntegrationTestCase
                 'oxdeltype'     => null,
             )
         );
+
+        foreach ($this->aDeliveryIdList as $sId) {
+            $this->createBaseModelObject('oxdelivery', $sId);
+        }
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -129,6 +137,10 @@ class requirementOrderDeltypeFilterTest extends d3RequirementIntegrationTestCase
 
         foreach ($this->aOrderIdList as $sOrderId) {
             $this->deleteOrder($sOrderId);
+        }
+
+        foreach ($this->aDeliveryIdList as $sId) {
+            $this->deleteBaseModelObject('oxdelivery', $sId);
         }
     }
 
@@ -148,7 +160,6 @@ class requirementOrderDeltypeFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -186,7 +197,6 @@ class requirementOrderDeltypeFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

@@ -6,7 +6,7 @@
                 [{block name="usermanager_admin_requ_ingroupfilter_editor"}]
                     <input type="hidden" name="value[aCustInGroupId]" value="">
                     <label for="sCustInGroupId" style="position: absolute; left: -2000px">[{oxmultilang ident="D3_USERMANAGER_REQU_INGROUP"}]</label>
-                    <SELECT class="editinput" name="value[aCustInGroupId][]" id="aCustInGroupId" size="5" multiple [{$blActionRestriction}] [{$readonly}]>
+                    <SELECT id="sCustInGroupId" class="editinput" name="value[aCustInGroupId][]" id="aCustInGroupId" size="5" multiple [{$blActionRestriction}] [{$readonly}]>
                         [{foreach from=$oView->getGroupsList() item="oGroup"}]
                             <option value="[{$oGroup->getId()}]" [{if is_array($edit->getValue('aCustInGroupId')) && in_array($oGroup->getId(), $edit->getValue('aCustInGroupId'))}]selected[{/if}]>[{$oGroup->getFieldData('oxtitle')}]</option>
                         [{/foreach}]

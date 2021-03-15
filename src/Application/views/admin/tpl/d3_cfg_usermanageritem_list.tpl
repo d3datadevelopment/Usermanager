@@ -235,7 +235,7 @@
                             <td style="vertical-align: top;" class="[{$listclass}] [{$formatclass}] " height="15">
                                 <div class="listitemfloating">&nbsp;
                                     <a href="Javascript:EditThis('[{$listitem->getId()}]');" class="[{$listclass}]">
-                                        [{if $listitem->getFieldData('oxfolder')}][{oxmultilang ident=$listitem->getFieldData('oxfolder')}][{/if}]
+                                        [{if $listitem->getFieldData('oxfolder')}][{oxmultilang ident=$listitem->getFieldData('oxfolder') noerror=true}][{/if}]
                                     </a>
                                 </div>
                             </td>

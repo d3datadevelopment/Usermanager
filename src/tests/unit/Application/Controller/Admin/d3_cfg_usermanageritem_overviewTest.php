@@ -22,7 +22,9 @@ use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\Application\Model\d3usermanager_conf;
+use D3\Usermanager\Application\Model\d3usermanager_configurationcheck;
 use D3\Usermanager\Application\Model\d3usermanager_listgenerator;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
 use Doctrine\DBAL\DBALException;
@@ -32,6 +34,8 @@ use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 use OxidEsales\Eshop\Core\Language;
+use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\UtilsView;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use stdClass;
@@ -60,6 +64,71 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
         parent::tearDown();
 
         unset($this->_oController);
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview::render
+     * @test
+     * @throws ReflectionException
+     */
+    public function renderThrowsException()
+    {
+        /** @var d3usermanager_requirementException|MockObject $excMock */
+        $excMock = $this->getMockBuilder(d3usermanager_requirementException::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        /** @var d3usermanager_configurationcheck|MockObject $confCheckMock */
+        $confCheckMock = $this->getMockBuilder(d3usermanager_configurationcheck::class)
+            ->setMethods(['checkThrowingExceptions'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $confCheckMock->method('checkThrowingExceptions')->willThrowException($excMock);
+
+        d3GetModCfgDIC()->set(d3usermanager_configurationcheck::class, $confCheckMock);
+
+        /** @var UtilsView|MockObject $utilsViewMock */
+        $utilsViewMock = $this->getMockBuilder(UtilsView::class)
+            ->setMethods(['addErrorToDisplay'])
+            ->getMock();
+        $utilsViewMock->expects($this->atLeastOnce())->method('addErrorToDisplay')->willReturn(true);
+
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.UtilsView::class, $utilsViewMock);
+
+        $this->callMethod(
+            $this->_oController,
+            'render'
+        );
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview::render
+     * @test
+     * @throws ReflectionException
+     */
+    public function renderDontThrowsException()
+    {
+        /** @var d3usermanager_configurationcheck|MockObject $confCheckMock */
+        $confCheckMock = $this->getMockBuilder(d3usermanager_configurationcheck::class)
+            ->setMethods(['checkThrowingExceptions'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $confCheckMock->method('checkThrowingExceptions')->willReturn(true);
+
+        d3GetModCfgDIC()->set(d3usermanager_configurationcheck::class, $confCheckMock);
+
+        /** @var UtilsView|MockObject $utilsViewMock */
+        $utilsViewMock = $this->getMockBuilder(UtilsView::class)
+            ->setMethods(['addErrorToDisplay'])
+            ->getMock();
+        $utilsViewMock->expects($this->never())->method('addErrorToDisplay')->willReturn(true);
+
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.UtilsView::class, $utilsViewMock);
+
+        $this->callMethod(
+            $this->_oController,
+            'render'
+        );
     }
 
     /**
@@ -187,7 +256,7 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
             ->willReturn($mExpectedAction);
 
         /** @var d3_cfg_usermanageritem_requ|MockObject $oRequirementAdminControllerMock */
-        $oRequirementAdminControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
+        $oRequirementAdminControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_requ::class)
             ->setMethods([$sMethodName])
             ->getMock();
         $oRequirementAdminControllerMock
@@ -254,7 +323,7 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
             ->willReturn($mExpectedAction);
 
         /** @var d3_cfg_usermanageritem_requ|MockObject $oRequirementAdminControllerMock */
-        $oRequirementAdminControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
+        $oRequirementAdminControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_requ::class)
             ->setMethods([$sOtherMethodName])
             ->getMock();
         $oRequirementAdminControllerMock
@@ -321,7 +390,7 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
             ->willReturn($mExpectedAction);
 
         /** @var d3_cfg_usermanageritem_requ|MockObject $oRequirementAdminControllerMock */
-        $oRequirementAdminControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
+        $oRequirementAdminControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_requ::class)
             ->setMethods([$sOtherMethodName])
             ->getMock();
         $oRequirementAdminControllerMock
@@ -389,13 +458,15 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
      */
     public function canGetRequirementList()
     {
-        $expected = ['foo123'   => 'bar'];
+        $expected = [
+            'test'  => 'item'
+        ];
 
         /** @var d3usermanager_conf|MockObject $oManagerConfMock */
         $oManagerConfMock = $this->getMockBuilder(d3usermanager_conf::class)
             ->setMethods(['getRequirementIdList'])
             ->getMock();
-        $oManagerConfMock->method('getRequirementIdList')->willReturn($expected);
+        $oManagerConfMock->method('getRequirementIdList')->willReturn([]);
 
         /** @var d3usermanager|MockObject $oProfileMock */
         $oProfileMock = $this->getMockBuilder(d3usermanager::class)
@@ -461,13 +532,15 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
      */
     public function canGetActionList()
     {
-        $expected = ['foo123'   => 'bar'];
+        $expected = [
+            'test'  => 'item'
+        ];
 
         /** @var d3usermanager_conf|MockObject $oManagerConfMock */
         $oManagerConfMock = $this->getMockBuilder(d3usermanager_conf::class)
             ->setMethods(['getActionIdList'])
             ->getMock();
-        $oManagerConfMock->method('getActionIdList')->willReturn($expected);
+        $oManagerConfMock->method('getActionIdList')->willReturn([]);
 
         /** @var d3usermanager|MockObject $oProfileMock */
         $oProfileMock = $this->getMockBuilder(d3usermanager::class)
@@ -620,6 +693,16 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
      */
     public function canNotGetToFinishedCount()
     {
+        /** @var Request|MockObject $requestMock */
+        $requestMock = $this->getMockBuilder(Request::class)
+            ->setMethods(['getRequestEscapedParameter'])
+            ->getMock();
+        $requestMock->method('getRequestEscapedParameter')
+                    ->with($this->matches('toFinishedCount'))
+                    ->willReturn(20);
+
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.Request::class, $requestMock);
+
         /** @var d3_cfg_usermanageritem_overview|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_overview::class)
             ->setMethods([
@@ -722,6 +805,16 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
      */
     public function canNotGetFinishedCount()
     {
+        /** @var Request|MockObject $requestMock */
+        $requestMock = $this->getMockBuilder(Request::class)
+                            ->setMethods(['getRequestEscapedParameter'])
+                            ->getMock();
+        $requestMock->method('getRequestEscapedParameter')
+                    ->with($this->matches('finishedCount'))
+                    ->willReturn(20);
+
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.Request::class, $requestMock);
+
         /** @var d3_cfg_usermanageritem_overview|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_overview::class)
             ->setMethods([
@@ -824,6 +917,16 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
      */
     public function canNotGetFinishedMonthCount()
     {
+        /** @var Request|MockObject $requestMock */
+        $requestMock = $this->getMockBuilder(Request::class)
+                            ->setMethods(['getRequestEscapedParameter'])
+                            ->getMock();
+        $requestMock->method('getRequestEscapedParameter')
+                    ->with($this->matches('finishedMonthCount'))
+                    ->willReturn(20);
+
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.Request::class, $requestMock);
+
         /** @var d3_cfg_usermanageritem_overview|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_overview::class)
             ->setMethods([
@@ -926,6 +1029,16 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
      */
     public function canNotGetNotFinishedMonthCount()
     {
+        /** @var Request|MockObject $requestMock */
+        $requestMock = $this->getMockBuilder(Request::class)
+                            ->setMethods(['getRequestEscapedParameter'])
+                            ->getMock();
+        $requestMock->method('getRequestEscapedParameter')
+                    ->with($this->matches('notFinishedCount'))
+                    ->willReturn(20);
+
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.Request::class, $requestMock);
+
         /** @var d3_cfg_usermanageritem_overview|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_overview::class)
             ->setMethods([
@@ -1059,71 +1172,67 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview::canUseRequestData
+     * @covers       \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview::canUseRequestData
      * @test
+     *
+     * @param $dataOnDemand
+     * @param $requestData
+     * @param $expected
+     *
      * @throws ReflectionException
+     * @dataProvider checkUsableRequestDataOnDemandDataProvider
      */
-    public function checkUsableRequestDataOnDemandHasRequestData()
+    public function checkUsableRequestDataOnDemandPass($dataOnDemand, $requestData, $expected)
     {
-        $iRequestCount = '301';
-
         /** @var d3_cfg_usermanageritem_overview|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_overview::class)
             ->setMethods(['getDataOnDemand'])
             ->getMock();
-        $oControllerMock->method('getDataOnDemand')->willReturn(true);
+        $oControllerMock->method('getDataOnDemand')->willReturn($dataOnDemand);
 
         $this->_oController = $oControllerMock;
 
-        $this->assertTrue(
+        $this->assertSame(
+            $expected,
             $this->callMethod(
                 $this->_oController,
                 'canUseRequestData',
-                array($iRequestCount)
+                [ $requestData ]
             )
         );
     }
 
     /**
-     * @covers \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview::canUseRequestData
-     * @test
-     * @throws ReflectionException
+     * @return array[]
      */
-    public function checkUsableRequestDataOnDemandHasNoRequestData()
+    public function checkUsableRequestDataOnDemandDataProvider(): array
     {
-        $iRequestCount = null;
-
-        /** @var d3_cfg_usermanageritem_overview|MockObject $oControllerMock */
-        $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_overview::class)
-            ->setMethods(['getDataOnDemand'])
-            ->getMock();
-        $oControllerMock->method('getDataOnDemand')->willReturn(true);
-
-        $this->_oController = $oControllerMock;
-
-        $this->assertFalse(
-            $this->callMethod(
-                $this->_oController,
-                'canUseRequestData',
-                array($iRequestCount)
-            )
-        );
+        return [
+            'noDOD' =>  [false, '10', false],
+            'intRequest' =>  [true, 10, true],
+            'stringRequest' =>  [true, '10', true],
+            'falseRequest' =>  [true, false, false],
+            'nullRequest' =>  [true, null, false],
+        ];
     }
 
     /**
-     * @covers \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview::getDataOnDemand
+     * @covers       \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview::getDataOnDemand
      * @test
+     *
+     * @param $onDemandSetting
+     * @param $expected
+     *
      * @throws ReflectionException
+     * @dataProvider dataOnDemandOptionPassDataProvider
      */
-    public function dataOnDemandOptionPass()
+    public function dataOnDemandOptionPass($onDemandSetting, $expected)
     {
-        $mExpected = 'testValue';
-
         /** @var stdClass|MockObject $oModCfgMock */
         $oModCfgMock = $this->getMockBuilder(stdClass::class)
             ->setMethods(['getValue'])
             ->getMock();
-        $oModCfgMock->method('getValue')->willReturn($mExpected);
+        $oModCfgMock->method('getValue')->willReturn($onDemandSetting);
 
         /** @var d3_cfg_usermanageritem_overview|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_overview::class)
@@ -1134,12 +1243,24 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
         $this->_oController = $oControllerMock;
 
         $this->assertSame(
-            $mExpected,
+            $expected,
             $this->callMethod(
                 $this->_oController,
                 'getDataOnDemand'
             )
         );
+    }
+
+    /**
+     * @return array[]
+     */
+    public function dataOnDemandOptionPassDataProvider(): array
+    {
+        return [
+            'onDemand unset'  => [null, false],
+            'onDemand not set'  => ['0', false],
+            'onDemand set'  => ['1', true],
+        ];
     }
 
     /**
@@ -1329,7 +1450,7 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
         $mExpected = 'managerTitleFromTranslation';
 
         /** @var Language|MockObject $oLangMock */
-        $oLangMock = $this->getMockBuilder(d3usermanager::class)
+        $oLangMock = $this->getMockBuilder(Language::class)
             ->setMethods(['translateString'])
             ->getMock();
         $oLangMock->method('translateString')->willReturn($mExpected);

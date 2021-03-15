@@ -14,8 +14,12 @@
  * @link      https://www.oxidmodule.com
  */
 
+namespace D3\Usermanager\tests\unit\publicDir;
+
+use D3\ModCfg\Application\Model\Exception\d3PreventExitException;
 use D3\Usermanager\Application\Controller\d3usermanager_response;
 use D3\Usermanager\Application\Model\d3usermanager;
+use D3\Usermanager\publicDir\d3_usermanager_cron;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
 use Doctrine\DBAL\DBALException;
 use OxidEsales\Eshop\Core\Config;
@@ -23,6 +27,7 @@ use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Session;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use splitbrain\phpcli\Exception as Exception;
 use splitbrain\phpcli\Options;
 
@@ -41,21 +46,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     {
         parent::setUp();
 
-        $count = 0;
-        $filePath = '../../../source/modules/d3/usermanager/public/d3_usermanager_cron.php';
-        $currentDirectory = __DIR__ . '/';
-        while ($count < 5) {
-            $count++;
-            if (file_exists($currentDirectory . $filePath)) {
-                $filePath = $currentDirectory . $filePath;
-                break;
-            }
-            $filePath = '../' . $filePath;
-        }
-
-        require_once($filePath);
-
-        $this->_oController = oxNew(d3_usermanager_cron::class);
+        $this->_oController = oxNew( d3_usermanager_cron::class);
     }
 
     public function tearDown()
@@ -66,7 +57,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::__construct
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::__construct
      * @test
      * @throws ReflectionException
      */
@@ -93,7 +84,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::__construct
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::__construct
      * @test
      * @throws ReflectionException
      */
@@ -119,7 +110,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::isCLI
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::isCLI
      * @test
      * @throws ReflectionException
      */
@@ -134,7 +125,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::setup
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::setup
      * @test
      * @throws ReflectionException
      */
@@ -162,7 +153,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::parseOptions
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::parseOptions
      * @test
      * @throws ReflectionException
      */
@@ -191,7 +182,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::main
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::main
      * @test
      * @throws ReflectionException
      */
@@ -235,7 +226,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::main
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::main
      * @test
      * @throws ReflectionException
      */
@@ -263,14 +254,6 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
         );
         $oOptionsMock->parseOptions();
 
-        /** @var Session|MockObject $oSessionMock */
-        $oSessionMock = $this->getMockBuilder(Session::class)
-            ->setMethods(['setVariable'])
-            ->getMock();
-        $oSessionMock->expects($this->once())->method('setVariable')
-            ->with($this->equalTo('d3usermanager_quiet'))->willReturn(true);
-        d3GetModCfgDIC()->set('d3ox.usermanager.'.Session::class, $oSessionMock);
-
         /** @var d3_usermanager_cron|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_usermanager_cron::class)
             ->setMethods(['translateFixedStrings'])
@@ -287,7 +270,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::main
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::main
      * @test
      * @throws ReflectionException
      */
@@ -315,19 +298,11 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
         );
         $oOptionsMock->parseOptions();
 
-        /** @var Session|MockObject $oSessionMock */
-        $oSessionMock = $this->getMockBuilder(Session::class)
-            ->setMethods(['setVariable'])
-            ->getMock();
-        $oSessionMock->expects($this->never())->method('setVariable')
-            ->with($this->equalTo('d3usermanager_quiet'))->willReturn(false);
-        d3GetModCfgDIC()->set('d3ox.usermanager.'.Session::class, $oSessionMock);
-
         /** @var d3usermanager_response|MockObject $oResponseMock */
         $oResponseMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods(['init'])
+            ->setMethods(['initCli'])
             ->getMock();
-        $oResponseMock->expects($this->never())->method('init')->willReturn(true);
+        $oResponseMock->expects($this->never())->method('initCli')->willReturn(true);
         d3GetModCfgDIC()->set( d3usermanager_response::class, $oResponseMock);
 
         /** @var d3_usermanager_cron|MockObject $oControllerMock */
@@ -352,78 +327,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::main
-     * @test
-     * @throws ReflectionException
-     */
-    public function mainUseQuietCmdDefaultValidCJID()
-    {
-        $aAvailableIds = d3GetModCfgDIC()->get(d3usermanager::class)->getAvailableCronjobIds();
-
-        if (0 === count($aAvailableIds)) {
-            $this->fail('no available cronjob ids for running test');
-        }
-
-        /** @var Options|MockObject $oOptionsMock */
-        $oOptionsMock = $this->getMockBuilder(Options::class)
-            ->setMethods([
-                'getOpt',
-                'getCmd',
-                'getArgs'
-            ])
-            ->setConstructorArgs(
-                [$this->getValue($this->_oController, 'colors')]
-            )
-            ->getMock();
-        $oOptionsMock->method('getOpt')->willReturn(false);
-        $oOptionsMock->method('getCmd')->willReturn(false);
-        $oOptionsMock->method('getArgs')->willReturn(['1', end($aAvailableIds)['id'], 'key']);
-
-        $this->setValue(
-            $oOptionsMock,
-            'args',
-            ['1', end($aAvailableIds)['id'], 'key']
-        );
-        $oOptionsMock->parseOptions();
-
-        /** @var Session|MockObject $oSessionMock */
-        $oSessionMock = $this->getMockBuilder(Session::class)
-            ->setMethods(['setVariable'])
-            ->getMock();
-        $oSessionMock->expects($this->never())->method('setVariable')
-            ->with($this->equalTo('d3usermanager_quiet'))->willReturn(false);
-        d3GetModCfgDIC()->set('d3ox.usermanager.'.Session::class, $oSessionMock);
-
-        /** @var d3usermanager_response|MockObject $oResponseMock */
-        $oResponseMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods(['init'])
-            ->getMock();
-        $oResponseMock->expects($this->once())->method('init')->willReturn(true);
-        d3GetModCfgDIC()->set( d3usermanager_response::class, $oResponseMock);
-
-        /** @var d3_usermanager_cron|MockObject $oControllerMock */
-        $oControllerMock = $this->getMockBuilder(d3_usermanager_cron::class)
-            ->setMethods([
-                'translateFixedStrings',
-                'success',
-                'error'
-            ])
-            ->getMock();
-        $oControllerMock->expects($this->never())->method('translateFixedStrings')->willReturn(false);
-        $oControllerMock->expects($this->once())->method('success')->willReturn(true);
-        $oControllerMock->expects($this->never())->method('error')->willReturn(true);
-
-        $this->_oController = $oControllerMock;
-
-        $this->callMethod(
-            $this->_oController,
-            'main',
-            array($oOptionsMock)
-        );
-    }
-
-    /**
-     * @covers d3_usermanager_cron::main
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::main
      * @test
      * @throws ReflectionException
      */
@@ -495,7 +399,72 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::main
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::main
+     * @test
+     * @throws DBALException
+     * @throws DatabaseConnectionException
+     * @throws ReflectionException
+     */
+    public function mainUseQuietCmdDefaultValidCJID()
+    {
+        $aAvailableIds = d3GetModCfgDIC()->get(d3usermanager::class)->getAvailableCronjobIds();
+
+        if (0 === count($aAvailableIds)) {
+            $this->fail('no available cronjob ids for running test');
+        }
+
+        /** @var Options|MockObject $oOptionsMock */
+        $oOptionsMock = $this->getMockBuilder(Options::class)
+            ->setMethods([
+                'getOpt',
+                'getCmd',
+                'getArgs'
+            ])
+            ->setConstructorArgs(
+                [$this->getValue($this->_oController, 'colors')]
+            )
+            ->getMock();
+        $oOptionsMock->method('getOpt')->willReturn(false);
+        $oOptionsMock->method('getCmd')->willReturn(false);
+        $oOptionsMock->method('getArgs')->willReturn(['1', end($aAvailableIds)['id'], 'key']);
+
+        $this->setValue(
+            $oOptionsMock,
+            'args',
+            ['1', end($aAvailableIds)['id'], 'key']
+        );
+        $oOptionsMock->parseOptions();
+
+        /** @var d3usermanager_response|MockObject $oResponseMock */
+        $oResponseMock = $this->getMockBuilder(d3usermanager_response::class)
+            ->setMethods(['initCli'])
+            ->getMock();
+        $oResponseMock->expects($this->once())->method('initCli')->willReturn(true);
+        d3GetModCfgDIC()->set( d3usermanager_response::class, $oResponseMock);
+
+        /** @var d3_usermanager_cron|MockObject $oControllerMock */
+        $oControllerMock = $this->getMockBuilder(d3_usermanager_cron::class)
+            ->setMethods([
+                'translateFixedStrings',
+                'success',
+                'error'
+            ])
+            ->getMock();
+        $oControllerMock->expects($this->never())->method('translateFixedStrings')->willReturn(false);
+        $oControllerMock->expects($this->once())->method('success')->willReturn(true);
+        $oControllerMock->expects($this->never())->method('error')->willReturn(true);
+
+        $this->_oController = $oControllerMock;
+
+        $this->callMethod(
+            $this->_oController,
+            'main',
+            array($oOptionsMock)
+        );
+    }
+
+    /**
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::main
      * @test
      * @throws ReflectionException
      */
@@ -521,9 +490,9 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanager_response|MockObject $oResponseMock */
         $oResponseMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods(['init'])
+            ->setMethods(['initCli'])
             ->getMock();
-        $oResponseMock->expects($this->once())->method('init')->willReturn(true);
+        $oResponseMock->expects($this->once())->method('initCli')->willReturn(true);
         d3GetModCfgDIC()->set( d3usermanager_response::class, $oResponseMock);
 
         /** @var d3_usermanager_cron|MockObject $oControllerMock */
@@ -542,12 +511,20 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::main
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::main
      * @test
      * @throws ReflectionException
      */
     public function mainCmdStatus()
     {
+        /** @var d3usermanager_response|MockObject $oResponseMock */
+        $oResponseMock = $this->getMockBuilder(d3usermanager_response::class)
+            ->setMethods(['getLastExecDateInfo'])
+            ->getMock();
+        $oResponseMock->expects($this->atLeastOnce())->method('getLastExecDateInfo')->willReturn(['content1', 'content2']);
+
+        d3GetModCfgDIC()->set( d3usermanager_response::class, $oResponseMock );
+
         /** @var Options|MockObject $oOptionsMock */
         $oOptionsMock = $this->getMockBuilder(Options::class)
             ->setMethods([
@@ -577,12 +554,12 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
         $this->callMethod(
             $this->_oController,
             'main',
-            array($oOptionsMock)
+            [$oOptionsMock]
         );
     }
 
     /**
-     * @covers d3_usermanager_cron::main
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::main
      * @test
      * @throws ReflectionException
      */
@@ -608,9 +585,9 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanager_response|MockObject $oResponseMock */
         $oResponseMock = $this->getMockBuilder(d3usermanager_response::class)
-            ->setMethods(['init'])
+            ->setMethods(['initCli'])
             ->getMock();
-        $oResponseMock->expects($this->once())->method('init')->willThrowException(new Exception('excMsg'));
+        $oResponseMock->expects($this->once())->method('initCli')->willThrowException(new Exception('excMsg'));
         d3GetModCfgDIC()->set( d3usermanager_response::class, $oResponseMock);
 
         /** @var d3_usermanager_cron|MockObject $oControllerMock */
@@ -629,7 +606,30 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::translateFixedStrings
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::execute
+     * @test
+     * @throws ReflectionException
+     */
+    public function executeThrowRightException()
+    {
+        /** @var d3_usermanager_cron|MockObject $oControllerMock */
+        $oControllerMock = $this->getMockBuilder(d3_usermanager_cron::class)
+            ->setMethods(['main'])
+            ->getMock();
+        $oControllerMock->method('main')->willReturn(true);
+
+        $this->_oController = $oControllerMock;
+
+        $this->expectException(d3PreventExitException::class);
+
+        $this->callMethod(
+            $this->_oController,
+            'execute'
+        );
+    }
+
+    /**
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::translateFixedStrings
      * @test
      * @throws ReflectionException
      */
@@ -648,7 +648,7 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers d3_usermanager_cron::translateFixedStrings
+     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::translateFixedStrings
      * @test
      * @throws ReflectionException
      */

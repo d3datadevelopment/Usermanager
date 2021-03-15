@@ -19,6 +19,7 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delfieldfilter;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -54,6 +55,8 @@ class requirementDelFieldFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -137,9 +140,7 @@ class requirementDelFieldFilterTest extends d3RequirementIntegrationTestCase
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -164,7 +165,7 @@ class requirementDelFieldFilterTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckDelUserField_status', true);
         $oManager->setValue('sDelUserField_FieldName', 'oxfon');
-        $oManager->setValue('sCheckDelUserFieldType', 'empty');
+        $oManager->setValue('sCheckDelUserFieldType', d3usermanager_requirement_delfieldfilter::TYPE_EMPTY);
 
         return $oManager;
     }
@@ -179,7 +180,7 @@ class requirementDelFieldFilterTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckDelUserField_status', true);
         $oManager->setValue('sDelUserField_FieldName', 'oxfon');
-        $oManager->setValue('sCheckDelUserFieldType', 'notempty');
+        $oManager->setValue('sCheckDelUserFieldType', d3usermanager_requirement_delfieldfilter::TYPE_NOTEMPTY);
 
         return $oManager;
     }
@@ -194,7 +195,7 @@ class requirementDelFieldFilterTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckDelUserField_status', true);
         $oManager->setValue('sDelUserField_FieldName', 'oxfon');
-        $oManager->setValue('sCheckDelUserFieldType', 'value');
+        $oManager->setValue('sCheckDelUserFieldType', d3usermanager_requirement_delfieldfilter::TYPE_CONTENT);
         $oManager->setValue('sDelUserField_FieldValue', 'testFon2');
 
         return $oManager;
@@ -202,7 +203,6 @@ class requirementDelFieldFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -227,7 +227,6 @@ class requirementDelFieldFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -252,7 +251,6 @@ class requirementDelFieldFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

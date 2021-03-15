@@ -52,6 +52,8 @@ class requirementValidNewsletterMailTest extends d3RequirementIntegrationTestCas
 
     /**
      * Tear down fixture.
+     *
+     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -124,9 +126,7 @@ class requirementValidNewsletterMailTest extends d3RequirementIntegrationTestCas
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DBALException
      */
     public function cleanTestData()
     {
@@ -171,7 +171,6 @@ class requirementValidNewsletterMailTest extends d3RequirementIntegrationTestCas
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
@@ -195,7 +194,6 @@ class requirementValidNewsletterMailTest extends d3RequirementIntegrationTestCas
 
     /**
      * @test
-     * @coversNothing
      * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException

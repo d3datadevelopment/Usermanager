@@ -14,6 +14,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Model\d3filesystem;
@@ -21,7 +23,6 @@ use D3\ModCfg\Application\Model\d3str;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
-use Exception;
 use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
 use OxidEsales\Eshop\Application\Controller\Admin\AdminMall;  // required for non fallback case
 use OxidEsales\Eshop\Core\Language;
@@ -37,7 +38,7 @@ if (false == class_exists("\OxidEsales\Eshop\Application\Controller\Admin\AdminM
         /**
          * @return string
          */
-        public function render()
+        public function render(): string
         {
             parent::render();
             return $this->_blThisTemplate;
@@ -67,7 +68,6 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
     protected $_blUseOwnOxid = true;
     protected $_sMenuItemTitle = 'd3mxusermanager';
     protected $_sMenuSubItemTitle = 'd3mxusermanager_items_mall';
-    protected $_sUpdateAddSql;
     protected $_sHelpLinkMLAdd;
     protected $_aNaviItems = array(
         'new' => array(
@@ -92,9 +92,8 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
 
     /**
      * @return Manager
-     * @throws Exception
      */
-    public function getProfile()
+    public function getProfile(): Manager
     {
         /** @var Manager $oManager */
         $oManager = d3GetModCfgDIC()->get($this->_sObjectClassName);
@@ -103,9 +102,8 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
 
     /**
      * @return string
-     * @throws Exception
      */
-    public function render()
+    public function render() : string
     {
         $oProfile = $this->getProfile();
         /** @var Request $request */
@@ -126,16 +124,15 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
     /**
      * @return array
      */
-    public function getUserMessages()
+    public function getUserMessages(): array
     {
-        return array();
+        return [];
     }
 
     /**
      * @return Language
-     * @throws Exception
      */
-    public function getLang()
+    public function getLang(): Language
     {
         /** @var Language $lang */
         $lang = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
@@ -145,9 +142,8 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
 
     /**
      * @return string
-     * @throws Exception
      */
-    public function getHelpURL()
+    public function getHelpURL(): string
     {
         $sUrl = $this->d3GetSet()->getHelpURL();
         /** @var d3str $oD3Str */
@@ -169,8 +165,8 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
     }
 
     /**
+     * return type can't defined, because of unmockable d3_cfg_mod class, use stdClass in test
      * @return d3_cfg_mod
-     * @throws Exception
      */
     public function d3GetSet()
     {
@@ -187,7 +183,7 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
      *                  )
      * @return array
      */
-    public function getNaviItems()
+    public function getNaviItems(): array
     {
         return $this->_aNaviItems;
     }
@@ -195,7 +191,7 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
     /**
      * @return string
      */
-    public function d3GetMenuItemTitle()
+    public function d3GetMenuItemTitle(): string
     {
         return $this->_sMenuItemTitle;
     }
@@ -203,7 +199,7 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
     /**
      * @return string
      */
-    public function d3GetMenuSubItemTitle()
+    public function d3GetMenuSubItemTitle(): string
     {
         return $this->_sMenuSubItemTitle;
     }
@@ -213,7 +209,7 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
      *
      * @return bool
      */
-    protected function _isSetOxid($soxId)
+    protected function _isSetOxid($soxId): bool
     {
         return isset($soxId) && $soxId && $soxId != "-1";
     }
@@ -224,7 +220,7 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
      *
      * @return Manager
      */
-    protected function _d3LoadInOtherLang(Manager $oProfile, $soxId)
+    protected function _d3LoadInOtherLang(Manager $oProfile, $soxId): Manager
     {
         // load object in other languages
         $oOtherLang = $oProfile->getAvailableInLangs();

@@ -5,14 +5,16 @@
             [{if $oView->isEditMode()}]
                 [{block name="usermanager_admin_requ_hasvoucher_editor"}]
                     <SELECT id="RequVoucherType" class="editinput" name="value[sCheckVoucherType]" size="1" [{$blActionRestriction}] [{$readonly}]>
-                        <option value="exist" [{if $edit->getValue('sCheckVoucherType') == 'exist'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_VOUCHER_USED"}]</option>
-                        <option value="notexist" [{if $edit->getValue('sCheckVoucherType') == 'notexist'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_VOUCHER_NOTUSED"}]</option>
+                        [{foreach from=$oRequ->getTypeList() key="type" item="translation"}]
+                            <option value="[{$type}]" [{if $edit->getValue('sCheckVoucherType') == $type}]selected[{/if}]>[{oxmultilang ident=$translation}]</option>
+                        [{/foreach}]
                     </SELECT>
                 [{/block}]
             [{else}]
                 [{block name="usermanager_admin_requ_hasvoucher_viewer"}]
-                    [{if $edit->getValue('sCheckVoucherType') == 'exist'}][{oxmultilang ident="D3_USERMANAGER_REQU_VOUCHER_USED"}][{/if}]
-                    [{if $edit->getValue('sCheckVoucherType') == 'notexist'}][{oxmultilang ident="D3_USERMANAGER_REQU_VOUCHER_NOTUSED"}][{/if}]
+                    [{foreach from=$oRequ->getTypeList() key="type" item="translation"}]
+                        [{if $edit->getValue('sCheckVoucherType') == $type}][{oxmultilang ident=$translation}][{/if}]
+                    [{/foreach}]
                 [{/block}]
             [{/if}]
             [{oxinputhelp ident="D3_USERMANAGER_REQU_VOUCHER_DESC"}]

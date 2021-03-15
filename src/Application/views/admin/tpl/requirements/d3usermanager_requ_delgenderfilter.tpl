@@ -5,17 +5,16 @@
             [{if $oView->isEditMode()}]
                 [{block name="usermanager_admin_requ_delgenderfilter_editor"}]
                     <SELECT id="RequDelGenderType" class="editinput" name="value[sCheckDelGenderType]" size="1" [{$blActionRestriction}] [{$readonly}]>
-                        <option value="mr" [{if $edit->getValue('sCheckDelGenderType') == 'mr'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_GENDER_MR"}]</option>
-                        <option value="mrs" [{if $edit->getValue('sCheckDelGenderType') == 'mrs'}]selected[{/if}]>[{oxmultilang ident="D3_USERMANAGER_REQU_GENDER_MRS"}]</option>
+                        [{foreach from=$oRequ->getTypeList() key="type" item="translation"}]
+                            <option value="[{$type}]" [{if $edit->getValue('sCheckDelGenderType') == $type}]selected[{/if}]>[{oxmultilang ident=$translation}]</option>
+                        [{/foreach}]
                     </SELECT>
                 [{/block}]
             [{else}]
                 [{block name="usermanager_admin_requ_delgenderfilter_viewer"}]
-                    [{if $edit->getValue('sCheckDelGenderType') == 'mr'}]
-                        [{oxmultilang ident="D3_USERMANAGER_REQU_GENDER_MR"}]
-                    [{elseif $edit->getValue('sCheckDelGenderType') == 'mrs'}]
-                        [{oxmultilang ident="D3_USERMANAGER_REQU_GENDER_MRS"}]
-                    [{/if}]
+                    [{foreach from=$oRequ->getTypeList() key="type" item="translation"}]
+                        [{if $edit->getValue('sCheckDelGenderType') == $type}][{oxmultilang ident=$translation}][{/if}]
+                    [{/foreach}]
                 [{/block}]
             [{/if}]
             [{oxinputhelp ident="D3_USERMANAGER_REQU_DELADR_GENERALDESC"}]

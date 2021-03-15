@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
@@ -23,15 +25,18 @@ use D3\ModCfg\Application\Model\d3str;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\Usermanager\Application\Model\d3usermanager_configurationcheck;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_execute as ManagerExecuteModel;
-use D3\Usermanager\Application\Model\d3usermanager_toUserAssignment as ToItemAssignmentModel;
+use D3\Usermanager\Application\Model\d3usermanager_touserassignment as ToItemAssignmentModel;
 use D3\Usermanager\Application\Model\d3usermanagerlist as ManagerListModel;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
+use D3\Usermanager\Application\Model\Exceptions\d3ActionRequirementInterface;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_templaterendererExceptionInterface;
 use Doctrine\DBAL\DBALException;
-use Exception;
 use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
 use OxidEsales\Eshop\Application\Model\User as ItemModel;
+use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -40,6 +45,7 @@ use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\Session;
+use OxidEsales\Eshop\Core\UtilsView;
 
 class d3_usermanager_jobs extends AdminDetailsController
 {
@@ -65,13 +71,12 @@ class d3_usermanager_jobs extends AdminDetailsController
 
     /**
      * @return ItemModel
-     * @throws Exception
      */
-    public function getItemObject()
+    public function getItemObject(): ItemModel
     {
         /** @var ItemModel $item */
-        $item = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.ItemModel::class);
-        
+        $item = d3GetModCfgDIC()->get('d3ox.usermanager.'.ItemModel::class);
+
         return $item;
     }
 
@@ -83,9 +88,8 @@ class d3_usermanager_jobs extends AdminDetailsController
      * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
-    public function render()
+    public function render(): string
     {
         parent::render();
 
@@ -110,19 +114,15 @@ class d3_usermanager_jobs extends AdminDetailsController
 
     /**
      * @return Session
-     * @throws Exception
      */
-    public function d3GetSession()
+    public function d3GetSession(): Session
     {
         /** @var Session $session */
-        $session = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Session::class);
-        
+        $session = d3GetModCfgDIC()->get('d3ox.usermanager.'.Session::class);
+
         return $session;
     }
 
-    /**
-     * @throws Exception
-     */
     public function changeFolder()
     {
         /** @var Request $request */
@@ -136,9 +136,8 @@ class d3_usermanager_jobs extends AdminDetailsController
 
     /**
      * @return ManagerListModel
-     * @throws Exception
      */
-    public function getManagerList()
+    public function getManagerList(): ManagerListModel
     {
         /** @var ManagerListModel $managerList */
         $managerList = d3GetModCfgDIC()->get(ManagerListModel::class);
@@ -147,9 +146,8 @@ class d3_usermanager_jobs extends AdminDetailsController
 
     /**
      * @return ManagerListModel
-     * @throws Exception
      */
-    public function d3GetManagerJobs()
+    public function d3GetManagerJobs(): ManagerListModel
     {
         $oManagerList = $this->getManagerList();
         $oManagerList->getList();
@@ -167,40 +165,48 @@ class d3_usermanager_jobs extends AdminDetailsController
      * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
-    protected function _d3GetManuallyManagerJobs($sFolderId)
+    protected function _d3GetManuallyManagerJobs($sFolderId): ManagerListModel
     {
-        $oManagerList = $this->getManagerList();
-        $oList = $oManagerList->d3GetManuallyManagerJobsByFolder($sFolderId);
+        try {
+            $oManagerList = $this->getManagerList();
+            $oList = $oManagerList->d3GetManuallyManagerJobsByFolder($sFolderId);
 
-        /** @var Manager $oManager */
-        foreach ($oList as $sId => $oManager) {
-            $oManagerExecute = $this->getManagerExecute($oManager);
+            /** @var Manager $oManager */
+            foreach ($oList as $sId => $oManager) {
+                $oManagerExecute = $this->getManagerExecute($oManager);
 
-            if ($oManager->getValue('sManuallyExecMeetCondition') &&
-                false == $oManagerExecute->userMeetsConditions($this->getEditObjectId())
-            ) {
-                $oList->offsetUnset($sId);
+                if ($oManager->getValue('sManuallyExecMeetCondition') &&
+                        false == $oManagerExecute->userMeetsConditions($this->getEditObjectId())
+                    ) {
+                       $oList->offsetUnset($sId);
+                }
             }
+
+            return $oList;
+        } catch (d3ActionRequirementInterface $oEx) {
+            /** @var UtilsView $utilsView */
+            $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
+            $utilsView->addErrorToDisplay($oEx);
         }
 
-        return $oList;
+        /** @var ManagerListModel $managerList */
+        $managerList = d3GetModCfgDIC()->get(ManagerListModel::class);
+        return $managerList;
     }
 
     /**
      * @return array
      */
-    public function d3GetJobList()
+    public function d3GetJobList(): array
     {
         return $this->_aJobList->getArray();
     }
 
     /**
      * @return Manager
-     * @throws Exception
      */
-    public function getManager()
+    public function getManager(): Manager
     {
         /** @var Manager $manager */
         $manager = d3GetModCfgDIC()->get(Manager::class);
@@ -210,9 +216,8 @@ class d3_usermanager_jobs extends AdminDetailsController
     /**
      * @param Manager $oManager
      * @return ManagerExecuteModel
-     * @throws Exception
      */
-    public function getManagerExecute(Manager $oManager)
+    public function getManagerExecute(Manager $oManager): ManagerExecuteModel
     {
         d3GetModCfgDIC()->set(
             ManagerExecuteModel::class.'.args.usermanager',
@@ -229,24 +234,35 @@ class d3_usermanager_jobs extends AdminDetailsController
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
-     * @throws Exception
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
     public function d3execusermanager()
     {
-        /** @var Request $request */
-        $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
+        try {
+            /** @var Request $request */
+            $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id . Request::class);
 
-        $oManager = $this->getManager();
-        $oManager->load($request->getRequestEscapedParameter('usermanagerid'));
-        $oManagerExec = $this->getManagerExecute($oManager);
+            $oManager = $this->getManager();
+            $oManager->load($request->getRequestEscapedParameter('usermanagerid'));
+            $oManagerExec = $this->getManagerExecute($oManager);
 
-        if (false == $oManager->getValue('sManuallyExecMeetCondition') ||
-            $oManagerExec->userMeetsConditions($this->getEditObjectId())
-        ) {
-            $oManagerExec->exec4user($this->getEditObjectId());
-            $oManagerExec->finishJobExecution();
+            $this->checkForConfigurationException($oManager);
+
+            if (false == $oManager->getValue('sManuallyExecMeetCondition') ||
+                $oManagerExec->userMeetsConditions($this->getEditObjectId())
+            ) {
+                $oManagerExec->exec4user($this->getEditObjectId());
+                $oManagerExec->finishJobExecution();
+            }
+        } catch (d3ActionRequirementInterface | d3usermanager_templaterendererExceptionInterface $oEx) {
+            $oEx->debugOut();
+            /** @var UtilsView $utilsView */
+            $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
+            $utilsView->addErrorToDisplay($oEx);
+        } finally {
+            $oConfig = d3GetModCfgDIC()->get('d3ox.usermanager.'.Config::class);
+            $oConfig->setAdminMode(true);
         }
     }
 
@@ -255,34 +271,49 @@ class d3_usermanager_jobs extends AdminDetailsController
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
-     * @throws Exception
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
     public function d3ExecChangedUserManager()
     {
-        /** @var Request $request */
-        $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
+        try {
+            /** @var Request $request */
+            $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
 
-        $oManager = $this->getManager();
-        $oManager->load($request->getRequestEscapedParameter('usermanagerid'));
-        $oManager->setEditedValues($request->getRequestEscapedParameter('aContent'));
-        $oManagerExec = $this->getManagerExecute($oManager);
+            $oManager = $this->getManager();
+            $oManager->load($request->getRequestEscapedParameter('usermanagerid'));
+            $oManager->setEditedValues($request->getRequestEscapedParameter('aContent'));
+            $oManagerExec = $this->getManagerExecute($oManager);
 
-        if (false == $oManager->getValue('sManuallyExecMeetCondition') ||
-            $oManagerExec->userMeetsConditions($this->getEditObjectId())
-        ) {
-            $oManagerExec->exec4user($this->getEditObjectId());
-            $oManagerExec->finishJobExecution();
+            $this->checkForConfigurationException($oManager);
+
+            if (false == $oManager->getValue('sManuallyExecMeetCondition') ||
+                $oManagerExec->userMeetsConditions($this->getEditObjectId())
+            ) {
+                $oManagerExec->exec4user($this->getEditObjectId());
+                $oManagerExec->finishJobExecution();
+            }
+        } catch (d3ActionRequirementInterface $e) {
+            $e->debugOut();
+            /** @var UtilsView $utilsView */
+            $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
+            $utilsView->addErrorToDisplay($e);
+        } catch (d3usermanager_templaterendererExceptionInterface $oEx) {
+            $oEx->debugOut();
+            /** @var UtilsView $utilsView */
+            $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
+            $utilsView->addErrorToDisplay($oEx);
+        } finally {
+            $oConfig = d3GetModCfgDIC()->get('d3ox.usermanager.'.Config::class);
+            $oConfig->setAdminMode(true);
         }
     }
 
     /**
      * @param Manager $oManager
      * @return ToItemAssignmentModel
-     * @throws Exception
      */
-    public function getUserManagerAssignment(Manager $oManager)
+    public function getUserManagerAssignment(Manager $oManager): ToItemAssignmentModel
     {
         d3GetModCfgDIC()->set(
             ToItemAssignmentModel::class.'.args.usermanager',
@@ -295,9 +326,7 @@ class d3_usermanager_jobs extends AdminDetailsController
     }
 
     /**
-     * @throws DatabaseErrorException
      * @throws d3ParameterNotFoundException
-     * @throws Exception
      */
     public function d3resetUserManagerAssignment()
     {
@@ -316,7 +345,6 @@ class d3_usermanager_jobs extends AdminDetailsController
      * @return mixed
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
-     * @throws Exception
      */
     public function getFolderList()
     {
@@ -331,56 +359,68 @@ class d3_usermanager_jobs extends AdminDetailsController
      * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
     public function execChangedContents()
     {
-        /** @var Request $request */
-        $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
-        $sItemId = $this->getEditObjectId();
-        $oManager = $this->getManager();
-        $oManager->load($request->getRequestEscapedParameter('usermanagerid'));
-        $this->addTplParam('aMailContent', $oManager->getEditableContent($sItemId));
+        try {
+            /** @var Request $request */
+            $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
+            $sItemId = $this->getEditObjectId();
+            $oManager = $this->getManager();
+            $oManager->load($request->getRequestEscapedParameter('usermanagerid'));
 
-        $contents = $oManager->getEditableContent($sItemId);
-        $field = oxNew(Field::class);
-        $field->setValue($contents['html']);
-        $object = oxNew(BaseModel::class);
-        $object->__set(
-            'aContent[mail][html]',
-            $field
-        );
-        $this->addTplParam("htmleditor", $this->generateTextEditor("95%", 180, $object, "aContent[mail][html]", "list.tpl.css"));
+            // check configuration exceptions
+            $this->checkForConfigurationException($oManager);
 
-        $this->addTplParam('sAction', __FUNCTION__);
-        $this->addTplParam('oManager', $oManager);
+            $contents = $oManager->getEditableContent($sItemId);
+            
+            $this->addTplParam('aMailContent', $contents);
+            
+            $field = oxNew(Field::class);
+            $field->setValue($contents['html']);
+            $object = oxNew(BaseModel::class);
+            $object->__set(
+                'aContent[mail][html]',
+                $field
+            );
+            $this->addTplParam("htmleditor", $this->generateTextEditor("95%", 180, $object, "aContent[mail][html]", "list.tpl.css"));
+
+            $this->addTplParam('sAction', __FUNCTION__);
+            $this->addTplParam('oManager', $oManager);
+        } catch (d3ActionRequirementInterface | d3usermanager_templaterendererExceptionInterface $oEx) {
+            $oEx->debugOut();
+            /** @var UtilsView $utilsView */
+            $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
+            $utilsView->addErrorToDisplay($oEx);
+        } finally {
+            $oConfig = d3GetModCfgDIC()->get('d3ox.usermanager.'.Config::class);
+            $oConfig->setAdminMode(true);
+        }
     }
 
     /**
      * @return array
      */
-    public function getUserMessages()
+    public function getUserMessages(): array
     {
         return array();
     }
 
     /**
      * @return Language
-     * @throws Exception
      */
-    public function getLang()
+    public function getLang(): Language
     {
         /** @var Language $language */
-        $language = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
-        
+        $language = d3GetModCfgDIC()->get('d3ox.usermanager.'.Language::class);
+
         return $language;
     }
 
     /**
      * @return string
-     * @throws Exception
      */
-    public function getHelpURL()
+    public function getHelpURL(): string
     {
         $sUrl = $this->d3GetSet()->getHelpURL();
         /** @var d3str $oD3Str */
@@ -403,19 +443,37 @@ class d3_usermanager_jobs extends AdminDetailsController
     }
 
     /**
+     * return type can't defined, because of unmockable d3_cfg_mod class, use stdClass in test
      * @return d3_cfg_mod
-     * @throws Exception
      */
     public function d3GetSet()
     {
         /** @var d3_cfg_mod $modCfg */
-        $modCfg = d3GetModCfgDIC()->get($this->_DIC_Instance_Id.'modcfg');
+        $modCfg = d3GetModCfgDIC()->get('d3.usermanager.modcfg');
 
         return $modCfg;
     }
 
-    public function getLink()
+    public function getLink(): string
     {
         return '';
+    }
+
+    /**
+     * @param Manager $oManager
+     * @throws d3ActionRequirementInterface
+     */
+    protected function checkForConfigurationException(Manager $oManager): void
+    {
+        d3GetModCfgDIC()->set(d3usermanager_configurationcheck::class.'.args.usermanager', $oManager);
+        d3GetModCfgDIC()->setParameter(
+            d3usermanager_configurationcheck::class.'.args.checktypes',
+            $oManager->getValue('sManuallyExecMeetCondition') ?
+                d3usermanager_configurationcheck::REQUIREMENTS_AND_ACTIONS :
+                d3usermanager_configurationcheck::ACTIONS_ONLY
+        );
+        /** @var d3usermanager_configurationcheck $confCheck */
+        $confCheck = d3GetModCfgDIC()->get(d3usermanager_configurationcheck::class);
+        $confCheck->checkThrowingExceptions();
     }
 }

@@ -4,9 +4,9 @@
         <dd style="margin-left: 30%;">
             [{if $oView->isEditMode()}]
                 [{block name="usermanager_admin_action_exportlist_editor"}]
-                    <label for="fieldList">[{oxmultilang ident="D3_USERMANAGER_ACTION_EXPORTCONTAINS"}]</label>
+                    <label for="aExportFieldList">[{oxmultilang ident="D3_USERMANAGER_ACTION_EXPORTCONTAINS"}]</label>
                     <input type="hidden" name="value[aExportFieldList]" value="">
-                    <SELECT id="fieldlist" class="editinput" name="value[aExportFieldList][]" id="aExportFieldList" size="7" multiple [{$blActionRestriction}] [{$readonly}]>
+                    <SELECT class="editinput" name="value[aExportFieldList][]" id="aExportFieldList" size="7" multiple [{$blActionRestriction}] [{$readonly}]>
                         [{foreach from=$oView->getItemFieldNames() item="sFieldName"}]
                             <option value="[{$sFieldName}]" [{if is_array($edit->getValue('aExportFieldList')) && in_array($sFieldName, $edit->getValue('aExportFieldList'))}]selected[{/if}]>[{$oView->getFieldNameDescription($sFieldName)}]</option>
                         [{/foreach}]

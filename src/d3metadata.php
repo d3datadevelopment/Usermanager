@@ -15,6 +15,8 @@
  * @link      https://www.oxidmodule.com
  */
 
+declare(strict_types = 1);
+
 use D3\Usermanager\Setup as ModuleSetup;
 
 /**
@@ -41,11 +43,23 @@ $aModule = [
         'd3/usermanager/Application/Model/d3usermanager_export.php',
         'd3/usermanager/Application/Model/d3usermanager_partgrouplist_abstract.php',
         'd3/usermanager/Application/Model/Exceptions/d3usermanager_requirementexception.php',
+        'd3/usermanager/Application/Model/Exceptions/d3usermanager_templaterendererExceptionInterface.php',
+        'd3/usermanager/Application/Model/Exceptions/d3usermanager_smartyException.php',
         'd3/usermanager/Application/Model/Exceptions/d3usermanager_cronunavailableexception.php',
         'd3/usermanager/Application/Model/d3usermanager.php',
+        'd3/usermanager/Application/Model/d3usermanager_actionrequirement_interface.php',
+        'd3/usermanager/Application/Model/Exceptions/d3ActionRequirementAbstract.php',
+        'd3/usermanager/Application/Model/Exceptions/d3usermanager_actionException.php',
+        'd3/usermanager/Application/Model/Output/d3usermanager_debugoutput.php',
+        'd3/usermanager/Application/Model/Output/d3usermanager_abstractoutput.php',
+        'd3/usermanager/Application/Model/Output/d3usermanager_nulloutput.php',
+        'd3/usermanager/Application/Model/Exceptions/d3ActionRequirementInterface.php',
+        'd3/usermanager/Application/Model/d3usermanager_configurationcheck.php',
         'd3/usermanager/Application/Model/Exceptions/d3usermanager_cronUnavailableException.php',
         'd3/usermanager/Application/Model/d3usermanager_partgrouplist_interface.php',
+        'd3/usermanager/Application/Model/d3usermanager_partlist_interface.php',
         'd3/usermanager/Application/Model/d3usermanager_conf.php',
+        'd3/usermanager/Application/Model/d3usermanager_renderererrorhandler.php',
         'd3/usermanager/Application/Model/d3usermanager_listgenerator.php',
         'd3/usermanager/Application/Model/d3usermanager_execute.php',
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_custnrto.php',
@@ -75,6 +89,7 @@ $aModule = [
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_agecheck.php',
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirementlist.php',
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_abstract.php',
+        'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_dateabstract.php',
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_userbaskettimespan.php',
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_invustidfilter.php',
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_orderminsum.php',
@@ -105,6 +120,7 @@ $aModule = [
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_delgenderfilter.php',
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_passwordfilter.php',
         'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_registerfrom.php',
+        'd3/usermanager/Application/Model/Requirements/d3usermanager_requirement_testfilter.php',
         'd3/usermanager/Application/Model/d3usermanagerlist.php',
         'd3/usermanager/Application/Model/Actions/d3usermanager_actiongrouplist.php',
         'd3/usermanager/Application/Model/Actions/d3usermanager_action_sendpushnotification.php',
@@ -115,6 +131,7 @@ $aModule = [
         'd3/usermanager/Application/Model/Actions/d3usermanager_action_deleteuser.php',
         'd3/usermanager/Application/Model/Actions/d3usermanager_action_deletefromgroup.php',
         'd3/usermanager/Application/Model/Actions/d3usermanager_action_interface.php',
+        'd3/usermanager/Application/Model/Actions/d3usermanager_action_testaction.php',
         'd3/usermanager/Application/Model/Actions/d3usermanager_actionlist.php',
         'd3/usermanager/Application/Model/Actions/d3usermanager_action_add2group.php',
         'd3/usermanager/Application/Model/Actions/d3usermanager_action_abstract.php',
@@ -137,7 +154,13 @@ $aModule = [
         'd3/usermanager/tests/integration/Actions/actionSetFieldValueTest.php',
         'd3/usermanager/tests/integration/Actions/d3ActionIntegrationTestCase.php',
         'd3/usermanager/tests/integration/Actions/actionExecuteMethodTest.php',
-        'd3/usermanager/tests/integration/executeCronTest.php',
+        'd3/usermanager/tests/integration/Actions/actionExportListTest.php',
+        'd3/usermanager/tests/integration/Admin/jobExecuteTest.php',
+        'd3/usermanager/tests/integration/executeCronTest.php',  // outdated
+        'd3/usermanager/tests/integration/Trigger/executeCLICronTest.php',
+        'd3/usermanager/tests/integration/Trigger/executeGUICronTest.php',
+        'd3/usermanager/tests/integration/Trigger/finalizeOrderTest.php',
+        'd3/usermanager/tests/integration/Trigger/userSaveTest.php',
         'd3/usermanager/tests/integration/Requirements/requirementActiveFilterTest.php',
         'd3/usermanager/tests/integration/Requirements/requirementBoniFilterTest.php',
         'd3/usermanager/tests/integration/Requirements/requirementOtherJobTest.php',
@@ -193,6 +216,8 @@ $aModule = [
         'd3/usermanager/tests/integration/Requirements/requirementOrderNoCountTest.php',
         'd3/usermanager/tests/integration/Requirements/requirementOrderTimespanTest.php',
 
+        'd3/usermanager/tests/tools/Intercept.php',
+
         'd3/usermanager/tests/unit/d3UsermanagerUnitTestCase.php',
         'd3/usermanager/tests/unit/Modules/Application/Model/d3_order_usermanagerTest.php',
         'd3/usermanager/tests/unit/Modules/Application/Model/d3_user_usermanagerTest.php',
@@ -222,6 +247,7 @@ $aModule = [
         'd3/usermanager/tests/unit/Application/Model/d3usermanagerlistTest.php',
         'd3/usermanager/tests/unit/Application/Model/d3usermanagerTest.php',
         'd3/usermanager/tests/unit/Setup/d3usermanager_updateTest.php',
+        'd3/usermanager/tests/unit/Application/Model/d3usermanager_configurationcheckTest.php',
         'd3/usermanager/tests/unit/Application/Model/Requirements/d3usermanagerrequbirthdatetoTest.php',
         'd3/usermanager/tests/unit/Application/Model/Requirements/d3usermanagerrequbonifilterTest.php',
         'd3/usermanager/tests/unit/Application/Model/Requirements/d3usermanagerrequagecheckTest.php',
@@ -236,6 +262,8 @@ $aModule = [
         'd3/usermanager/tests/unit/Application/Model/Requirements/d3usermanagerrequotherjobTest.php',
         'd3/usermanager/tests/unit/Application/Model/Requirements/d3usermanagerrequcustnrfromTest.php',
         'd3/usermanager/tests/unit/Application/Model/Requirements/d3usermanagerrequcustnrtoTest.php',
+        'd3/usermanager/tests/unit/Application/Model/Output/d3usermanager_debugoutputTest.php',
+        'd3/usermanager/tests/unit/Application/Model/d3usermanager_renderererrorhandlerTest.php',
         'd3/usermanager/tests/unit/Application/Model/Actions/d3usermanageractionexportlistTest.php',
         'd3/usermanager/tests/unit/Application/Model/Actions/d3usermanageractionsetfieldvalueTest.php',
         'd3/usermanager/tests/unit/Application/Model/Actions/d3usermanageractioncustdelfromgroupTest.php',
@@ -250,6 +278,7 @@ $aModule = [
         'd3/usermanager/tests/unit/Application/Model/Actions/d3usermanageractiondeleteuserTest.php',
         'd3/usermanager/tests/unit/Application/Model/Exceptions/d3usermanager_cronUnavailableExceptionTest.php',
         'd3/usermanager/tests/unit/Application/Model/Exceptions/d3usermanager_requirementExceptionTest.php',
+        'd3/usermanager/tests/unit/Application/Model/Exceptions/d3usermanager_actionExceptionTest.php',
         'd3/usermanager/tests/unit/public/d3_usermanager_cronTest.php',
 
         'd3/usermanager/tests/unit/Application/Model/Requirements/d3usermanagerrequinvcompanyfilterTest.php',
