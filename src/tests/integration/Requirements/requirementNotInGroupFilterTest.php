@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\tests\integration\Requirements\d3RequirementIntegrationTestCase;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -39,6 +38,11 @@ class requirementNotInGroupFilterTest extends d3RequirementIntegrationTestCase
         'groupAssignIdNo2',
         'groupAssignIdNo3',
     );
+    public $aGroupIdList = [
+        'sGroupId1Pass',
+        'sGroupId2Pass',
+        'sGroupId3Pass'
+    ];
 
     /**
      * Set up fixture.
@@ -119,6 +123,10 @@ class requirementNotInGroupFilterTest extends d3RequirementIntegrationTestCase
                 'oxgroupsid'    => 'sGroupId1Pass',
             )
         );
+
+        foreach ($this->aGroupIdList as $sId) {
+            $this->createBaseModelObject('oxgroups', $sId);
+        }
     }
 
     /**
@@ -136,6 +144,10 @@ class requirementNotInGroupFilterTest extends d3RequirementIntegrationTestCase
 
         foreach ($this->aGroupAssignIdList as $sGroupAssignId) {
             $this->deleteBaseModelObject('oxobject2group', $sGroupAssignId);
+        }
+
+        foreach ($this->aGroupIdList as $sId) {
+            $this->deleteBaseModelObject('oxgroups', $sId);
         }
     }
 

@@ -17,8 +17,10 @@
 
 namespace D3\Usermanager\Setup;
 
+use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\d3bitmask;
 use D3\ModCfg\Application\Model\d3database;
+use D3\ModCfg\Application\Model\d3str;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
@@ -26,7 +28,7 @@ use D3\ModCfg\Application\Model\Install\d3install_updatebase;
 use D3\ModCfg\Application\Model\Installwizzard\d3installdbrecord;
 use Doctrine\DBAL\DBALException;
 use Exception;
-use OxidEsales\Eshop\Application\Model\Shop as Shop;
+use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Exception\ConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -39,17 +41,17 @@ class d3usermanager_update extends d3install_updatebase
 {
     public $sModKey = 'd3usermanager';
     public $sModName = 'Kundenmanager';
-    public $sModVersion = '3.3.0.0';
-    public $sModRevision = '3300';
+    public $sModVersion = '3.3.0.1';
+    public $sModRevision = '3301';
     public $sBaseConf = 
-    'AXpv2==K3VWVFVqZHkyNEtWYm1Ha3lmMjdXNjBZbEtaY3UreEpXVTZZZFplVVZ6N1l2aVlaRzRMbm5pN
-mgwTDRtYVp5cTdXQTdwTWxTdm1rZmRvblFGQzFDZU1iQVROSTc2QTFrVjZ2MEM5Nm9YOTF3ODRHdytCe
-EtMUDJiM29LQnhwNjZ1NlJSeHBuV0RkUVJiajgzbG9wbGZRUTljZURYYUVaNXI4eHhEM2Ztdm9lZHdCO
-HlHSlNPdDY4TU41NGpsOElLemdUeXNjYkw0WXdFQWRkcTh6ZU9LUVlZR3dBQ3haNlIxdHQzVmx6Z1R2N
-S9QT25KdGE3ZnBmMzJpcU9VODRKTDVBWElFaXBTMmFURTZkcjlvOFhWUmVCQW1qaUZ2Rmx5WWNlZUkrR
-Xpjd2l5MmJqeEUrNExzVTdtOTZVR01xTUttMFMrU0l1UkcxeHlxdTFJOStwQ1hRPT0=';
+    'PoCv2==Nkd1VU9RTDJLMXlhbXV6WVozSW1ITFRDT3BhdlA4WGlibGlEUWRvcS91OW5QQU45K0NTUjlKd
+E5icm4xN0o5K3UyakkzdlYvK2ZZT0hBVE1aR04vNW4zU0poNkNialVEbXRpQzIxd0doM2h1TmpvWWkxS
+WZ6MTlpMHZmQkMzTWMvZjV4L00wZk9OSUpoalJuemZoeFU2S2VMTWJVa3huZWlGWTIrWkU0SEx5c1JhN
+nFIVzFWNll6NksxTjJZb2JDUzIwTEtFak8zbk5aN0RNRGtVd21qaStJbEFKT3pQQnd0eGJpRWlyK0k1V
+DdMekF2NHA2OUN5b29sZE5QTkNseEl1UWtFWHZYK1oremlMa1k0a05COUJtMzZLaE1nbkM4b0czcGkvM
+TJDeGhmOHAzTEVjYWhGV3dIRCswZTYwV1YzUUV2cVJ0VEg3ZUUyNlgvQzVjdktRPT0=';
     public $sRequirements = '';
-    public $sBaseValue = 'TyUzQTglM0ElMjJzdGRDbGFzcyUyMiUzQTQlM0ElN0JzJTNBMjMlM0ElMjJkM19jZmdfbW9kX19hRm9sZGVyTGlzdCUyMiUzQmElM0E0JTNBJTdCaSUzQTAlM0JzJTNBMjMlM0ElMjJEM19VU0VSTUFOQUdFUl9VU0VSX05FVyUyMiUzQmklM0ExJTNCcyUzQTMwJTNBJTIyRDNfVVNFUk1BTkFHRVJfVVNFUl9FWFRSQUNUSU9OJTIyJTNCaSUzQTIlM0JzJTNBMjklM0ElMjJEM19VU0VSTUFOQUdFUl9VU0VSX1JFVEVOVElPTiUyMiUzQmklM0EzJTNCcyUzQTMxJTNBJTIyRDNfVVNFUk1BTkFHRVJfVVNFUl9NQUlOVEVOQU5DRSUyMiUzQiU3RHMlM0EyNCUzQSUyMmQzX2NmZ19tb2RfX2JsQ3JvbkFjdGl2ZSUyMiUzQnMlM0ExJTNBJTIyMCUyMiUzQnMlM0EyMyUzQSUyMmQzX2NmZ19tb2RfX2lNYXhVc2VyQ250JTIyJTNCcyUzQTIlM0ElMjI1MCUyMiUzQnMlM0EyNSUzQSUyMmQzX2NmZ19tb2RfX3NDcm9uUGFzc3dvcmQlMjIlM0JzJTNBOCUzQSUyMjVuZGJyQjNSJTIyJTNCJTdE';
+    public $sBaseValue = 'TyUzQTglM0ElMjJzdGRDbGFzcyUyMiUzQTYlM0ElN0JzJTNBMjMlM0ElMjJkM19jZmdfbW9kX19hRm9sZGVyTGlzdCUyMiUzQmElM0E0JTNBJTdCaSUzQTAlM0JzJTNBMjMlM0ElMjJEM19VU0VSTUFOQUdFUl9VU0VSX05FVyUyMiUzQmklM0ExJTNCcyUzQTMwJTNBJTIyRDNfVVNFUk1BTkFHRVJfVVNFUl9FWFRSQUNUSU9OJTIyJTNCaSUzQTIlM0JzJTNBMjklM0ElMjJEM19VU0VSTUFOQUdFUl9VU0VSX1JFVEVOVElPTiUyMiUzQmklM0EzJTNCcyUzQTMxJTNBJTIyRDNfVVNFUk1BTkFHRVJfVVNFUl9NQUlOVEVOQU5DRSUyMiUzQiU3RHMlM0EyNCUzQSUyMmQzX2NmZ19tb2RfX2JsQ3JvbkFjdGl2ZSUyMiUzQnMlM0ExJTNBJTIyMCUyMiUzQnMlM0EyMyUzQSUyMmQzX2NmZ19tb2RfX2lNYXhVc2VyQ250JTIyJTNCcyUzQTIlM0ElMjI1MCUyMiUzQnMlM0EyNSUzQSUyMmQzX2NmZ19tb2RfX3NDcm9uUGFzc3dvcmQlMjIlM0JzJTNBMCUzQSUyMiUyMiUzQnMlM0EyOCUzQSUyMmQzX2NmZ19tb2RfX2FMaWNlbnNlSW5mb01haWwlMjIlM0JhJTNBMSUzQSU3QnMlM0E0MiUzQSUyMk5PTElDS0VZX180NzkzNjM4NzAyYjY3NzE1ZjFkZmJmYzgzMjQ2NjkxNCUyMiUzQnMlM0ExOSUzQSUyMjIwMjAtMTAtMTIlMjAwOSUzQTE2JTNBMDglMjIlM0IlN0RzJTNBMzAlM0ElMjJkM19jZmdfbW9kX19ibENhbGNTdGF0T25EZW1hbmQlMjIlM0JzJTNBMSUzQSUyMjAlMjIlM0IlN0Q=';
 
     public $sMinModCfgVersion = '5.3.1.2';
 
@@ -62,6 +64,8 @@ Xpjd2l5MmJqeEUrNExzVTdtOTZVR01xTUttMFMrU0l1UkcxeHlxdTFJOStwQ1hRPT0=';
               'do'    => 'fixFields'),
         array('check' => 'checkIndizes',
               'do'    => 'fixIndizes'),
+        array('check' => 'checkCronPasswordSet',
+              'do'    => 'createCronPassword'),
         array('check' => 'checkExampleJobList',
               'do'    => 'addExampleJobList'),
         array('check' => 'checkExampleContentList',
@@ -422,6 +426,45 @@ Xpjd2l5MmJqeEUrNExzVTdtOTZVR01xTUttMFMrU0l1UkcxeHlxdTFJOStwQ1hRPT0=';
             }
         }
         return $blRet;
+    }
+
+    /**
+     * @return bool true, if new password must set
+     * @throws DBALException
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
+     */
+    public function checkCronPasswordSet()
+    {
+        $password = d3_cfg_mod::get($this->sModKey)->getValue('sCronPassword');
+        return false === $password || is_null($password) || (is_string($password) && strlen($password) <= 0);
+    }
+
+    /**
+     * @return bool
+     * @throws DBALException
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
+     * @throws StandardException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
+     */
+    public function createCronPassword()
+    {
+        $message = Registry::getLang()->translateString('D3_USERMANAGER_SETUP_CRONPASSWORD') . PHP_EOL.PHP_EOL;
+        $this->setActionLog('msg', $message, __METHOD__);
+
+        if ($this->hasExecute()) {
+            /** @var d3str $oD3str */
+            $oD3str = oxNew(d3str::class);
+            $password = $oD3str->random_str(12);
+
+            $set = d3_cfg_mod::get($this->sModKey);
+            $set->setValue('sCronPassword', $password);
+            $set->saveNoLicenseRefresh();
+        }
+
+        return true;
     }
 
     /**

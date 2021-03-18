@@ -82,6 +82,8 @@ $aLang = array(
     'D3_GENERAL_USERMANAGER_COPY_PREFIX'               => 'Kopie von ',
     'D3_GENERAL_USERMANAGER_SELECT_ALL'                => 'alle Einträge wählen',
     'D3_GENERAL_USERMANAGER_SELECT_NONE'               => 'keinen Eintrag wählen',
+    'D3_GENERAL_USERMANAGER_TASKCOUNT_CRONID'          => 'Anzahl Aufgaben für Cronjob-ID %1$s: %2$u',
+    'D3_GENERAL_USERMANAGER_LASTEXEC_CRONID'           => 'letzte Ausführung für Cronjob-ID %1$s: %2$s',
 
     'D3_USERMANAGER_GENERAL_ACTIVTITLE'                => 'AC',
     'D3_USERMANAGER_GENERAL_ACTIVTITLE_DESC'           => 'Aktiv für automatische Ausführung über Cronjobs',
@@ -444,4 +446,25 @@ $aLang = array(
     'D3USERMANAGER_CONFIGVARS_SEDITIONID'              => 'Editions-ID',
 
     'D3_USERMANAGER_GENERAL_TASK'                      => 'Aufgabe:',
+
+    'D3_USERMANAGER_SETUP_CRONPASSWORD'                => 'Für die Absicherung externer Cronjobaufrufe wird ein sicheres Passwort gesetzt. Dieses können Sie später in den Moduleinstellungen einsehen und bei Bedarf verändern.',
+
+    'D3_USERMANAGER_CLI_COMMON_RUNFROMCLI'              => 'Dieses Script muss von der Befehlszeile aus ausgeführt werden.',
+    'D3_USERMANAGER_CLI_COMMON_UNVALIDSHOPID'           => 'ungültige Shop-ID',
+    'D3_USERMANAGER_CLI_COMMON_UNVALIDCJID'             => 'ungültige Cronjob-ID',
+    'D3_USERMANAGER_CLI_HELP'                           => 'Ermöglicht die Ausführung von Kundenmanageraufgaben.',
+    'D3_USERMANAGER_CLI_OPTION_VERSION'                 => 'zeigt Version',
+    'D3_USERMANAGER_CLI_OPTION_QUIET'                   => 'verhindert die Anzeige der Ausgabe',
+    'D3_USERMANAGER_CLI_OPTION_LANG'                    => 'optional - Sprache der ausgegebenen Meldungen, mögliche Werte sind: "%1$s"',
+    'D3_USERMANAGER_CLI_OPTION_HELP'                    => 'Diesen Hilfetext anzeigen und den Aufruf verlassen.',
+    'D3_USERMANAGER_CLI_OPTION_NOCOLORS'                => 'Verwendet keine Farben in der Ausgabe. Nützlich bei der Weitergabe der Ausgabe an andere Tools oder Dateien.',
+    'D3_USERMANAGER_CLI_OPTION_LOGLEVELS'               => 'Kleinstes Level der anzuzeigenden Meldungen. Standard ist "info". Gültige Stufen sind: "debug", "info", "notice", "success", "warning", "error", "critical", "alert", "emergency".',
+    'D3_USERMANAGER_CLI_COMMAND'                        => 'Dieses Tool akzeptiert einen Befehl als ersten Parameter, wie unten beschrieben:',
+    'D3_USERMANAGER_CLI_COMMAND_RUN'                    => 'Ausführen der Aufgabengruppe mit definierter Cronjob-ID',
+    'D3_USERMANAGER_CLI_COMMAND_STATUS'                 => 'Statusinfos zur Cronjob-ID anzeigen',
+    'D3_USERMANAGER_CLI_ARGUMENT_CJID'                  => 'ID der zu startenden Aufgabengruppe (kann im Shop-Backend eingestellt werden), mögliche Werte sind: "%1$s"',
+    'D3_USERMANAGER_CLI_ARGUMENT_SHOPID'                => 'ID des ausgewählten Shops, mögliche Werte sind: "%1$s"',
+    'D3_USERMANAGER_CLI_ARGUMENT_KEY'                   => 'optional - nur für externe Anrufe erforderlich,'.PHP_EOL.'Zugriffsschlüssel zur Verhinderung externer unbefugter Anrufe (kann im Shop-Backend eingestellt werden)',
+    'D3_USERMANAGER_CLI_ARGUMENT_ENCLOSER'              => '", "',
+    'D3_USERMANAGER_CLI_FINISHED_SUCCFESSFULLY'         => 'Das Script wurde erfolgreich beendet.',
 );

@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -39,6 +38,10 @@ class requirementOrderPaymentFilterTest extends d3RequirementIntegrationTestCase
         'orderTestIdNo2',
         'orderTestIdNo3',
     );
+    public $aPayIdList = [
+        'testPayType',
+        'testFailedPayType'
+    ];
 
     /**
      * Set up fixture.
@@ -113,6 +116,10 @@ class requirementOrderPaymentFilterTest extends d3RequirementIntegrationTestCase
                 'oxpaymenttype'     => null,
             )
         );
+
+        foreach ($this->aPayIdList as $Ids) {
+            $this->createBaseModelObject('oxpayments', $Ids);
+        }
     }
 
     /**
@@ -130,6 +137,10 @@ class requirementOrderPaymentFilterTest extends d3RequirementIntegrationTestCase
 
         foreach ($this->aOrderIdList as $sOrderId) {
             $this->deleteOrder($sOrderId);
+        }
+
+        foreach ($this->aPayIdList as $Ids) {
+            $this->deleteBaseModelObject('oxpayments', $Ids);
         }
     }
 

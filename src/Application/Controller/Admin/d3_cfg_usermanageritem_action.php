@@ -391,12 +391,12 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
         $oProfile = $this->getProfile();
         /** @var Language $oLang */
         $oLang = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Language::class);
-        $iCount = $oProfile->markConcernedItemsAsFinished();
+        $iCount = $oProfile->markConcernedItemsAsFinished(true);
 
         $oEx = oxNew(
             StandardException::class,
             sprintf(
-                Registry::getLang()->translateString('D3_USERMANAGER_ACTION_MARKASFINISHED_MESSAGE'),
+                $oLang->translateString('D3_USERMANAGER_ACTION_MARKASFINISHED_MESSAGE'),
                 $iCount
             )
         );

@@ -1,9 +1,9 @@
 {
     "title": "<i class='fab fa-d3 d3fa-color-blue'></i> Kundenmanager",
-    "moduleversion": "3.3.0.0",
+    "moduleversion": "3.3.0.1",
     "titledesc": "für den Oxid eShop",
     "author": "D³ Data Development",
-    "moduledate": "02.10.2020",
+    "moduledate": "10.03.2021",
     "editors": "",
     "tagline": "",
     "image": "",
@@ -65,6 +65,7 @@
         "modulename"    : "<i class='fab fa-d3 d3fa-color-blue'></i> Kundenmanager",
         "menutitle"     : "<i class='fab fa-d3 d3fa-color-blue'></i> Kundenmanager",
         "modulefolder"  : "usermanager",
+        "metadataident" : "d3usermanager",
         "modcfgident"   : "d3usermanager",
         "composerident" : "d3/usermanager"
     },

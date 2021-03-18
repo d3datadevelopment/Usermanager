@@ -19,7 +19,7 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\tests\integration\Requirements\d3RequirementIntegrationTestCase;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invgenderfilter;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -114,7 +114,7 @@ class requirementInvGenderFilterTest extends d3RequirementIntegrationTestCase
         $oManager = $this->getManagerMock($this->sManagerId);
 
         $oManager->setValue('blCheckInvGender_status', true);
-        $oManager->setValue('sCheckInvGenderType', 'MR');
+        $oManager->setValue('sCheckInvGenderType', d3usermanager_requirement_invgenderfilter::TYPE_MR);
 
         return $oManager;
     }
@@ -128,7 +128,7 @@ class requirementInvGenderFilterTest extends d3RequirementIntegrationTestCase
         $oManager = $this->getManagerMock($this->sManagerId);
 
         $oManager->setValue('blCheckInvGender_status', true);
-        $oManager->setValue('sCheckInvGenderType', 'Mrs');
+        $oManager->setValue('sCheckInvGenderType', d3usermanager_requirement_invgenderfilter::TYPE_MRS);
 
         return $oManager;
     }

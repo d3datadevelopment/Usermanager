@@ -19,7 +19,7 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\tests\integration\Requirements\d3RequirementIntegrationTestCase;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_noticelistcount;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -203,7 +203,7 @@ class requirementNoticelistCountTest extends d3RequirementIntegrationTestCase
         $oManager = $this->getManagerMock($this->sManagerId);
 
         $oManager->setValue('blNoticeListCount_status', true);
-        $oManager->setValue('sNoticeListCountType', 'higher');
+        $oManager->setValue('sNoticeListCountType', d3usermanager_requirement_noticelistcount::TYPE_HIGHER);
         $oManager->setValue('sNoticeListCountValue', '2');
 
         return $oManager;
@@ -218,7 +218,7 @@ class requirementNoticelistCountTest extends d3RequirementIntegrationTestCase
         $oManager = $this->getManagerMock($this->sManagerId);
 
         $oManager->setValue('blNoticeListCount_status', true);
-        $oManager->setValue('sNoticeListCountType', 'lower');
+        $oManager->setValue('sNoticeListCountType', d3usermanager_requirement_noticelistcount::TYPE_LESS);
         $oManager->setValue('sNoticeListCountValue', '2');
 
         return $oManager;

@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\tests\integration\Requirements\d3RequirementIntegrationTestCase;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -34,6 +33,10 @@ class requirementInvCountryFilterTest extends d3RequirementIntegrationTestCase
         'userTestIdNo2',
         'userTestIdNo3'
     );
+    public $aCountryIdList = [
+        'testCountry1',
+        'testCountry2'
+    ];
 
     /**
      * Set up fixture.
@@ -89,6 +92,10 @@ class requirementInvCountryFilterTest extends d3RequirementIntegrationTestCase
                 'oxcompany' => __CLASS__
             )
         );
+
+        foreach ($this->aCountryIdList as $sId) {
+            $this->createBaseModelObject('oxcountry', $sId);
+        }
     }
 
     /**
@@ -102,6 +109,10 @@ class requirementInvCountryFilterTest extends d3RequirementIntegrationTestCase
 
         foreach ($this->aUserIdList as $sUserId) {
             $this->deleteUser($sUserId);
+        }
+
+        foreach ($this->aCountryIdList as $sId) {
+            $this->deleteBaseModelObject('oxcountry', $sId);
         }
     }
 

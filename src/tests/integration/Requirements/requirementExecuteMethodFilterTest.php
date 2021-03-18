@@ -21,6 +21,7 @@ use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
 use Doctrine\DBAL\DBALException;
 use Exception;
+use OxidEsales\Eshop\Application\Model\UserList;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -127,12 +128,17 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
     {
         $oListGenerator = $this->getListGenerator($this->getConfiguredManager());
 
-        /** @var ListModel|PHPUnit_Framework_MockObject_MockObject $oListMock */
+        $definitions = d3GetModCfgDIC()->getDefinitions();
+
+        /** @var UserList|PHPUnit_Framework_MockObject_MockObject $oListMock */
         $oListMock = $this->getMock(ListModel::class, array('testChangeUserList'));
         $oListMock->expects($this->once())->method('testChangeUserList')->willReturn(null);
-        d3GetModCfgDIC()->set('d3ox.usermanager.'.ListModel::class, $oListMock);
+        d3GetModCfgDIC()->set('d3ox.usermanager.'.UserList::class, $oListMock);
 
         $oUserList = $oListGenerator->getConcernedUsers();
+
+        d3GetModCfgDIC()->reset();
+        d3GetModCfgDIC()->setDefinitions($definitions);
 
         $this->assertTrue(
             $oUserList->count() >= 2

@@ -25,7 +25,7 @@ use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_execute as ManagerExecuteModel;
-use D3\Usermanager\Application\Model\d3usermanager_toUserAssignment as ToItemAssignmentModel;
+use D3\Usermanager\Application\Model\d3usermanager_touserassignment as ToItemAssignmentModel;
 use D3\Usermanager\Application\Model\d3usermanagerlist as ManagerListModel;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
 use Doctrine\DBAL\DBALException;

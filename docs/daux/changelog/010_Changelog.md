@@ -2,6 +2,21 @@
 title: Changelog
 ---
 
+## 3.3.0.1 - (2021-03-10)
+
+### Added
+- erweiterte Konfigurationsprüfung integriert
+- CLI-Klasse für Konsolenaufrufe eigefügt
+
+### Changed
+- im Installationsprozess wird Zufallspasswort gesetzt
+- unnötige Prüfung für Plain-Template in Mail-Aktion entfernt (Plain kann aus HTML generiert werden)
+
+### Fixed
+- "Einträge als erledigt markieren" ignoriert "Einträge nich als erledigt markieren"-Option
+
+---
+
 ## 3.3.0.0 - (2020-10-02) - (aus Kompatibilitätsgründen zu Ordermanager-Release)
 
 **Minor version upgrade notice: there are some backward-incompatible changes to this release.**
