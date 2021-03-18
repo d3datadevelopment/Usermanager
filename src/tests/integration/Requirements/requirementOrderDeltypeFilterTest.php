@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -39,6 +38,10 @@ class requirementOrderDeltypeFilterTest extends d3RequirementIntegrationTestCase
         'orderTestIdNo2',
         'orderTestIdNo3',
     );
+    public $aDeliveryIdList = [
+        'testDelType',
+        'testFailedDelType'
+    ];
 
     /**
      * Set up fixture.
@@ -113,6 +116,10 @@ class requirementOrderDeltypeFilterTest extends d3RequirementIntegrationTestCase
                 'oxdeltype'     => null,
             )
         );
+
+        foreach ($this->aDeliveryIdList as $sId) {
+            $this->createBaseModelObject('oxdelivery', $sId);
+        }
     }
 
     /**
@@ -130,6 +137,10 @@ class requirementOrderDeltypeFilterTest extends d3RequirementIntegrationTestCase
 
         foreach ($this->aOrderIdList as $sOrderId) {
             $this->deleteOrder($sOrderId);
+        }
+
+        foreach ($this->aDeliveryIdList as $sId) {
+            $this->deleteBaseModelObject('oxdelivery', $sId);
         }
     }
 

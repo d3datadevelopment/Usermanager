@@ -15,22 +15,7 @@
  * @link          https://www.oxidmodule.com
  */
 
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_action;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_list;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_main;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_mall;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_settings;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_trigger;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerlog;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerlog_list;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_licence;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_list;
-use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_main;
-use D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs;
+use D3\Usermanager\Application\Controller\Admin as ModuleControllerAdmin;
 use D3\Usermanager\Application\Controller\d3usermanager_response;
 use D3\Usermanager\Modules\Application\Model\d3_order_usermanager;
 use D3\Usermanager\Modules\Application\Model\d3_oxemail_usermanager as d3_oxemail_usermanager;
@@ -44,50 +29,52 @@ use OxidEsales\Eshop\Core\Email;
  * Metadata version
  */
 $sMetadataVersion = '2.0';
+$sLogo = '<img src="https://logos.oxidmodule.com/d3logo.svg" alt="(D3)" style="height:1em;width:1em"> ';
 
 /**
  * Module information
  */
-$aModule = array(
+$aModule = [
     'id'          => 'd3usermanager',
-    'title'       => 
-        '<img src="https://logos.oxidmodule.com/d3logo.svg" alt="(D3)" style="height:1em;width:1em"> '.
-        'Kundenmanager',
-    'description' => array(
+    'title'       => [
+        'de' => $sLogo . 'Kundenmanager',
+        'en' => $sLogo . 'User Manager'
+    ],
+    'description' => [
         'de' => 'Bearbeitet frei definierbare Auftr&auml;ge auf Basis von einstellbaren Kundenlisten.',
-        'en' => '',
-    ),
+        'en' => 'Processes freely definable tasks based on adjustable customer lists.',
+    ],
     'controllers' => [
         'd3usermanager_response'           => d3usermanager_response::class,
 
-        'd3_cfg_usermanagerset'            => d3_cfg_usermanagerset::class,
-        'd3_cfg_usermanagerset_list'       => d3_cfg_usermanagerset_list::class,
-        'd3_cfg_usermanagerset_main'       => d3_cfg_usermanagerset_main::class,
-        'd3_cfg_usermanagerlog'            => d3_cfg_usermanagerlog::class,
-        'd3_cfg_usermanagerlog_list'       => d3_cfg_usermanagerlog_list::class,
-        'd3_cfg_usermanagerset_licence'    => d3_cfg_usermanagerset_licence::class,
-        'd3_cfg_usermanageritem'           => d3_cfg_usermanageritem::class,
-        'd3_cfg_usermanageritem_list'      => d3_cfg_usermanageritem_list::class,
-        'd3_cfg_usermanageritem_main'      => d3_cfg_usermanageritem_main::class,
-        'd3_cfg_usermanageritem_mall'      => d3_cfg_usermanageritem_mall::class,
-        'd3_cfg_usermanageritem_trigger'   => d3_cfg_usermanageritem_trigger::class,
-        'd3_cfg_usermanageritem_overview'  => d3_cfg_usermanageritem_overview::class,
-        'd3_cfg_usermanageritem_settings'  => d3_cfg_usermanageritem_settings::class,
-        'd3_cfg_usermanageritem_requ'      => d3_cfg_usermanageritem_requ::class,
-        'd3_cfg_usermanageritem_action'    => d3_cfg_usermanageritem_action::class,
-        'd3_usermanager_jobs'             => d3_usermanager_jobs::class,
+        'd3_cfg_usermanagerset'            => ModuleControllerAdmin\d3_cfg_usermanagerset::class,
+        'd3_cfg_usermanagerset_list'       => ModuleControllerAdmin\d3_cfg_usermanagerset_list::class,
+        'd3_cfg_usermanagerset_main'       => ModuleControllerAdmin\d3_cfg_usermanagerset_main::class,
+        'd3_cfg_usermanagerlog'            => ModuleControllerAdmin\d3_cfg_usermanagerlog::class,
+        'd3_cfg_usermanagerlog_list'       => ModuleControllerAdmin\d3_cfg_usermanagerlog_list::class,
+        'd3_cfg_usermanagerset_licence'    => ModuleControllerAdmin\d3_cfg_usermanagerset_licence::class,
+        'd3_cfg_usermanageritem'           => ModuleControllerAdmin\d3_cfg_usermanageritem::class,
+        'd3_cfg_usermanageritem_list'      => ModuleControllerAdmin\d3_cfg_usermanageritem_list::class,
+        'd3_cfg_usermanageritem_main'      => ModuleControllerAdmin\d3_cfg_usermanageritem_main::class,
+        'd3_cfg_usermanageritem_mall'      => ModuleControllerAdmin\d3_cfg_usermanageritem_mall::class,
+        'd3_cfg_usermanageritem_trigger'   => ModuleControllerAdmin\d3_cfg_usermanageritem_trigger::class,
+        'd3_cfg_usermanageritem_overview'  => ModuleControllerAdmin\d3_cfg_usermanageritem_overview::class,
+        'd3_cfg_usermanageritem_settings'  => ModuleControllerAdmin\d3_cfg_usermanageritem_settings::class,
+        'd3_cfg_usermanageritem_requ'      => ModuleControllerAdmin\d3_cfg_usermanageritem_requ::class,
+        'd3_cfg_usermanageritem_action'    => ModuleControllerAdmin\d3_cfg_usermanageritem_action::class,
+        'd3_usermanager_jobs'              => ModuleControllerAdmin\d3_usermanager_jobs::class,
     ],
     'thumbnail'   => 'picture.png',
-    'version'     => '3.3.0.0',
+    'version'     => '3.3.0.1',
     'author'      => 'D&sup3; Data Development (Inh.: Thomas Dartsch)',
     'email'       => 'support@shopmodule.com',
     'url'         => 'https://www.oxidmodule.com/',
-    'extend'      => array(
+    'extend'      => [
         Email::class => d3_oxemail_usermanager::class,
         User::class  => d3_user_usermanager::class,
         Order::class => d3_order_usermanager::class
-    ),
-    'templates'   => array(
+    ],
+    'templates'   => [
         'd3_cfg_usermanagerset_main.tpl'        => 'd3/usermanager/Application/views/admin/tpl/d3_cfg_usermanagerset_main.tpl',
         'd3_cfg_usermanageritem_list.tpl'       => 'd3/usermanager/Application/views/admin/tpl/d3_cfg_usermanageritem_list.tpl',
         'd3_cfg_usermanageritem_main.tpl'       => 'd3/usermanager/Application/views/admin/tpl/d3_cfg_usermanageritem_main.tpl',
@@ -229,18 +216,18 @@ $aModule = array(
             'd3/usermanager/Application/views/admin/tpl/actions/d3usermanager_action_sendmail.tpl',
         'd3usermanager_action_exportlist.tpl'       =>
             'd3/usermanager/Application/views/admin/tpl/actions/d3usermanager_action_exportlist.tpl',
-    ),
-    'events'         => array(
+    ],
+    'events'         => [
         'onActivate' => '\D3\Usermanager\Setup\Events::onActivate',
-    ),
-    'blocks'      => array(
-        array(
+    ],
+    'blocks'      => [
+        [
             'template'  => 'user_remark.tpl',
             'block'     => 'admin_user_remark_type',
             'file'      => 'Application/views/admin/blocks/d3usermanager_user_remark_type.tpl',
-        )
-    ),
-    'd3FileRegister'    => array(
+        ]
+    ],
+    'd3FileRegister'    => [
         'd3/usermanager/IntelliSenseHelper.php',
         'd3/usermanager/metadata.php',
         'd3/usermanager/Application/views/admin/blocks/d3usermanager_user_remark_type.tpl',
@@ -409,11 +396,11 @@ $aModule = array(
         'd3/usermanager/tests/integration/Requirements/requirementHasNoticelistTest.php',
         'd3/usermanager/tests/integration/Requirements/requirementOrderNoCountTest.php',
         'd3/usermanager/tests/integration/Requirements/requirementOrderTimespanTest.php'
-    ),
-    'd3SetupClasses'    => array(
+    ],
+    'd3SetupClasses'    => [
         d3usermanager_update::class
-    ),
+    ],
     'd3DICDefinitionFiles'  => [
         'd3/usermanager/Config/services.yaml',
     ]
-);
+];

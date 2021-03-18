@@ -33,8 +33,9 @@
   },
   "require": {
     "php": "7.1 - 7.4", "ext-ionCube-Loader": "*",
-    "oxid-esales/oxideshop-metapackage-ce": "~6.0.0 || ~6.1.0",
-    "d3/modcfg": "^5.3.2.000"
+    "oxid-esales/oxideshop-ce": "6.0 - 6.3",
+    "d3/modcfg": "^5.3.2.000",
+    "splitbrain/php-cli": "^1.1"
   },
   "require-dev": {
     "mikey179/vfsstream": "^1.4"
@@ -43,5 +44,6 @@
     "psr-4": {
       "D3\\Usermanager\\": "../../../source/modules/d3/usermanager"
     }
-  }
+  },
+  "bin": ["src/bin/d3_usermanager_cron"]
 }

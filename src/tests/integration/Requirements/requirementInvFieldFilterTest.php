@@ -19,7 +19,7 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use D3\Usermanager\tests\integration\Requirements\d3RequirementIntegrationTestCase;
+use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invfieldfilter;
 use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -115,7 +115,7 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckInvUserField_status', true);
         $oManager->setValue('sInvUserField_FieldName', 'oxfname');
-        $oManager->setValue('sCheckInvUserFieldType', 'empty');
+        $oManager->setValue('sCheckInvUserFieldType', d3usermanager_requirement_invfieldfilter::TYPE_EMPTY);
 
         return $oManager;
     }
@@ -130,7 +130,7 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckInvUserField_status', true);
         $oManager->setValue('sInvUserField_FieldName', 'oxfname');
-        $oManager->setValue('sCheckInvUserFieldType', 'notempty');
+        $oManager->setValue('sCheckInvUserFieldType', d3usermanager_requirement_invfieldfilter::TYPE_NOTEMPTY);
 
         return $oManager;
     }
@@ -145,7 +145,7 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
 
         $oManager->setValue('blCheckInvUserField_status', true);
         $oManager->setValue('sInvUserField_FieldName', 'oxfname');
-        $oManager->setValue('sCheckInvUserFieldType', 'value');
+        $oManager->setValue('sCheckInvUserFieldType', d3usermanager_requirement_invfieldfilter::TYPE_CONTENT);
         $oManager->setValue('sInvUserField_FieldValue', 'testFName');
 
         return $oManager;

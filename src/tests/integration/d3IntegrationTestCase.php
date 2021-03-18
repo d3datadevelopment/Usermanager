@@ -20,7 +20,6 @@ use D3\ModCfg\Application\Model\Log\d3log;
 use D3\ModCfg\Tests\unit\d3ModCfgUnitTestCase;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\Application\Model\d3usermanager_listgenerator;
-use D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Groups;
@@ -31,7 +30,6 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Model\BaseModel;
-use OxidEsales\Eshop\Core\Model\ListModel;
 use PHPUnit_Framework_MockObject_MockObject;
 
 abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
