@@ -65,7 +65,7 @@ class d3_order_usermanager extends d3_order_usermanager_parent
      * @throws StandardException
      * @throws Exception
      */
-    public function finalizeOrder(Basket $oBasket, $oUser, $blRecalculatingOrder = false): int
+    public function finalizeOrder(Basket $oBasket, $oUser, $blRecalculatingOrder = false)//: int // function declaration must be compatible with parent function
     {
         $iRet = parent::finalizeOrder($oBasket, $oUser, $blRecalculatingOrder);
 

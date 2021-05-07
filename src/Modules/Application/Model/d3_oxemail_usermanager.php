@@ -75,7 +75,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     /**
      * @return TemplateEngineInterface
      */
-    protected function _getTemplateEngine(): TemplateEngineInterface
+    protected function _d3GetUserManagerTemplateEngine(): TemplateEngineInterface
     {
         /** @var TemplateRendererInterface $renderer */
         $renderer = $this->d3getUserManagerDIContainer()
@@ -106,7 +106,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
         $this->_processViewArray();
 
         /** @var LegacySmartyEngine $templateEngine */
-        $templateEngine = $this->_getTemplateEngine();
+        $templateEngine = $this->_d3GetUserManagerTemplateEngine();
         foreach ($this->getViewData() as $key => $value) {
             $templateEngine->addGlobal($key, $value);
         }
@@ -223,7 +223,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
         $this->setBody($content);
 
         if ((bool) strlen($content) && false === (bool) strlen($this->getBody())) {
-            $this->throwUnequalContentException();
+            $this->d3UserManagerThrowUnequalContentException();
         }
     }
 
@@ -237,7 +237,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
         $this->setAltBody($content);
 
         if ((bool) strlen($content) && false === (bool) strlen($this->getAltBody())) {
-            $this->throwUnequalContentException();
+            $this->d3UserManagerThrowUnequalContentException();
         }
     }
 
@@ -251,7 +251,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
         $this->setSubject($content);
 
         if ((bool) strlen($content) && false === (bool) strlen($this->getSubject())) {
-            $this->throwUnequalContentException();
+            $this->d3UserManagerThrowUnequalContentException();
         }
     }
 
@@ -761,7 +761,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     /**
      * @throws d3usermanager_smartyException
      */
-    protected function throwUnequalContentException() : void
+    protected function d3UserManagerThrowUnequalContentException() : void
     {
         d3GetModCfgDIC()->setParameter(
             d3usermanager_smartyException::class . '.args.message',

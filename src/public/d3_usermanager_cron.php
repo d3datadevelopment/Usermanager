@@ -95,8 +95,10 @@ if (false == function_exists('isAdmin')) {
 }
 
 // set language
+$language = Registry::getLang();
 $options = getopt('l:', ["lang:"]);
-$searchedValue = $options ? getopt('l:', ["lang:"])['lang'] : 0;
+$searchedValue = $options ? getopt('l:', ["lang:"])['lang'] : $language->getLanguageAbbr($language->getBaseLanguage());
+
 Registry::getLang()->setTplLanguage(
     current(
         array_filter(
@@ -107,6 +109,11 @@ Registry::getLang()->setTplLanguage(
         )
     )->id
 );
+
+if(!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
+if(!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
+if(!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
+
 // @codeCoverageIgnoreEnd
 
 // ToDo: extract to separate file because of circular reference in d3usermanager_execute class
@@ -225,7 +232,7 @@ class d3_usermanager_cron extends CLI
         $aTranslation         = [];
         $aTranslation['shp']  = $arguments[0] ?? '';
         $aTranslation['cjid'] = $arguments[1] ?? '';
-        $aTranslation['key']  = $arguments[2] ?? '';
+        $aTranslation['key']  = $arguments[2] ?: '';
 
         $_GET = array_merge( $_GET, $aTranslation );
 

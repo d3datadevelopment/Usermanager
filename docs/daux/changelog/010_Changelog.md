@@ -2,6 +2,24 @@
 title: Changelog
 ---
 
+## 4.1.2.2 - (2021-05-07)
+
+### Added
+- installierbar in OXID 6.2.4
+
+### Changed
+- D3 Methoden in öffentlichen Klassen mit individuellen Namen versehen
+
+### Fixed
+- Syntaxfehler in Wochentagsbedingungsprüfung korrigiert
+- erweiterte Methoden für Kompatibilität mit Elternmethoden angepasst
+- Warnung bei Verwendung der Standardsprache bei CLI-Aufrufen entfernt
+- Fehler bei undefinierter STDOUT Konstante behoben
+- Verwendung leerer Tasklisten optimiert
+- Einstellungszuordnungen optimiert
+
+---
+
 ## 4.1.2.0 - (2021-03-10)
 
 ** Hinweis für kleinere Versions-Upgrades: Es gibt einige rückwärts-inkompatible Änderungen an dieser Version. **
@@ -31,7 +49,7 @@ title: Changelog
 - nicht generierbare Statusmails korrigiert
 - Debugmodus verwendet SQL-Logger für optimierte Anzeige
 - nicht geladenes Manager-Objekt im Admincontroller korrigiert
-- "Einträge als erledigt markieren" ignoriert "Einträge nich als erledigt markieren"-Option 
+- "Einträge als erledigt markieren" ignoriert "Einträge nicht als erledigt markieren"-Option 
 
 ---
 
