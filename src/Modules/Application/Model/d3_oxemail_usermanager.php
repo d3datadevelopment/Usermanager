@@ -23,6 +23,7 @@ use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\ModCfg\Application\Model\Log\d3LogInterface;
+use D3\OxidServiceBridges\Internal\Framework\Module\Path\ModulePathResolverBridgeInterface;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_renderererrorhandler;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException;
@@ -45,8 +46,6 @@ use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
-use OxidEsales\EshopCommunity\Internal\Framework\Module\Path\ModulePathResolver;
-use OxidEsales\EshopCommunity\Internal\Framework\Module\Path\ModulePathResolverInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Smarty\Legacy\LegacySmartyEngine;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateEngineInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateRendererBridgeInterface;
@@ -443,9 +442,9 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     {
         if ($oManager->getValue('sSendMailFromTheme') == 'module') {
             $sModuleId = $oManager->getValue('sSendMailFromModulePath');
-            /** @var ModulePathResolver $pathResolver */
-            $pathResolver = $this->d3getUserManagerDIContainer()->get(ModulePathResolverInterface::class);
-            $sModulePath = $pathResolver->getFullModulePathFromConfiguration(
+            /** @var ModulePathResolverBridgeInterface $pathResolverBridge */
+            $pathResolverBridge = $this->d3getUserManagerDIContainer()->get(ModulePathResolverBridgeInterface::class);
+            $sModulePath = $pathResolverBridge->getFullModulePathFromConfiguration(
                 $sModuleId,
                 Registry::getConfig()->getShopId()
             );

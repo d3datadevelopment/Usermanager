@@ -21,6 +21,7 @@ namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\OxidServiceBridges\Internal\Framework\Module\Path\ModulePathResolverBridgeInterface;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_action_interface as ActionModelInterface;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist as ActionGroupList;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist as ActionList;
@@ -44,7 +45,6 @@ use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_settings 
 use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\ShopConfigurationDaoBridgeInterface;
-use OxidEsales\EshopCommunity\Internal\Framework\Module\Path\ModulePathResolverInterface;
 
 class d3_cfg_usermanageritem_action extends ItemSettingsController
 {
@@ -329,8 +329,9 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
         $shopConfiguration = $container->get(ShopConfigurationDaoBridgeInterface::class)->get();
 
         foreach ($shopConfiguration->getModuleConfigurations() as $moduleConfiguration) {
-            $pathResolver = ContainerFactory::getInstance()->getContainer()->get(ModulePathResolverInterface::class);
-            $sModulePath = $pathResolver->getFullModulePathFromConfiguration(
+            /** @var ModulePathResolverBridgeInterface $pathResolverBridge */
+            $pathResolverBridge = ContainerFactory::getInstance()->getContainer()->get(ModulePathResolverBridgeInterface::class);
+            $sModulePath = $pathResolverBridge->getFullModulePathFromConfiguration(
                 $moduleConfiguration->getId(),
                 Registry::getConfig()->getShopId()
             );

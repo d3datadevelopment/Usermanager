@@ -38,7 +38,8 @@
     "splitbrain/php-cli": "^1.1",
     "html2text/html2text": "^4.2",
     "d3/oxid-sql-logger": "^1.2.2",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "d3/oxidservicebridges": "^1.0.0"
   },
   "require-dev": {
     "mikey179/vfsstream": "^1.4",

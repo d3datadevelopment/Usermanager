@@ -44,7 +44,7 @@ $aModule = [
         'en'    => 'Processes freely definable tasks based on adjustable customer lists.',
     ],
     'thumbnail'     => 'picture.png',
-    'version'       => '4.1.2.2',
+    'version'       => '4.1.2.3',
     'author'        => 'D&sup3; Data Development (Inh.: Thomas Dartsch)',
     'email'         => 'support@shopmodule.com',
     'url'           => 'https://www.oxidmodule.com/',

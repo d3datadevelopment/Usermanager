@@ -32,6 +32,7 @@ use Doctrine\DBAL\Driver\PDOStatement;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Shop;
+use OxidEsales\Eshop\Application\Model\ShopList;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -866,13 +867,19 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
      */
     public function checkRequireExample2ShopRelationTrue()
     {
+        /** @var ShopList $shopList */
+        $shopList = oxNew(ShopList::class);
+        $shopList->offsetSet('foobar', oxNew(Shop::class));
+
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
             ->setMethods([
                 'setInitialExecMethod',
                 'getExampleJobInsertList',
                 'getExampleJobItem1InsertFields',
-                '_require2ShopRelation'])
+                '_require2ShopRelation',
+                'getShopListByActiveModule'
+            ])
             ->getMock();
         $oModelMock->method('setInitialExecMethod')->willReturn(true);
         $oModelMock->method('getExampleJobInsertList')->willReturn(
@@ -885,6 +892,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
         );
         $oModelMock->expects($this->once())->method('getExampleJobItem1InsertFields')->willReturn(['fields']);
         $oModelMock->expects($this->once())->method('_require2ShopRelation')->willReturn(true);
+        $oModelMock->expects($this->once())->method('getShopListByActiveModule')->willReturn($shopList);
 
         $this->_oModel = $oModelMock;
 

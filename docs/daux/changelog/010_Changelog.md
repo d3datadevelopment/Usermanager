@@ -2,6 +2,13 @@
 title: Changelog
 ---
 
+## 4.1.2.3 - (2021-05-10)
+
+### Fixed
+- fehlender OXID-Service im no-dev-Modus führt zu Fehlern im Modul
+
+--- 
+
 ## 4.1.2.2 - (2021-05-07)
 
 ### Added
