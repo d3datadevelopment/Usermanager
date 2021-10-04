@@ -26,7 +26,6 @@ use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementExcepti
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_interface as RequirementModelInterface;
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist as RequirementGroupListModel;
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist as RequirementListModel;
-use Doctrine\DBAL\DBALException;
 use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Application\Model\PaymentList;
 use OxidEsales\Eshop\Application\Model\CountryList;
@@ -81,7 +80,6 @@ class d3_cfg_usermanageritem_requ extends d3_cfg_usermanageritem_settings
 
     /**
      * @return ListModel
-     * @throws DBALException
      */
     public function getPaymentList(): ListModel
     {

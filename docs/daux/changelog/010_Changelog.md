@@ -2,6 +2,22 @@
 title: Changelog
 ---
 
+## 5.0.1.0 - (2021-10-01)
+
+### Added
+- installierbar in OXID 6.3.x
+
+### Changed
+- #10850: Limitierung wird vorzeitig auf das Ergebnis des Filterqueries angewandt
+- Tests angepasst
+
+### Fixed
+- #10933: Übersicht zeigt falsche Anzahlen
+- Eingabekonvertierung bei Rabatt ändern Aktion optimiert
+- Übersicht zeigt richtige Templatequelle der Exportaktion an
+
+---
+
 ## 4.1.2.3 - (2021-05-10)
 
 ### Fixed

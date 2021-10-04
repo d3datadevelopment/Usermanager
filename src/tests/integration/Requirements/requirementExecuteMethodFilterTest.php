@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\UserList;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -39,7 +38,7 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
      * Set up fixture.
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -48,10 +47,8 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
 
     /**
      * Tear down fixture.
-     *
-     * @throws DBALException
      */
-    public function tearDown()
+    public function tearDown() : void
     {
         $this->cleanTestData();
 
@@ -84,9 +81,6 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
         );
     }
 
-    /**
-     * @throws DBALException
-     */
     public function cleanTestData()
     {
         $this->deleteManager($this->sManagerId);
@@ -113,7 +107,6 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -129,7 +122,7 @@ class requirementExecuteMethodFilterTest extends d3RequirementIntegrationTestCas
 
         /** @var UserList|MockObject $oListMock */
         $oListMock = $this->getMockBuilder(UserList::class)
-            ->setMethods(['testChangeUserList'])
+            ->addMethods(['testChangeUserList'])
             ->getMock();
         $oListMock->expects($this->once())->method('testChangeUserList')->willReturn(null);
         d3GetModCfgDIC()->set('d3ox.usermanager.'.UserList::class, $oListMock);

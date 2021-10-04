@@ -19,13 +19,15 @@ namespace D3\Usermanager\tests\integration\Actions;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Model\ListModel;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 
 class actionDeleteUserTest extends d3ActionIntegrationTestCase
 {
@@ -48,7 +50,7 @@ class actionDeleteUserTest extends d3ActionIntegrationTestCase
     }
 
     /**
-     * @throws DBALException
+     * @throws DoctrineException
      */
     public function cleanTestData()
     {
@@ -61,7 +63,7 @@ class actionDeleteUserTest extends d3ActionIntegrationTestCase
      * @return d3usermanager
      * @throws Exception
      */
-    public function getConfiguredManager()
+    public function getConfiguredManager(): d3usermanager
     {
         $oManager = $this->getManagerMock($this->sManagerId);
 
@@ -75,14 +77,13 @@ class actionDeleteUserTest extends d3ActionIntegrationTestCase
      * @return ListModel
      * @throws Exception
      */
-    public function getFilledResultList()
+    public function getFilledResultList(): ListModel
     {
         return $this->getResultList(array($this->aUserIdList[0]));
     }
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -95,17 +96,28 @@ class actionDeleteUserTest extends d3ActionIntegrationTestCase
         $oExecute = $this->getExecuteMock($this->getConfiguredManager());
         $oExecute->startJobItemExecution();
 
-        $sSelect = "SELECT count(*) FROM oxuser WHERE oxid IN ('{$this->aUserIdList[0]}')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxuser')
+            ->where(
+                $queryBuilder->expr()->in('oxid', [$queryBuilder->createNamedParameter($this->aUserIdList[0])])
+            );
         $this->assertSame(
             0,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int)$queryBuilder->execute()->fetchOne()
         );
 
-        $sSelect = "SELECT count(*) FROM oxuser WHERE oxid IN ('{$this->aUserIdList[1]}')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxuser')
+            ->where(
+                $queryBuilder->expr()->in('oxid', [$queryBuilder->createNamedParameter($this->aUserIdList[1])])
+            );
         $this->assertSame(
             1,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int)$queryBuilder->execute()->fetchOne()
         );
-
     }
 }

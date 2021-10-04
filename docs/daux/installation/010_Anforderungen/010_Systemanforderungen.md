@@ -3,7 +3,9 @@ title: Systemanforderungen
 ---
 
 * PHP Version
-    * 7.1.x bis 7.4.x
+    * 7.3.x
+    * 7.4.x
+    * 8.0.x
 * PHP Decoder
     * installierter ionCube Loader
 * Shopeditionen
@@ -13,10 +15,10 @@ title: Systemanforderungen
     * OXID eShop B2B Edition
 * Shopversionen
     * OXID eShop in Compilation Version 
-        * 6.2.x
+        * 6.3.x
 * Themes
     * Das Modul benötigt keine Einbindung ins Frontend und ist damit von diesen Themes unabhängig.
-* (D3) Modul-Connector ([kostenfrei bei D3 erhältlich](https://www.oxidmodule.com/connector/)) ab Version 5.3.6.0 
+* (D3) Modul-Connector ([kostenfrei bei D3 erhältlich](https://www.oxidmodule.com/connector/)) ab Version 6.0.0.0 
 * Installation via [Composer](https://getcomposer.org)
 * mindestens ein freier Cronjob zur automatischen Ausführung der angelegten Aufgaben
 

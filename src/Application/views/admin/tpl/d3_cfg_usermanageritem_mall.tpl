@@ -1,6 +1,6 @@
 [{include file="headitem.tpl" title="GENERAL_ADMIN_TITLE"|oxmultilangassign}]
 
-<style type="text/css">
+<style>
     details {
         margin: 0 0 15px;
         padding: 6px 9px 2px 18px;

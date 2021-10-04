@@ -28,7 +28,6 @@ use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\ModCfg\Application\Model\Install\d3install_updatebase;
 use D3\ModCfg\Application\Model\Installwizzard\d3installdbrecord;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Exception\ConnectionException;
@@ -44,19 +43,19 @@ class d3usermanager_update extends d3install_updatebase
 {
     public $sModKey = 'd3usermanager';
     public $sModName = 'Kundenmanager';
-    public $sModVersion = '4.1.2.3';
-    public $sModRevision = '4123';
+    public $sModVersion = '5.0.1.0';
+    public $sModRevision = '5010';
     public $sBaseConf = 
-    'ss9v2==Zk1Zc0lvL0lPYjhOL0NBcWNlZ1JiRmg0dG9RMEJkUEcydUJmVm4xcnRsUWJ2ZnB5RkI1MzBsY
-Xhkai8wRUN4MDlBQ1QvS2ZNSHJMVXpkZ2RSaWtmWklqOWJXQkNaYUVQaHhIZEJyRUh0QmNmLzlmRFhZQ
-VhZZjVFRDVnUmRwdlNoSDlJUWVhNnppRWhJeEFvdzJMSzQ1Q1A4cXhNOW02dkZVaUNseVA2eTQ2emdtQ
-jZlTHY2M0Q2SGE0YnJtMTFhdlZpeUx5NnNPRGlZeCtoV1A4cXVVRnVRN3FlcVBoSDVFMk15aVJ2NlZiM
-01kRzc1UENjY0VnMy9keXBxM2UySVpaeDg0UG9QcUxsTjJmZXUyUGZBN1dpbTRUZjB5MEllME85VUhqN
-UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
+    'EeHv2==Vk1DeTJqS1EvMGdaT3Y3LzJWcWVLWDNwRDJ0Ni9DdmpRS3N6czZVRyttWXpubTduM0FBMmJKT
+EtHMDJPSnZoMTZ4b2M2Nm5YVU5GWGhkOWo4TzZuZjR5NHFWMjZaeG45MVNsNDlNNS9rRithQ1VZb2Yye
+Tg4c0lDQnFlbzdrUnhJNStXbHQ0RTkwMnBhYzJwWHdXcXQ2QTF2Tkg0TVZNNkd5TGlBSVNFU2R1Mm1ZS
+lArdXkydkxIZi8wMXJCM3lmSjF1QWI5SVFYZDBUVFB1NTR2a0Z3SXhxVWI2eEZDdTRLZ0E2bjdyb21SS
+FRZcHRHdmxWUzRCVXc4Wkt2RkhWTThkeVc3NEwvQUtLZUFUWFp6blMySzdIV2x3N0NBaHFpUmtyWksyc
+WpIb2xNeUtSL05ZY0dWZExvaGZNZlczcXc2RDJXWXI3UkZRMHoyRWo0UGxnaGtBPT0=';
     public $sRequirements = '';
     public $sBaseValue = 'TyUzQTglM0ElMjJzdGRDbGFzcyUyMiUzQTYlM0ElN0JzJTNBMjMlM0ElMjJkM19jZmdfbW9kX19hRm9sZGVyTGlzdCUyMiUzQmElM0E0JTNBJTdCaSUzQTAlM0JzJTNBMjMlM0ElMjJEM19VU0VSTUFOQUdFUl9VU0VSX05FVyUyMiUzQmklM0ExJTNCcyUzQTMwJTNBJTIyRDNfVVNFUk1BTkFHRVJfVVNFUl9FWFRSQUNUSU9OJTIyJTNCaSUzQTIlM0JzJTNBMjklM0ElMjJEM19VU0VSTUFOQUdFUl9VU0VSX1JFVEVOVElPTiUyMiUzQmklM0EzJTNCcyUzQTMxJTNBJTIyRDNfVVNFUk1BTkFHRVJfVVNFUl9NQUlOVEVOQU5DRSUyMiUzQiU3RHMlM0EyNCUzQSUyMmQzX2NmZ19tb2RfX2JsQ3JvbkFjdGl2ZSUyMiUzQnMlM0ExJTNBJTIyMCUyMiUzQnMlM0EyMyUzQSUyMmQzX2NmZ19tb2RfX2lNYXhVc2VyQ250JTIyJTNCcyUzQTIlM0ElMjI1MCUyMiUzQnMlM0EyNSUzQSUyMmQzX2NmZ19tb2RfX3NDcm9uUGFzc3dvcmQlMjIlM0JzJTNBMCUzQSUyMiUyMiUzQnMlM0EyOCUzQSUyMmQzX2NmZ19tb2RfX2FMaWNlbnNlSW5mb01haWwlMjIlM0JhJTNBMSUzQSU3QnMlM0E0MiUzQSUyMk5PTElDS0VZX180NzkzNjM4NzAyYjY3NzE1ZjFkZmJmYzgzMjQ2NjkxNCUyMiUzQnMlM0ExOSUzQSUyMjIwMjAtMTAtMTIlMjAwOSUzQTE2JTNBMDglMjIlM0IlN0RzJTNBMzAlM0ElMjJkM19jZmdfbW9kX19ibENhbGNTdGF0T25EZW1hbmQlMjIlM0JzJTNBMSUzQSUyMjAlMjIlM0IlN0Q=';
 
-    public $sMinModCfgVersion = '5.3.6.0';
+    public $sMinModCfgVersion = '6.0.0.0';
 
     protected $_aUpdateMethods = array(
         array('check' => 'doesUser2UserManagerTableNotExist',
@@ -263,7 +262,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
 
     /**
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -274,7 +272,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
 
     /**
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws ConnectionException
@@ -298,7 +295,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
 
     /**
      * @return d3installdbrecord
-     * @throws Exception
      */
     public function d3GetInstallDbRecord(): d3installdbrecord
     {
@@ -315,7 +311,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
     /**
      * required for unitTests
      * @return Config
-     * @throws Exception
      */
     public function d3GetConfig(): Config
     {
@@ -326,7 +321,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
 
     /**
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws Exception
      */
@@ -353,7 +347,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
     /**
      * @return bool
      * @throws ConnectionException
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -492,7 +485,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
 
     /**
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -520,7 +512,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
 
     /**
      * @return bool true, if update is required
-     * @throws DBALException
      * @throws Exception
      */
     public function needExampleJobList(): bool
@@ -535,7 +526,7 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
            ->where('oxmodid = '.$qb->createNamedParameter('d3usermanager'))
            ->setMaxResults(1);
 
-        if ($qb->execute()->fetchColumn() == 0) {
+        if ($qb->execute()->fetchOne() == 0) {
             $blRet = true;
         }
 
@@ -545,7 +536,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
     /**
      * @return bool
      * @throws ConnectionException
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -601,7 +591,7 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
                     )
                 ->setMaxResults(1);
 
-            return (bool) $qb->execute()->fetchColumn();
+            return (bool) $qb->execute()->fetchOne();
         }
 
         return $blRet;
@@ -610,7 +600,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
     /**
      * @return bool
      * @throws ConnectionException
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -738,7 +727,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
 
     /**
      * @return d3bitmask
-     * @throws Exception
      */
     public function getD3BitMask(): d3bitmask
     {
@@ -751,7 +739,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
      * @param Shop $oShop
      *
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
@@ -937,7 +924,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
      * @param Shop $oShop
      *
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
@@ -1123,7 +1109,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
      * @param Shop $oShop
      *
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -1308,7 +1293,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
      * @param Shop $oShop
      *
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
@@ -1494,7 +1478,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
      * @param Shop $oShop
      *
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -1679,7 +1662,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
      * @param Shop $oShop
      *
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -1786,7 +1768,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
      * @param Shop $oShop
      *
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -1895,7 +1876,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
      * @param $sGetFieldContentMethodName
      * @return bool
      * @throws ConnectionException
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -1921,7 +1901,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
 
     /**
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -1937,7 +1916,6 @@ UtPWWhEd1I1ZE9tUlhpcTdWU05Xd2RtMTllMEhzZGpNZDNrYkRpMFZOcEd0TzNBPT0=';
 
     /**
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException

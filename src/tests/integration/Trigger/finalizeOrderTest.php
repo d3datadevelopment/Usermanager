@@ -24,7 +24,7 @@ use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanagerlist;
 use D3\Usermanager\Modules\Application\Model\d3_user_usermanager;
 use D3\Usermanager\tests\integration\d3IntegrationTestCase;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order as Item;
@@ -122,7 +122,7 @@ class finalizeOrderTest extends d3IntegrationTestCase
     }
 
     /**
-     * @throws DBALException
+     * @throws DoctrineException
      */
     public function cleanTestData()
     {
@@ -182,7 +182,6 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -194,7 +193,7 @@ class finalizeOrderTest extends d3IntegrationTestCase
     {
         /** @var d3usermanagerlist|MockObject $usermanagerlistmock */
         $usermanagerlistmock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetOrderFinishTriggeredManagerTasks'])
+            ->onlyMethods(['d3GetOrderFinishTriggeredManagerTasks'])
             ->getMock();
         $usermanagerlistmock->offsetSet($this->sManagerId, $this->getConfiguredManager());
         $usermanagerlistmock->method('d3GetOrderFinishTriggeredManagerTasks')->willReturnSelf();
@@ -212,7 +211,7 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
         /** @var Item|MockObject $oItem */
         $oItem = $this->getMockBuilder(Item::class)
-            ->setMethods(
+            ->onlyMethods(
                 ['validateOrder', '_loadFromBasket', '_executePayment', '_sendOrderByEmail']
             )
             ->getMock();
@@ -241,7 +240,6 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -257,7 +255,7 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
         /** @var d3usermanagerlist|MockObject $usermanagerlistmock */
         $usermanagerlistmock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetOrderFinishTriggeredManagerTasks'])
+            ->onlyMethods(['d3GetOrderFinishTriggeredManagerTasks'])
             ->getMock();
         $usermanagerlistmock->offsetSet($manager->getId(), $manager);
         $usermanagerlistmock->method('d3GetOrderFinishTriggeredManagerTasks')->willReturnSelf();
@@ -275,7 +273,7 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
         /** @var Item|MockObject $oItem */
         $oItem = $this->getMockBuilder(Item::class)
-            ->setMethods(
+            ->onlyMethods(
                 ['validateOrder', '_loadFromBasket', '_executePayment', '_sendOrderByEmail']
             )
             ->getMock();
@@ -306,7 +304,6 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -323,7 +320,7 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
         /** @var d3usermanagerlist|MockObject $usermanagerlistmock */
         $usermanagerlistmock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetOrderFinishTriggeredManagerTasks'])
+            ->onlyMethods(['d3GetOrderFinishTriggeredManagerTasks'])
             ->getMock();
         $usermanagerlistmock->offsetSet($manager->getId(), $manager);
         $usermanagerlistmock->method('d3GetOrderFinishTriggeredManagerTasks')->willReturnSelf();
@@ -339,7 +336,7 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
         /** @var Item|MockObject $oItem */
         $oItem = $this->getMockBuilder(Item::class)
-            ->setMethods(
+            ->onlyMethods(
                 ['validateOrder', '_loadFromBasket', '_executePayment', '_sendOrderByEmail']
             )
             ->getMock();
@@ -384,7 +381,7 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
         /** @var d3usermanagerlist|MockObject $managerListMock */
         $managerListMock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetOrderFinishTriggeredManagerTasks'])
+            ->onlyMethods(['d3GetOrderFinishTriggeredManagerTasks'])
             ->getMock();
         $managerListMock->method('d3GetOrderFinishTriggeredManagerTasks')->willReturnSelf();
 
@@ -397,7 +394,7 @@ class finalizeOrderTest extends d3IntegrationTestCase
 
         /** @var Item|MockObject $oItem */
         $oItem = $this->getMockBuilder(Item::class)
-            ->setMethods(
+            ->onlyMethods(
                 ['validateOrder', '_loadFromBasket', '_executePayment', '_sendOrderByEmail']
             )
             ->getMock();

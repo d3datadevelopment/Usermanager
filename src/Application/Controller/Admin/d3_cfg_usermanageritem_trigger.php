@@ -25,7 +25,6 @@ use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\ModCfg\Application\Controller\Admin\d3_cfg_mod_main;
 use D3\Usermanager\Application\Model\d3usermanager_conf as ConfModel;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
-use Doctrine\DBAL\DBALException;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -98,7 +97,6 @@ class d3_cfg_usermanageritem_trigger extends d3_cfg_mod_main
 
     /**
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -116,7 +114,6 @@ class d3_cfg_usermanageritem_trigger extends d3_cfg_mod_main
 
     /**
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException

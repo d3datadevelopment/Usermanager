@@ -20,7 +20,6 @@ use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_trigger;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -35,19 +34,18 @@ class d3_cfg_usermanageritem_triggerTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->_oController = d3GetModCfgDIC()->get(d3_cfg_usermanageritem_trigger::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -61,7 +59,7 @@ class d3_cfg_usermanageritem_triggerTest extends d3UsermanagerUnitTestCase
      */
     public function renderPass()
     {
-        $this->assertContains(
+        $this->assertStringContainsStringIgnoringCase(
             '.tpl',
             $this->callMethod($this->_oController, 'render')
         );
@@ -80,7 +78,7 @@ class d3_cfg_usermanageritem_triggerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_trigger|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_trigger::class)
-            ->setMethods(['fixCronjobId'])
+            ->onlyMethods(['fixCronjobId'])
             ->getMock();
         $oControllerMock->method('fixCronjobId')->willReturn('newCjId');
 
@@ -107,7 +105,7 @@ class d3_cfg_usermanageritem_triggerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_trigger|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_trigger::class)
-            ->setMethods(['fixCronjobId'])
+            ->onlyMethods(['fixCronjobId'])
             ->getMock();
         $oControllerMock->method('fixCronjobId')->willReturn('newCjId');
 
@@ -155,19 +153,19 @@ class d3_cfg_usermanageritem_triggerTest extends d3UsermanagerUnitTestCase
     {
         /** @var MockObject|d3_cfg_mod $oModCfgMock */
         $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods(['isDemo'])
+            ->addMethods(['isDemo'])
             ->getMock();
         $oModCfgMock->method('isDemo')->willReturn(true);
 
         /** @var MockObject|d3usermanager $oManagerMock */
         $oManagerMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['d3getModCfg'])
+            ->onlyMethods(['d3getModCfg'])
             ->getMock();
         $oManagerMock->expects($this->any())->method('d3getModCfg')->willReturn($oModCfgMock);
 
         /** @var d3_cfg_usermanageritem_trigger|MockObject $oActionMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_trigger::class)
-            ->setMethods(['getManager'])
+            ->addMethods(['getManager'])
             ->setConstructorArgs([$oManagerMock])
             ->getMock();
         $oControllerMock->method('getManager')->willReturn($oManagerMock);
@@ -191,19 +189,19 @@ class d3_cfg_usermanageritem_triggerTest extends d3UsermanagerUnitTestCase
     {
         /** @var MockObject|d3_cfg_mod $oModCfgMock */
         $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods(['isDemo'])
+            ->addMethods(['isDemo'])
             ->getMock();
         $oModCfgMock->method('isDemo')->willReturn(true);
 
         /** @var MockObject|d3usermanager $oManagerMock */
         $oManagerMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['d3getModCfg'])
+            ->onlyMethods(['d3getModCfg'])
             ->getMock();
         $oManagerMock->expects($this->any())->method('d3getModCfg')->willReturn($oModCfgMock);
 
         /** @var d3_cfg_usermanageritem_trigger|MockObject $oActionMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_trigger::class)
-            ->setMethods(['getManager'])
+            ->addMethods(['getManager'])
             ->setConstructorArgs([$oManagerMock])
             ->getMock();
         $oControllerMock->method('getManager')->willReturn($oManagerMock);

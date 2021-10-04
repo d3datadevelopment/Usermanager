@@ -23,7 +23,6 @@ use D3\ModCfg\Application\Model\Shopcompatibility\d3ShopCompatibilityAdapterHand
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_main;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -40,19 +39,18 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->_oController = d3GetModCfgDIC()->get(d3_cfg_usermanagerset_main::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -93,13 +91,13 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager|MockObject $oManagerMock */
         $oManagerMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['getBaseCronPW'])
+            ->onlyMethods(['getBaseCronPW'])
             ->getMock();
         $oManagerMock->method('getBaseCronPW')->willReturn('testBaseCronPw');
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
-            ->setMethods(['getManager'])
+            ->onlyMethods(['getManager'])
             ->getMock();
         $oControllerMock->method('getManager')->willReturn($oManagerMock);
 
@@ -146,7 +144,7 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3_cfg_mod|MockObject $oModCfgMock */
         $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods(['getValue'])
+            ->addMethods(['getValue'])
             ->getMock();
         $map = [
             ['sCronPassword', 'testCronPassword']
@@ -155,29 +153,29 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
 
         /** @var d3str|MockObject $oD3StrMock */
         $oD3StrMock = $this->getMockBuilder(d3str::class)
-            ->setMethods(['generateParameterUrl'])
+            ->onlyMethods(['generateParameterUrl'])
             ->getMock();
         $oD3StrMock->method('generateParameterUrl')->with(
-            $this->stringContains('http://www.example.net/modules/public/d3_usermanager_cron.php'),
+            $this->stringContains('https://www.example.net/modules/public/d3_usermanager_cron.php'),
             $this->logicalAnd(
-                $this->contains('testCjId'),
-                $this->contains('testCronPassword')
+                $this->containsIdentical('testCjId'),
+                $this->containsIdentical('testCronPassword')
             )
         )->willReturn('testUrl');
 
         /** @var ViewConfig|MockObject $oViewConfMock */
         $oViewConfMock = $this->getMockBuilder(ViewConfig::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getModuleUrl',
                 'getActiveShopId'
             ])
             ->getMock();
-        $oViewConfMock->method('getModuleUrl')->willReturn('http://www.example.net/modules/public/d3_usermanager_cron.php');
+        $oViewConfMock->method('getModuleUrl')->willReturn('https://www.example.net/modules/public/d3_usermanager_cron.php');
         $oViewConfMock->method('getActiveShopId')->willReturn(1);
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getViewConfig',
                 'd3GetSet',
                 'getBaseCronPW',
@@ -205,7 +203,7 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3_cfg_mod|MockObject $oModCfgMock */
         $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods(['getValue'])
+            ->addMethods(['getValue'])
             ->getMock();
         $map = [
             ['sCronPassword', '']
@@ -214,31 +212,31 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
 
         /** @var d3str|MockObject $oD3StrMock */
         $oD3StrMock = $this->getMockBuilder(d3str::class)
-            ->setMethods(['generateParameterUrl'])
+            ->onlyMethods(['generateParameterUrl'])
             ->getMock();
         $oD3StrMock->method('generateParameterUrl')->with(
-            $this->stringContains('http://www.example.net/modules/public/d3_usermanager_cron.php'),
+            $this->stringContains('https://www.example.net/modules/public/d3_usermanager_cron.php'),
             $this->logicalAnd(
                 $this->logicalNot(
-                    $this->contains('testCjId')
+                    $this->containsIdentical('testCjId')
                 ),
-                $this->contains('testBaseCronPassword')
+                $this->containsIdentical('testBaseCronPassword')
             )
         )->willReturn('testUrl');
 
         /** @var ViewConfig|MockObject $oViewConfMock */
         $oViewConfMock = $this->getMockBuilder(ViewConfig::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getModuleUrl',
                 'getActiveShopId'
             ])
             ->getMock();
-        $oViewConfMock->method('getModuleUrl')->willReturn('http://www.example.net/modules/public/d3_usermanager_cron.php');
+        $oViewConfMock->method('getModuleUrl')->willReturn('https://www.example.net/modules/public/d3_usermanager_cron.php');
         $oViewConfMock->method('getActiveShopId')->willReturn(1);
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getViewConfig',
                 'd3GetSet',
                 'getBaseCronPW',
@@ -266,7 +264,7 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3_cfg_mod|MockObject $oModCfgMock */
         $oModCfgMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods(['getValue'])
+            ->addMethods(['getValue'])
             ->getMock();
         $map = [
             ['sCronPassword', '']
@@ -275,33 +273,33 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
 
         /** @var d3str|MockObject $oD3StrMock */
         $oD3StrMock = $this->getMockBuilder(d3str::class)
-            ->setMethods(['generateParameterUrl'])
+            ->onlyMethods(['generateParameterUrl'])
             ->getMock();
         $oD3StrMock->method('generateParameterUrl')->with(
-            $this->stringContains('http://www.example.net/modules/public/d3_usermanager_cron.php'),
+            $this->stringContains('https://www.example.net/modules/public/d3_usermanager_cron.php'),
             $this->logicalAnd(
                 $this->logicalNot(
-                    $this->contains('testCjId')
+                    $this->containsIdentical('testCjId')
                 ),
                 $this->logicalNot(
-                    $this->contains('testBaseCronPassword')
+                    $this->containsIdentical('testBaseCronPassword')
                 )
             )
         )->willReturn('testUrl');
 
         /** @var ViewConfig|MockObject $oViewConfMock */
         $oViewConfMock = $this->getMockBuilder(ViewConfig::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getModuleUrl',
                 'getActiveShopId'
             ])
             ->getMock();
-        $oViewConfMock->method('getModuleUrl')->willReturn('http://www.example.net/modules/public/d3_usermanager_cron.php');
+        $oViewConfMock->method('getModuleUrl')->willReturn('https://www.example.net/modules/public/d3_usermanager_cron.php');
         $oViewConfMock->method('getActiveShopId')->willReturn(1);
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getViewConfig',
                 'd3GetSet',
                 'getBaseCronPW',
@@ -329,13 +327,13 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
     {
         /** @var ViewConfig|MockObject $oViewConfMock */
         $oViewConfMock = $this->getMockBuilder(ViewConfig::class)
-            ->setMethods(['getActiveShopId'])
+            ->onlyMethods(['getActiveShopId'])
             ->getMock();
         $oViewConfMock->method('getActiveShopId')->willReturn(1);
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
-            ->setMethods(['getViewConfig'])
+            ->onlyMethods(['getViewConfig'])
             ->getMock();
         $oControllerMock->method('getViewConfig')->willReturn($oViewConfMock);
 
@@ -358,13 +356,13 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
 
         /** @var ViewConfig|MockObject $oViewConfMock */
         $oViewConfMock = $this->getMockBuilder(ViewConfig::class)
-            ->setMethods(['getActiveShopId'])
+            ->onlyMethods(['getActiveShopId'])
             ->getMock();
         $oViewConfMock->method('getActiveShopId')->willReturn(1);
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
-            ->setMethods(['getViewConfig'])
+            ->onlyMethods(['getViewConfig'])
             ->getMock();
         $oControllerMock->method('getViewConfig')->willReturn($oViewConfMock);
 
@@ -385,13 +383,13 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager|MockObject $oManagerMock */
         $oManagerMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['getAvailableCronjobIds'])
+            ->onlyMethods(['getAvailableCronjobIds'])
             ->getMock();
         $oManagerMock->method('getAvailableCronjobIds')->willReturn(array(1,5,8,'foobar'));
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
-            ->setMethods(['getManager'])
+            ->onlyMethods(['getManager'])
             ->getMock();
         $oControllerMock->method('getManager')->willReturn($oManagerMock);
 
@@ -416,8 +414,8 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
         );
 
         $sDesc = $this->callMethod($this->_oController, 'getCJIDDesc', array($aCjId));
-        $this->assertContains('testid', $sDesc);
-        $this->assertContains('1', $sDesc);
+        $this->assertStringContainsStringIgnoringCase('testid', $sDesc);
+        $this->assertStringContainsStringIgnoringCase('1', $sDesc);
         $this->assertTrue(strlen($sDesc) > 11);
     }
 
@@ -434,8 +432,8 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
         );
 
         $sDesc = $this->callMethod($this->_oController, 'getCJIDDesc', array($aCjId));
-        $this->assertContains('testid', $sDesc);
-        $this->assertContains('5', $sDesc);
+        $this->assertStringContainsStringIgnoringCase('testid', $sDesc);
+        $this->assertStringContainsStringIgnoringCase('5', $sDesc);
         $this->assertTrue(strlen($sDesc) > 11);
     }
 
@@ -461,7 +459,7 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
         $sVarName = $this->callMethod($this->_oController, 'getCronTimestampVarName', array('testid'));
 
         $this->assertTrue(strlen($sVarName) > 6);
-        $this->assertContains('testid', $sVarName);
+        $this->assertStringContainsStringIgnoringCase('testid', $sVarName);
     }
 
     /**
@@ -488,13 +486,13 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
 
         /** @var d3filegeneratorcronsh|MockObject $oFileGeneratorCronShMock */
         $oFileGeneratorCronShMock = $this->getMockBuilder(d3filegeneratorcronsh::class)
-            ->setMethods(['getContentList'])
+            ->onlyMethods(['getContentList'])
             ->getMock();
         $oFileGeneratorCronShMock->method('getContentList')->willReturn($expected);
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
-            ->setMethods(['getFileGeneratorCronSh'])
+            ->onlyMethods(['getFileGeneratorCronSh'])
             ->getMock();
         $oControllerMock->method('getFileGeneratorCronSh')->willReturn($oFileGeneratorCronShMock);
 
@@ -543,19 +541,19 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
 
         /** @var d3ShopCompatibilityAdapterHandler|MockObject $oShopCompatibilityAdapterHandlerMock */
         $oShopCompatibilityAdapterHandlerMock = $this->getMockBuilder(d3ShopCompatibilityAdapterHandler::class)
-            ->setMethods(['call'])
+            ->onlyMethods(['call'])
             ->getMock();
         $oShopCompatibilityAdapterHandlerMock->method('call')->willReturnCallback(array($this, 'shopCompatHandlerCallback'));
 
         /** @var Shop|MockObject $oShopMock */
         $oShopMock = $this->getMockBuilder(Shop::class)
-            ->setMethods(['getId'])
+            ->onlyMethods(['getId'])
             ->getMock();
         $oShopMock->method('getId')->willReturn('shopid');
 
         /** @var d3filegeneratorcronsh|MockObject $oFileGeneratorCronShMock */
         $oFileGeneratorCronShMock = $this->getMockBuilder(d3filegeneratorcronsh::class)
-            ->setMethods([
+            ->onlyMethods([
                 'setContentType',
                 'setScriptPath',
                 'setSortedParameterList',
@@ -570,7 +568,7 @@ class d3_cfg_usermanagerset_mainTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanagerset_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanagerset_main::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getCompatibilityAdapterHandler',
                 'd3GetActiveShop',
                 'getFileGeneratorCronSh'

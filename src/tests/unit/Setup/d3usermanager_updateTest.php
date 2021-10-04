@@ -26,15 +26,12 @@ use D3\ModCfg\Application\Model\Installwizzard\d3installdbrecord;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\Setup\d3usermanager_update;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\PDOException;
-use Doctrine\DBAL\Driver\PDOStatement;
+use Doctrine\DBAL\Exception as DoctrineException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Application\Model\ShopList;
 use OxidEsales\Eshop\Core\Config;
-use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -49,19 +46,18 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->_oModel = d3GetModCfgDIC()->get(d3usermanager_update::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -70,13 +66,13 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
 
     public function dbInterfaceExecuteThrowException()
     {
-        $oPDOException = oxNew(\PDOException::class);
+        $oPDOException = oxNew(DoctrineException::class);
         $oPDOException->errorInfo = array(
             1   => 'errorInfoNo1',
             2   => 'errorInfoNo1',
         );
 
-        throw oxNew(PDOException::class, $oPDOException);
+        throw oxNew(DoctrineException::class, $oPDOException);
     }
 
     /**
@@ -88,7 +84,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods(['_checkTableNotExist'])
+            ->onlyMethods(['_checkTableNotExist'])
             ->getMock();
         $oModelMock->expects($this->once())->method('_checkTableNotExist')->willReturn(true);
 
@@ -109,7 +105,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'doesUser2UserManagerTableNotExist',
                 '_addTable2'
             ])
@@ -134,7 +130,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'doesUser2UserManagerTableNotExist',
                 '_addTable2'
             ])
@@ -191,20 +187,20 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3installdbrecord|MockObject $oInstallDbRecordMock */
         $oInstallDbRecordMock = $this->getMockBuilder(d3installdbrecord::class)
-            ->setMethods(['checkTableRecordNotExist'])
+            ->onlyMethods(['checkTableRecordNotExist'])
             ->setConstructorArgs([$this->_oModel])
             ->getMock();
         $oInstallDbRecordMock->expects($this->once())->method('checkTableRecordNotExist')->willReturn(true);
         
         /** @var Config|MockObject $oConfigMock */
         $oConfigMock = $this->getMockBuilder(Config::class)
-            ->setMethods(['getShopIds'])
+            ->onlyMethods(['getShopIds'])
             ->getMock();
         $oConfigMock->method('getShopIds')->willReturn(array(1, 2));
         
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'd3GetConfig',
                 'd3GetInstallDbRecord'
             ])
@@ -231,20 +227,20 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3installdbrecord|MockObject $oInstallDbRecordMock */
         $oInstallDbRecordMock = $this->getMockBuilder(d3installdbrecord::class)
-            ->setMethods(['checkTableRecordNotExist'])
+            ->onlyMethods(['checkTableRecordNotExist'])
             ->setConstructorArgs([$this->_oModel])
             ->getMock();
         $oInstallDbRecordMock->expects($this->exactly(2))->method('checkTableRecordNotExist')->willReturn(false);
 
         /** @var Config|MockObject $oConfigMock */
         $oConfigMock = $this->getMockBuilder(Config::class)
-            ->setMethods(['getShopIds'])
+            ->onlyMethods(['getShopIds'])
             ->getMock();
         $oConfigMock->method('getShopIds')->willReturn(array(1, 2));
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'd3GetConfig',
                 'd3GetInstallDbRecord'
             ])
@@ -271,20 +267,20 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3installdbrecord|MockObject $oInstallDbRecordMock */
         $oInstallDbRecordMock = $this->getMockBuilder(d3installdbrecord::class)
-            ->setMethods(['checkTableRecordNotExist'])
+            ->onlyMethods(['checkTableRecordNotExist'])
             ->setConstructorArgs([$this->_oModel])
             ->getMock();
         $oInstallDbRecordMock->expects($this->exactly(2))->method('checkTableRecordNotExist')->willReturn(true);
 
         /** @var Config|MockObject $oConfigMock */
         $oConfigMock = $this->getMockBuilder(Config::class)
-            ->setMethods(['getShopIds'])
+            ->onlyMethods(['getShopIds'])
             ->getMock();
         $oConfigMock->method('getShopIds')->willReturn(array(1, 2));
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'doesModCfgItemNotExist',
                 'd3GetConfig',
                 'd3GetInstallDbRecord',
@@ -316,20 +312,20 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3installdbrecord|MockObject $oInstallDbRecordMock */
         $oInstallDbRecordMock = $this->getMockBuilder(d3installdbrecord::class)
-            ->setMethods(['checkTableRecordNotExist'])
+            ->onlyMethods(['checkTableRecordNotExist'])
             ->setConstructorArgs([$this->_oModel])
             ->getMock();
         $oInstallDbRecordMock->expects($this->exactly(1))->method('checkTableRecordNotExist')->willReturn(true);
 
         /** @var Config|MockObject $oConfigMock */
         $oConfigMock = $this->getMockBuilder(Config::class)
-            ->setMethods(['getShopIds'])
+            ->onlyMethods(['getShopIds'])
             ->getMock();
         $oConfigMock->method('getShopIds')->willReturn(array(1, 2));
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'doesModCfgItemNotExist',
                 'd3GetConfig',
                 'd3GetInstallDbRecord',
@@ -361,20 +357,20 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3installdbrecord|MockObject $oInstallDbRecordMock */
         $oInstallDbRecordMock = $this->getMockBuilder(d3installdbrecord::class)
-            ->setMethods(['checkTableRecordNotExist'])
+            ->onlyMethods(['checkTableRecordNotExist'])
             ->setConstructorArgs([$this->_oModel])
             ->getMock();
         $oInstallDbRecordMock->expects($this->never())->method('checkTableRecordNotExist')->willReturn(true);
 
         /** @var Config|MockObject $oConfigMock */
         $oConfigMock = $this->getMockBuilder(Config::class)
-            ->setMethods(['getShopIds'])
+            ->onlyMethods(['getShopIds'])
             ->getMock();
         $oConfigMock->method('getShopIds')->willReturn(array(1, 2));
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'doesModCfgItemNotExist',
                 'd3GetConfig',
                 'd3GetInstallDbRecord',
@@ -402,7 +398,6 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
      * @test
      * @param $testPW
      * @param $expected
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws ReflectionException
@@ -449,7 +444,6 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     /**
      * @covers \D3\Usermanager\Setup\d3usermanager_update::createCronPassword
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws ReflectionException
@@ -468,14 +462,14 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
         $set->saveNoLicenseRefresh();
 
         $oStrMock = $this->getMockBuilder(d3str::class)
-            ->setMethods(['random_str'])
+            ->onlyMethods(['random_str'])
             ->getMock();
         $oStrMock->expects($this->atLeastOnce())->method('random_str')->willReturn($expectedPW);
         d3GetModCfgDIC()->set(d3str::class, $oStrMock);
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'hasExecute',
                 'setActionLog'
             ])
@@ -503,7 +497,6 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     /**
      * @covers \D3\Usermanager\Setup\d3usermanager_update::createCronPassword
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws ReflectionException
@@ -522,14 +515,14 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
         $set->saveNoLicenseRefresh();
 
         $oStrMock = $this->getMockBuilder(d3str::class)
-            ->setMethods(['random_str'])
+            ->onlyMethods(['random_str'])
             ->getMock();
         $oStrMock->expects($this->never())->method('random_str')->willReturn($expectedPW);
         d3GetModCfgDIC()->set(d3str::class, $oStrMock);
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'hasExecute',
                 'setActionLog'
             ])
@@ -557,28 +550,27 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     /**
      * @covers \D3\Usermanager\Setup\d3usermanager_update::needExampleJobList
      * @test
-     * @throws DBALException
      * @throws ReflectionException
      */
     public function needExampleJobListPass()
     {
-        /** @var PDOStatement|MockObject $oStmtMock */
-        $oStmtMock = $this->getMockBuilder(PDOStatement::class)
-            ->setMethods(['fetchColumn'])
+        /** @var stdClass|MockObject $oStmtMock */
+        $oStmtMock = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['fetchOne'])
             ->disableOriginalConstructor()
             ->getMock();
-        $oStmtMock->expects($this->once())->method('fetchColumn')->willReturn(0);
+        $oStmtMock->expects($this->once())->method('fetchOne')->willReturn(0);
 
         /** @var QueryBuilder|MockObject $oQBMock */
         $oQBMock = $this->getMockBuilder(QueryBuilder::class)
-            ->setMethods(['execute'])
+            ->onlyMethods(['execute'])
             ->setConstructorArgs([d3database::getInstance()->getConnection()])
             ->getMock();
         $oQBMock->method('execute')->willReturn($oStmtMock);
 
         /** @var d3database|MockObject $od3databaseMock */
         $od3databaseMock = $this->getMockBuilder(d3database::class)
-            ->setMethods(['getQueryBuilder'])
+            ->onlyMethods(['getQueryBuilder'])
             ->getMock();
         $od3databaseMock->expects($this->once())->method('getQueryBuilder')->willReturn($oQBMock);
 
@@ -595,28 +587,27 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     /**
      * @covers \D3\Usermanager\Setup\d3usermanager_update::needExampleJobList
      * @test
-     * @throws DBALException
      * @throws ReflectionException
      */
     public function needExampleJobListDontPass()
     {
-        /** @var PDOStatement|MockObject $oStmtMock */
-        $oStmtMock = $this->getMockBuilder(PDOStatement::class)
-            ->setMethods(['fetchColumn'])
+        /** @var stdClass|MockObject $oStmtMock */
+        $oStmtMock = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['fetchOne'])
             ->disableOriginalConstructor()
             ->getMock();
-        $oStmtMock->expects($this->once())->method('fetchColumn')->willReturn(true);
+        $oStmtMock->expects($this->once())->method('fetchOne')->willReturn(true);
 
         /** @var QueryBuilder|MockObject $oQBMock */
         $oQBMock = $this->getMockBuilder(QueryBuilder::class)
-            ->setMethods(['execute'])
+            ->onlyMethods(['execute'])
             ->setConstructorArgs([d3database::getInstance()->getConnection()])
             ->getMock();
         $oQBMock->method('execute')->willReturn($oStmtMock);
 
         /** @var d3database|MockObject $od3databaseMock */
         $od3databaseMock = $this->getMockBuilder(d3database::class)
-            ->setMethods(['getQueryBuilder'])
+            ->onlyMethods(['getQueryBuilder'])
             ->getMock();
         $od3databaseMock->expects($this->once())->method('getQueryBuilder')->willReturn($oQBMock);
 
@@ -639,7 +630,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getExampleJobInsertList',
                 '_addExampleJobItem',
                 'setUpdateBreak'
@@ -677,29 +668,28 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
      * @test
      * @param $fetchReturn
      * @param $expected
-     * @throws DBALException
      * @throws ReflectionException
      * @dataProvider checkisExampleContentMissingInDatabaseDataProvider
      */
     public function checkisExampleContentMissingInDatabasePositive($fetchReturn, $expected)
     {
-        /** @var PDOStatement|MockObject $oStmtMock */
-        $oStmtMock = $this->getMockBuilder(PDOStatement::class)
-            ->setMethods(['fetchColumn'])
+        /** @var stdClass|MockObject $oStmtMock */
+        $oStmtMock = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['fetchOne'])
             ->disableOriginalConstructor()
             ->getMock();
-        $oStmtMock->expects($this->once())->method('fetchColumn')->willReturn($fetchReturn);
+        $oStmtMock->expects($this->once())->method('fetchOne')->willReturn($fetchReturn);
 
         /** @var QueryBuilder|MockObject $oQBMock */
         $oQBMock = $this->getMockBuilder(QueryBuilder::class)
-            ->setMethods(['execute'])
+            ->onlyMethods(['execute'])
             ->setConstructorArgs([d3database::getInstance()->getConnection()])
             ->getMock();
         $oQBMock->method('execute')->willReturn($oStmtMock);
 
         /** @var d3database|MockObject $od3databaseMock */
         $od3databaseMock = $this->getMockBuilder(d3database::class)
-            ->setMethods(['getQueryBuilder'])
+            ->onlyMethods(['getQueryBuilder'])
             ->getMock();
         $od3databaseMock->expects($this->once())->method('getQueryBuilder')->willReturn($oQBMock);
 
@@ -709,7 +699,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getExampleContentInsertList',
                 'getExampleJobItem1InsertFields'
             ])
@@ -773,17 +763,32 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
      */
     public function checkisExampleContentMissingInDatabaseNegativeNoLoadId()
     {
-        /** @var DatabaseInterface|MockObject $oDBInterfaceMock */
-        $oDBInterfaceMock = $this->getMockBuilder(stdClass::class)
-            ->setMethods(['getOne'])
+        /** @var stdClass|MockObject $oStmtMock */
+        $oStmtMock = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['fetchOne'])
+            ->disableOriginalConstructor()
             ->getMock();
-        $oDBInterfaceMock->expects($this->never())->method('getOne')->willReturn(0);
+        $oStmtMock->expects($this->never())->method('fetchOne')->willReturn(0);
+
+        /** @var QueryBuilder|MockObject $oQBMock */
+        $oQBMock = $this->getMockBuilder(QueryBuilder::class)
+            ->onlyMethods(['execute'])
+            ->setConstructorArgs([d3database::getInstance()->getConnection()])
+            ->getMock();
+        $oQBMock->method('execute')->willReturn($oStmtMock);
+
+        /** @var d3database|MockObject $od3databaseMock */
+        $od3databaseMock = $this->getMockBuilder(d3database::class)
+            ->onlyMethods(['getQueryBuilder'])
+            ->getMock();
+        $od3databaseMock->expects($this->never())->method('getQueryBuilder')->willReturn($oQBMock);
+
+        d3GetModCfgDIC()->set('d3.usermanager.database', $od3databaseMock);
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getExampleContentInsertList',
-                'getDb',
                 'getExampleJobItem1InsertFields'
             ])
             ->getMock();
@@ -795,7 +800,6 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
                 )
             )
         );
-        $oModelMock->method('getDb')->willReturn($oDBInterfaceMock);
         $oModelMock->method('getExampleJobItem1InsertFields')->willReturn(
             array(
                 array (
@@ -827,7 +831,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getExampleContentInsertList',
                 '_addExampleJobItem',
                 'setUpdateBreak'
@@ -873,7 +877,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'setInitialExecMethod',
                 'getExampleJobInsertList',
                 'getExampleJobItem1InsertFields',
@@ -914,7 +918,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'setInitialExecMethod',
                 'getExampleJobInsertList',
                 'getExampleJobItem1InsertFields',
@@ -931,14 +935,19 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
                 )
             )
         );
+
+        /** @var Shop $shop */
+        $shop = d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class);
+
+        /** @var ShopList $shopList */
+        $shopList = d3GetModCfgDIC()->get('d3ox.usermanager.'.ShopList::class);
+        $shopList->offsetSet(1, $shop);
+        $shopList->offsetSet(2, $shop);
+        $shopList->offsetSet(3, $shop);
+
         $oModelMock->expects($this->exactly(3))->method('getExampleJobItem1InsertFields')->willReturn(['fields']);
         $oModelMock->expects($this->exactly(3))->method('_require2ShopRelation')->willReturn(false);
-        $oModelMock->expects($this->atLeastOnce())->method('getShopListByActiveModule')->willReturn(
-            array(
-                1 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-                2 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-                3 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-            ));
+        $oModelMock->expects($this->atLeastOnce())->method('getShopListByActiveModule')->willReturn($shopList);
 
         $this->_oModel = $oModelMock;
 
@@ -960,11 +969,13 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
-                'getExampleJobInsertList',
+            ->addMethods([
                 'getExampleJobItem1PassInsertFields',
                 'getExampleJobItem2PassInsertFields',
-                'getExampleJobItem3PassInsertFields',
+                'getExampleJobItem3PassInsertFields'
+            ])
+            ->onlyMethods([
+                'getExampleJobInsertList',
                 '_add2ShopRelation',
                 'getShopListByActiveModule'
             ])
@@ -985,16 +996,21 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
                 )
             )
         );
+
+        /** @var Shop $shop */
+        $shop = d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class);
+
+        /** @var ShopList $shopList */
+        $shopList = d3GetModCfgDIC()->get('d3ox.usermanager.'.ShopList::class);
+        $shopList->offsetSet(1, $shop);
+        $shopList->offsetSet(2, $shop);
+        $shopList->offsetSet(3, $shop);
+
         $oModelMock->expects($this->exactly(3))->method('getExampleJobItem1PassInsertFields')->willReturn(true);
         $oModelMock->expects($this->exactly(3))->method('getExampleJobItem2PassInsertFields')->willReturn(true);
         $oModelMock->expects($this->exactly(3))->method('getExampleJobItem3PassInsertFields')->willReturn(true);
         $oModelMock->expects($this->exactly(9))->method('_add2ShopRelation')->willReturn(true);
-        $oModelMock->expects($this->atLeastOnce())->method('getShopListByActiveModule')->willReturn(
-            array(
-                1 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-                2 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-                3 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-            ));
+        $oModelMock->expects($this->atLeastOnce())->method('getShopListByActiveModule')->willReturn($shopList);
 
         $this->_oModel = $oModelMock;
 
@@ -1016,11 +1032,13 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
-                'getExampleJobInsertList',
+            ->addMethods([
                 'getExampleJobItem1FailedInsertFields',
                 'getExampleJobItem2FailedInsertFields',
-                'getExampleJobItem3FailedInsertFields',
+                'getExampleJobItem3FailedInsertFields'
+            ])
+            ->onlyMethods([
+                'getExampleJobInsertList',
                 '_add2ShopRelation',
                 'getShopListByActiveModule'
             ])
@@ -1041,6 +1059,16 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
                 )
             )
         );
+
+        /** @var Shop $shop */
+        $shop = d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class);
+
+        /** @var ShopList $shopList */
+        $shopList = d3GetModCfgDIC()->get('d3ox.usermanager.'.ShopList::class);
+        $shopList->offsetSet(1, $shop);
+        $shopList->offsetSet(2, $shop);
+        $shopList->offsetSet(3, $shop);
+
         $oModelMock->expects($this->exactly(3))->method('getExampleJobItem1FailedInsertFields')->willReturn(true);
         $oModelMock->expects($this->exactly(3))->method('getExampleJobItem2FailedInsertFields')->willReturn(true);
         $oModelMock->expects($this->never())->method('getExampleJobItem3FailedInsertFields')->willReturn(true);
@@ -1050,12 +1078,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
                 true, false, false,
                 true, true, true)
         );
-        $oModelMock->expects($this->atLeastOnce())->method('getShopListByActiveModule')->willReturn(
-            array(
-                1 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-                2 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-                3 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-            ));
+        $oModelMock->expects($this->atLeastOnce())->method('getShopListByActiveModule')->willReturn($shopList);
 
         $this->_oModel = $oModelMock;
 
@@ -1079,7 +1102,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
             'getExampleJobInsertList'
         );
 
-        $this->assertInternalType('array', $aList);
+        $this->assertIsArray($aList);
         $this->assertTrue((bool) count($aList));
     }
 
@@ -1095,7 +1118,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
             'getExampleContentInsertList'
         );
 
-        $this->assertInternalType('array', $aList);
+        $this->assertIsArray($aList);
         $this->assertTrue((bool) count($aList));
     }
 
@@ -1112,19 +1135,19 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var Shop|MockObject $oShopMock */
         $oShopMock = $this->getMockBuilder(Shop::class)
-            ->setMethods(['getId'])
+            ->onlyMethods(['getId'])
             ->getMock();
         $oShopMock->method('getId')->willReturn('shopId');
         
         /** @var d3bitmask|MockObject $oD3BitMock */
         $oD3BitMock = $this->getMockBuilder(d3bitmask::class)
-            ->setMethods(['getIntByBitPosition'])
+            ->onlyMethods(['getIntByBitPosition'])
             ->getMock();
         $oD3BitMock->method('getIntByBitPosition')->willReturn(1);
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getD3BitMask',
                 '_getLangAbbrFieldName'
             ])
@@ -1141,7 +1164,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
                 array($oShopMock)
             );
 
-            $this->assertInternalType('array', $aFieldList);
+            $this->assertIsArray($aFieldList);
             $this->assertTrue((bool) count($aFieldList));
         }
     }
@@ -1156,19 +1179,19 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var Shop|MockObject $oShopMock */
         $oShopMock = $this->getMockBuilder(Shop::class)
-            ->setMethods(['getId'])
+            ->onlyMethods(['getId'])
             ->getMock();
         $oShopMock->method('getId')->willReturn('shopId');
 
         /** @var d3bitmask|MockObject $oD3BitMock */
         $oD3BitMock = $this->getMockBuilder(d3bitmask::class)
-            ->setMethods(['getIntByBitPosition'])
+            ->onlyMethods(['getIntByBitPosition'])
             ->getMock();
         $oD3BitMock->method('getIntByBitPosition')->willReturn(1);
 
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getD3BitMask',
                 '_getLangAbbrFieldName'
             ])
@@ -1185,7 +1208,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
                 array($oShopMock)
             );
 
-            $this->assertInternalType('array', $aFieldList);
+            $this->assertIsArray($aFieldList);
             $this->assertTrue((bool) count($aFieldList));
         }
     }
@@ -1200,19 +1223,25 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
-                'getShopListByActiveModule',
+            ->addMethods([
                 'jobFieldMethodName',
+            ])
+            ->onlyMethods([
+                'getShopListByActiveModule',
                 'setInitialExecMethod',
             '_updateTableItem2',
             'getStepByStepMode'])
             ->getMock();
 
-        $oModelMock->method('getShopListByActiveModule')->willReturn(
-            array(
-                1 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-                2 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-            ));
+        /** @var Shop $shop */
+        $shop = d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class);
+
+        /** @var ShopList $shopList */
+        $shopList = d3GetModCfgDIC()->get('d3ox.usermanager.'.ShopList::class);
+        $shopList->offsetSet(1, $shop);
+        $shopList->offsetSet(2, $shop);
+
+        $oModelMock->method('getShopListByActiveModule')->willReturn($shopList);
 
         $oModelMock->method('jobFieldMethodName')->willReturn(true);
         $oModelMock->method('setInitialExecMethod')->willReturn(true);
@@ -1257,20 +1286,25 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods([
-                'getShopListByActiveModule',
+            ->addMethods([
                 'jobFieldMethodName',
+            ])
+            ->onlyMethods([
+                'getShopListByActiveModule',
                 'setInitialExecMethod',
             '_updateTableItem2',
             'getStepByStepMode'])
             ->getMock();
 
-        $oModelMock->method('getShopListByActiveModule')->willReturn(
+        /** @var Shop $shop */
+        $shop = d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class);
 
-            array(
-                1 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-                2 => d3GetModCfgDIC()->get('d3ox.usermanager.'.Shop::class),
-            ));
+        /** @var ShopList $shopList */
+        $shopList = d3GetModCfgDIC()->get('d3ox.usermanager.'.ShopList::class);
+        $shopList->offsetSet(1, $shop);
+        $shopList->offsetSet(2, $shop);
+
+        $oModelMock->method('getShopListByActiveModule')->willReturn($shopList);
 
         $oModelMock->method('jobFieldMethodName')->willReturn(true);
         $oModelMock->method('setInitialExecMethod')->willReturn(true);
@@ -1298,7 +1332,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods(['_hasUnregisteredFiles'])
+            ->onlyMethods(['_hasUnregisteredFiles'])
             ->getMock();
         $oModelMock->expects($this->once())->method('_hasUnregisteredFiles')->willReturn(true);
 
@@ -1319,7 +1353,7 @@ class d3usermanager_updateTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager_update|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(d3usermanager_update::class)
-            ->setMethods(['_showUnregisteredFiles'])
+            ->onlyMethods(['_showUnregisteredFiles'])
             ->getMock();
         $oModelMock->expects($this->once())->method('_showUnregisteredFiles')->willReturn(true);
 

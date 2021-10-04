@@ -19,14 +19,16 @@ namespace D3\Usermanager\tests\integration\Actions;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Object2Group;
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Model\ListModel;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 
 class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
 {
@@ -60,9 +62,7 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
     }
 
     /**
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
-     * @throws Exception
+     * @throws DoctrineException
      */
     public function cleanTestData()
     {
@@ -71,12 +71,14 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
         $this->deleteUser($this->aUserIdList[1]);
         $this->deleteObject('d3ox.usermanager.'.Object2Group::class, $this->aO2GroupIdList[0]);
 
-        $aQueries = [
-            "DELETE FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[0]}'",
-            "DELETE FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[1]}'",
-        ];
-        foreach ($aQueries as $sQuery) {
-            DatabaseProvider::getDb()->execute($sQuery);
+        foreach ([$this->aUserIdList[0], $this->aUserIdList[1]] as $userItem) {
+            /** @var QueryBuilder $queryBuilder */
+            $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+            $queryBuilder->delete('oxobject2group')
+                ->where(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($userItem))
+                );
+            $queryBuilder->execute();
         }
     }
 
@@ -151,7 +153,6 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -195,24 +196,41 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
         $oExecute->startJobItemExecution();
 
         // check assignment pass
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[0]}' AND oxgroupsid IN ('{$this->aGroupsIdList[1]}') AND oxgroupsid NOT IN ('{$this->aGroupsIdList[0]}')";
-
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[0])),
+                    $queryBuilder->expr()->in('oxgroupsid', [$queryBuilder->createNamedParameter($this->aGroupsIdList[1])]),
+                    $queryBuilder->expr()->notIn('oxgroupsid', [$queryBuilder->createNamedParameter($this->aGroupsIdList[0])])
+                )
+            );
         $this->assertSame(
             1,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
 
         // check other assignments
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[1]}' AND oxgroupsid IN ('{$this->aGroupsIdList[0]}')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[1])),
+                    $queryBuilder->expr()->in('oxgroupsid', [$queryBuilder->createNamedParameter($this->aGroupsIdList[0])])
+                )
+            );
         $this->assertSame(
             1,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
     }
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -256,23 +274,43 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
         $oExecute->startJobItemExecution();
 
         // check assignment pass
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[0]}' AND oxgroupsid IN ('{$this->aGroupsIdList[0]}', '{$this->aGroupsIdList[1]}')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[0])),
+                    $queryBuilder->expr()->in('oxgroupsid', [
+                        $queryBuilder->createNamedParameter($this->aGroupsIdList[0]),
+                        $queryBuilder->createNamedParameter($this->aGroupsIdList[1])
+                    ])
+                )
+            );
         $this->assertSame(
             0,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
 
         // check other assignments
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[1]}' AND oxgroupsid IN ('{$this->aGroupsIdList[0]}')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[1])),
+                    $queryBuilder->expr()->in('oxgroupsid', [$queryBuilder->createNamedParameter($this->aGroupsIdList[0])])
+                )
+            );
         $this->assertSame(
             1,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
     }
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -306,23 +344,43 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
         $oExecute->startJobItemExecution();
 
         // check assignment pass
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[0]}' AND oxgroupsid IN ('{$this->aGroupsIdList[0]}', '{$this->aGroupsIdList[1]}')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[0])),
+                    $queryBuilder->expr()->in('oxgroupsid', [
+                        $queryBuilder->createNamedParameter($this->aGroupsIdList[0]),
+                        $queryBuilder->createNamedParameter($this->aGroupsIdList[1])
+                    ])
+                )
+            );
         $this->assertSame(
             1,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
 
         // check other assignments
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[1]}' AND oxgroupsid IN ('{$this->aGroupsIdList[0]}')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[1])),
+                    $queryBuilder->expr()->in('oxgroupsid', [$queryBuilder->createNamedParameter($this->aGroupsIdList[0])])
+                )
+            );
         $this->assertSame(
             1,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
     }
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -366,33 +424,73 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
         $oExecute->startJobItemExecution();
 
         // check assignment pass
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[0]}' AND oxgroupsid IN ('{$this->aGroupsIdList[0]}', '{$this->aGroupsIdList[1]}')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[0])),
+                    $queryBuilder->expr()->in('oxgroupsid', [
+                        $queryBuilder->createNamedParameter($this->aGroupsIdList[0]),
+                        $queryBuilder->createNamedParameter($this->aGroupsIdList[1])
+                    ])
+                )
+            );
         $this->assertSame(
             2,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
 
         // check other assignments
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[0]}' AND oxgroupsid IN ('unknownGroupId')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[0])),
+                    $queryBuilder->expr()->in('oxgroupsid', [$queryBuilder->createNamedParameter('unknownGroupId')])
+                )
+            );
         $this->assertSame(
             0,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid != '{$this->aUserIdList[0]}' AND oxgroupsid IN ('unknownGroupId')";
+
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->neq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[0])),
+                    $queryBuilder->expr()->in('oxgroupsid', [$queryBuilder->createNamedParameter('unknownGroupId')])
+                )
+            );
         $this->assertSame(
             0,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[1]}' AND oxgroupsid IN ('{$this->aGroupsIdList[0]}')";
+
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[1])),
+                    $queryBuilder->expr()->in('oxgroupsid', [$queryBuilder->createNamedParameter($this->aGroupsIdList[0])])
+                )
+            );
         $this->assertSame(
             1,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
     }
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -436,15 +534,37 @@ class actionDeleteFromGroupTest extends d3ActionIntegrationTestCase
         $oExecute->startJobItemExecution();
 
         // check assignment pass
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[0]}' AND oxgroupsid IN ('{$this->aGroupsIdList[0]}', '{$this->aGroupsIdList[1]}')";
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[0])),
+                    $queryBuilder->expr()->in('oxgroupsid', [
+                        $queryBuilder->createNamedParameter($this->aGroupsIdList[0]),
+                        $queryBuilder->createNamedParameter($this->aGroupsIdList[1]),
+                    ])
+                )
+            );
         $this->assertSame(
             2,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
-        $sSelect = "SELECT count(*) FROM oxobject2group WHERE oxobjectid = '{$this->aUserIdList[1]}' AND oxgroupsid IN ('{$this->aGroupsIdList[0]}')";
+
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from('oxobject2group')
+            ->where(
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->eq('oxobjectid', $queryBuilder->createNamedParameter($this->aUserIdList[1])),
+                    $queryBuilder->expr()->in('oxgroupsid', [$queryBuilder->createNamedParameter($this->aGroupsIdList[0])])
+                )
+            );
         $this->assertSame(
             1,
-            (int) DatabaseProvider::getDb()->getOne($sSelect)
+            (int) $queryBuilder->execute()->fetchOne()
         );
     }
 }

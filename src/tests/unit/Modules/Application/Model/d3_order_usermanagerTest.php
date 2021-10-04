@@ -28,7 +28,6 @@ use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementExcepti
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException;
 use D3\Usermanager\Modules\Application\Model\d3_order_usermanager;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
@@ -46,19 +45,18 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->_oModel = d3GetModCfgDIC()->get('d3ox.usermanager.'.Order::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -79,7 +77,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanagerlist|MockObject $oUserManagerListMock */
         $oUserManagerListMock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetOrderFinishTriggeredManagerTasks'])
+            ->onlyMethods(['d3GetOrderFinishTriggeredManagerTasks'])
             ->getMock();
         $oUserManagerListMock->method('d3GetOrderFinishTriggeredManagerTasks')->willReturn($managerList);
 
@@ -87,7 +85,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
         $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
-            ->setMethods([
+            ->onlyMethods([
                 'userMeetsConditions',
                 'exec4user'
             ])
@@ -98,7 +96,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_order_usermanager|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(Order::class)
-            ->setMethods(['d3UsermanagerGetManagerExecute'])
+            ->onlyMethods(['d3UsermanagerGetManagerExecute'])
             ->getMock();
         $oModelMock->method('d3UsermanagerGetManagerExecute')->willReturn($oManagerExecuteMock);
 
@@ -130,7 +128,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanagerlist|MockObject $oUserManagerListMock */
         $oUserManagerListMock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetOrderFinishTriggeredManagerTasks'])
+            ->onlyMethods(['d3GetOrderFinishTriggeredManagerTasks'])
             ->getMock();
         $oUserManagerListMock->method('d3GetOrderFinishTriggeredManagerTasks')->willReturn($managerList);
 
@@ -139,13 +137,11 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
         /** @var d3usermanager_requirementException|MockObject $exception */
         $exception = $this->getMockBuilder(d3usermanager_requirementException::class)
             ->disableOriginalConstructor()
-            ->setMethods(['debugOut'])
             ->getMock();
-        $exception->expects($this->exactly(2))->method('debugOut')->willReturn(true);
 
         /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
         $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
-            ->setMethods([
+            ->onlyMethods([
                 'userMeetsConditions',
                 'exec4user'
             ])
@@ -156,7 +152,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var UtilsView|MockObject $utilsViewMock */
         $utilsViewMock = $this->getMockBuilder(UtilsView::class)
-            ->setMethods(['addErrorToDisplay'])
+            ->onlyMethods(['addErrorToDisplay'])
             ->getMock();
         $utilsViewMock->expects($isAdmin ? $this->exactly(2) : $this->never())
             ->method('addErrorToDisplay')->willReturn(true);
@@ -165,7 +161,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_order_usermanager|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(Order::class)
-            ->setMethods(['d3UsermanagerGetManagerExecute', 'isAdmin'])
+            ->onlyMethods(['d3UsermanagerGetManagerExecute', 'isAdmin'])
             ->getMock();
         $oModelMock->method('d3UsermanagerGetManagerExecute')->willReturn($oManagerExecuteMock);
         $oModelMock->method('isAdmin')->willReturn($isAdmin);
@@ -198,7 +194,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanagerlist|MockObject $oUserManagerListMock */
         $oUserManagerListMock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetOrderFinishTriggeredManagerTasks'])
+            ->onlyMethods(['d3GetOrderFinishTriggeredManagerTasks'])
             ->getMock();
         $oUserManagerListMock->method('d3GetOrderFinishTriggeredManagerTasks')->willReturn($managerList);
 
@@ -207,13 +203,11 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
         /** @var d3usermanager_smartyException|MockObject $exception */
         $exception = $this->getMockBuilder(d3usermanager_smartyException::class)
             ->disableOriginalConstructor()
-            ->setMethods(['debugOut'])
             ->getMock();
-        $exception->expects($this->exactly(2))->method('debugOut')->willReturn(true);
 
         /** @var d3usermanager_execute|MockObject $oManagerExecuteMock */
         $oManagerExecuteMock = $this->getMockBuilder(d3usermanager_execute::class)
-            ->setMethods([
+            ->onlyMethods([
                 'userMeetsConditions',
                 'exec4user'
             ])
@@ -224,7 +218,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var UtilsView|MockObject $utilsViewMock */
         $utilsViewMock = $this->getMockBuilder(UtilsView::class)
-            ->setMethods(['addErrorToDisplay'])
+            ->onlyMethods(['addErrorToDisplay'])
             ->getMock();
         $utilsViewMock->expects($isAdmin ? $this->exactly(2) : $this->never())
             ->method('addErrorToDisplay')->willReturn(true);
@@ -233,7 +227,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_order_usermanager|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(Order::class)
-            ->setMethods(['d3UsermanagerGetManagerExecute', 'isAdmin'])
+            ->onlyMethods(['d3UsermanagerGetManagerExecute', 'isAdmin'])
             ->getMock();
         $oModelMock->method('d3UsermanagerGetManagerExecute')->willReturn($oManagerExecuteMock);
         $oModelMock->method('isAdmin')->willReturn($isAdmin);
@@ -297,7 +291,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager|MockObject $oManagerMock */
         $oManagerMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['getValue'])
+            ->onlyMethods(['getValue'])
             ->getMock();
         $getValueMap = [
             ['blGetStornoArticles', false],
@@ -314,7 +308,7 @@ class d3_order_usermanagerTest extends d3UsermanagerUnitTestCase
         /** @var d3usermanager_configurationcheck|MockObject $confCheckMock */
         $confCheckMock = $this->getMockBuilder(d3usermanager_configurationcheck::class)
             ->disableOriginalConstructor()
-            ->setMethods(['checkThrowingExceptions'])
+            ->onlyMethods(['checkThrowingExceptions'])
             ->getMock();
         $throwExc ?
             $confCheckMock->expects($this->once())->method('checkThrowingExceptions')->willThrowException($expectedExc) :

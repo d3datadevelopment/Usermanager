@@ -22,8 +22,7 @@ use D3\ModCfg\Tests\unit\d3ModCfgUnitTestCase;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_listgenerator as Manager_Listgenerator;
 use D3\Usermanager\Modules\Application\Model\d3_user_usermanager;
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\Exception as DoctrineException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Groups;
@@ -39,7 +38,7 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
     /**
      * Set up fixture.
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -49,7 +48,7 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
     /**
      * Tear down fixture.
      */
-    public function tearDown()
+    public function tearDown() : void
     {
         $this->cleanTestData();
 
@@ -64,7 +63,6 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
      * @param $sClass
      * @param $sId
      * @param array $aFields
-     * @throws Exception
      */
     public function createObject($sClass, $sId, $aFields = array())
     {
@@ -217,7 +215,7 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
 
     /**
      * @param $sId
-     * @throws DBALException
+     * @throws DoctrineException
      */
     public function deleteManager($sId)
     {
@@ -227,7 +225,7 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
             ->from('d3user2usermanager')
             ->where('oxusermanagerid = '.$qb->createNamedParameter($sId));
 
-        foreach ((array) $qb->execute()->fetchAll(FetchMode::ASSOCIATIVE) as $aId) {
+        foreach ((array) $qb->execute()->fetchAllAssociative() as $aId) {
             $aId = array_change_key_case($aId, CASE_UPPER);
             $this->deleteBaseModelObject('d3user2usermanager', $aId['OXID']);
         }
@@ -264,9 +262,9 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
     {
         /** @var d3log|MockObject $oD3LogMock */
         $oD3LogMock = $this->getMockBuilder(d3log::class)
-            ->setMethods(['log'])
+            ->onlyMethods(['log'])
             ->getMock();
-        $oD3LogMock->method('log')->willReturn(true);
+        $oD3LogMock->method('log')->willReturnSelf();
 
         return $oD3LogMock;
     }
@@ -274,13 +272,12 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
     /**
      * @param $sManagerId
      * @return Manager|MockObject
-     * @throws Exception
      */
     public function getManagerMock($sManagerId)
     {
         /** @var Manager|MockObject $oManager */
         $oManager = $this->getMockBuilder(Manager::class)
-            ->setMethods([
+            ->onlyMethods([
                 'd3getLog',
                 'getListGenerator'
             ])
@@ -295,7 +292,6 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
     /**
      * @param Manager $oManager
      * @return Manager_Listgenerator|MockObject
-     * @throws Exception
      */
     public function getListGenerator(Manager $oManager)
     {

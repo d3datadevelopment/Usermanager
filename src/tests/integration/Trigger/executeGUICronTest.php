@@ -23,13 +23,14 @@ use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\Usermanager\Application\Controller\d3usermanager_response as ResponseController;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as Item;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
+use ReflectionException;
 
 class executeGUICronTest extends d3IntegrationTestCase
 {
@@ -83,7 +84,7 @@ class executeGUICronTest extends d3IntegrationTestCase
     }
 
     /**
-     * @throws DBALException
+     * @throws DoctrineException
      */
     public function cleanTestData()
     {
@@ -99,7 +100,6 @@ class executeGUICronTest extends d3IntegrationTestCase
 
     /**
      * @return Manager
-     * @throws Exception
      */
     public function getConfiguredManager()
     {
@@ -124,7 +124,6 @@ class executeGUICronTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -178,10 +177,11 @@ class executeGUICronTest extends d3IntegrationTestCase
      *
      * @param $password
      *
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
+     * @throws DoctrineException
      * @throws StandardException
+     * @throws ReflectionException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      * @dataProvider runCronCanceledWrongPasswordConfigDataProvider
@@ -247,7 +247,6 @@ class executeGUICronTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -309,7 +308,6 @@ class executeGUICronTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -371,7 +369,6 @@ class executeGUICronTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -428,7 +425,6 @@ class executeGUICronTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException

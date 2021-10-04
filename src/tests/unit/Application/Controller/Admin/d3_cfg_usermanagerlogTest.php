@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\unit\Application\Controller\Admin;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerlog;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -32,19 +31,18 @@ class d3_cfg_usermanagerlogTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->_oController = d3GetModCfgDIC()->get(d3_cfg_usermanagerlog::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -58,9 +56,7 @@ class d3_cfg_usermanagerlogTest extends d3UsermanagerUnitTestCase
      */
     public function additionalUrlParamsPass()
     {
-        $this->assertInternalType(
-            'string',
-            $this->callMethod($this->_oController, 'd3getAdditionalUrlParams')
+        $this->assertIsString($this->callMethod($this->_oController, 'd3getAdditionalUrlParams')
         );
     }
 
@@ -72,7 +68,7 @@ class d3_cfg_usermanagerlogTest extends d3UsermanagerUnitTestCase
     public function additionalUrlParamsWithModIdPass()
     {
         $this->setValue($this->_oController, '_sModId', 'testid');
-        $this->assertContains(
+        $this->assertStringContainsStringIgnoringCase(
             'testid',
             $this->callMethod($this->_oController, 'd3getAdditionalUrlParams')
         );

@@ -21,6 +21,7 @@ namespace D3\Usermanager\Application\Controller;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
+use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\ModCfg\Application\Model\Log\d3LogInterface;
 use D3\ModCfg\Application\Model\Log\d3log;
@@ -28,8 +29,11 @@ use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_execute as ManagerExecuteModel;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
 use D3\Usermanager\Application\Model\d3usermanagerlist as ManagerList;
+use D3\Usermanager\Application\Model\Exceptions\d3ActionRequirementAbstract;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException as cronUnavailableException;
-use Doctrine\DBAL\DBALException;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
+use Doctrine\DBAL\Exception as DoctrineException;
 use OxidEsales\Eshop\Core\Base;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -41,6 +45,7 @@ use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\Session;
 use OxidEsales\EshopCommunity\Core\ShopControl;
 use ReflectionClass;
+use ReflectionException;
 
 class d3usermanager_response extends Base
 {
@@ -58,7 +63,8 @@ class d3usermanager_response extends Base
     }
 
     /**
-     * @throws DBALException
+     * @throws DoctrineException
+     * @throws ReflectionException
      */
     public function init()
     {
@@ -81,9 +87,9 @@ class d3usermanager_response extends Base
             $oEx->d3showMessage();
         } catch (StandardException $oEx) {
             /** @var StandardException $oEx */
-            $logger = Registry::getLogger();
-            $logger->error($oEx);
-            $oEx->debugOut();
+            if (!defined('OXID_PHP_UNIT')) {
+                Registry::getLogger()->error($oEx, [$oEx]);
+            }
             echo $oEx->getMessage().PHP_EOL;
         } finally {
             /** @var Session $session */
@@ -113,6 +119,20 @@ class d3usermanager_response extends Base
         }
     }
 
+    /**
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
+     * @throws DatabaseException
+     * @throws DoctrineException
+     * @throws StandardException
+     * @throws cronUnavailableException
+     * @throws d3ActionRequirementAbstract
+     * @throws d3ParameterNotFoundException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
+     * @throws d3usermanager_actionException
+     * @throws d3usermanager_requirementException
+     */
     public function initCli()
     {
         startProfile(__METHOD__);
@@ -123,14 +143,18 @@ class d3usermanager_response extends Base
     }
 
     /**
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws DatabaseException
+     * @throws DoctrineException
      * @throws StandardException
      * @throws cronUnavailableException
+     * @throws d3ActionRequirementAbstract
+     * @throws d3ParameterNotFoundException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
+     * @throws d3usermanager_actionException
+     * @throws d3usermanager_requirementException
      */
     protected function _startExecution()
     {
@@ -189,10 +213,15 @@ class d3usermanager_response extends Base
     }
 
     /**
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws DatabaseException
+     * @throws StandardException
+     * @throws d3ParameterNotFoundException
+     * @throws d3ActionRequirementAbstract
+     * @throws d3usermanager_actionException
+     * @throws d3usermanager_requirementException
+     * @throws DoctrineException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
@@ -304,7 +333,6 @@ class d3usermanager_response extends Base
     }
 
     /**
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -368,10 +396,7 @@ class d3usermanager_response extends Base
     protected function _getCronTimestampVarName(): string
     {
         $sVarName = "sCronExecTimestamp";
-
-        if ($this->_getCronJobIdParameter() !== false) {
-            $sVarName .= $this->_getCronJobIdParameter();
-        }
+        $sVarName .= $this->_getCronJobIdParameter();
 
         return $sVarName;
     }
@@ -383,8 +408,8 @@ class d3usermanager_response extends Base
 
     /**
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
+     * @throws DoctrineException
      */
     public function getLastExecDateInfo(): array
     {

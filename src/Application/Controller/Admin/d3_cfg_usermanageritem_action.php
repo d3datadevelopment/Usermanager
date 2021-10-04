@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
+use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\OxidServiceBridges\Internal\Framework\Module\Path\ModulePathResolverBridgeInterface;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_action_interface as ActionModelInterface;
@@ -28,12 +29,11 @@ use D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist as ActionL
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
+use Doctrine\DBAL\Query\QueryBuilder;
 use OxidEsales\Eshop\Application\Model\ContentList;
 use OxidEsales\Eshop\Application\Model\User as Item;
 use OxidEsales\Eshop\Core\Config;
-use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -44,6 +44,7 @@ use OxidEsales\Eshop\Core\Request;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_settings as ItemSettingsController;
 use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\ShopConfigurationDaoBridgeInterface;
 
 class d3_cfg_usermanageritem_action extends ItemSettingsController
@@ -60,7 +61,6 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
     /**
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -217,7 +217,7 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
     public function getFieldNameTitle($sFieldName): ?string
     {
         $sLangAdd = '';
-        $sPattern = "@(.*)([_]{1}([0-9]{1,3}))$@";
+        $sPattern = "@(.*)([_]([0-9]{1,3}))$@";
         if (preg_match($sPattern, $sFieldName, $aMatches)) {
             $sFieldMLIdent = $this->_sExportFieldTitleBaseMLIdent.strtoupper($aMatches[1]);
             $aLangNames = $this->getLang()->getLanguageNames();
@@ -343,17 +343,24 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
     }
 
     /**
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
+     * @throws StandardException
+     * @throws d3ParameterNotFoundException
+     * @throws DoctrineException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
     public function markAsFinished()
     {
         $oProfile = $this->getProfile();
-        $iAllCount = d3GetModCfgDIC()->get('d3ox.usermanager.'.DatabaseInterface::class.'.assoc')
-            ->getOne('SELECT COUNT(*) FROM '.d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class)->getViewName());
+
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $queryBuilder->select('count(*)')
+            ->from(d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class)->getViewName());
+        $iAllCount = $queryBuilder->execute()->fetchOne();
+
         $iCount = $oProfile->markConcernedItemsAsFinished(true);
 
         $oEx = oxNew(

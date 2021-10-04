@@ -20,7 +20,6 @@ use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ;
 use D3\Usermanager\Application\Model\d3usermanager;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -44,7 +43,7 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
      * Set up fixture.
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -53,12 +52,8 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
 
     /**
      * Tear down fixture.
-     *
-     * @throws DBALException
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
      */
-    public function tearDown()
+    public function tearDown() : void
     {
         $this->cleanTestData();
 
@@ -127,9 +122,6 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
         );
     }
 
-    /**
-     * @throws DBALException
-     */
     public function cleanTestData()
     {
         $this->deleteManager($this->sManagerId);
@@ -168,7 +160,6 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -215,7 +206,6 @@ class requirementOrderLanguageFilterTest extends d3RequirementIntegrationTestCas
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException

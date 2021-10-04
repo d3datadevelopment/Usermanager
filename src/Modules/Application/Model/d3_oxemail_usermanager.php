@@ -28,7 +28,6 @@ use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_renderererrorhandler;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_templaterendererExceptionInterface;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\d3str;
@@ -46,7 +45,6 @@ use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
-use OxidEsales\EshopCommunity\Internal\Framework\Smarty\Legacy\LegacySmartyEngine;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateEngineInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateRendererBridgeInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateRendererInterface;
@@ -86,13 +84,13 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     /**
      * @param $aManagerNotes
      * @return bool
-     * @throws Exception
+     * @throws d3usermanager_smartyException
      */
     public function d3sendUserManagerEmail($aManagerNotes): bool
     {
         startProfile(__METHOD__);
 
-        $oShop = $this->_getShop();
+        $oShop = $this->getShop();
 
         /** @var Config $config */
         $config = d3GetModCfgDIC()->get('d3ox.usermanager.'.Config::class);
@@ -104,7 +102,6 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
 
         $this->_processViewArray();
 
-        /** @var LegacySmartyEngine $templateEngine */
         $templateEngine = $this->_d3GetUserManagerTemplateEngine();
         foreach ($this->getViewData() as $key => $value) {
             $templateEngine->addGlobal($key, $value);
@@ -180,7 +177,6 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     /**
      * @param Manager $oManager
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws DatabaseException
@@ -194,7 +190,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
         $this->oUserManager = $oManager;
         $aContent = $this->getUserManagerMailContent($oManager);
 
-        $oShop = $this->_getShop();
+        $oShop = $this->getShop();
         $this->d3UMsetBody($aContent['html']);
         $this->d3UMsetAltBody($aContent['plain']);
         $this->d3UMsetSubject($aContent['subject']);
@@ -221,7 +217,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     {
         $this->setBody($content);
 
-        if ((bool) strlen($content) && false === (bool) strlen($this->getBody())) {
+        if (strlen($content) && false === (bool) strlen($this->getBody())) {
             $this->d3UserManagerThrowUnequalContentException();
         }
     }
@@ -235,7 +231,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     {
         $this->setAltBody($content);
 
-        if ((bool) strlen($content) && false === (bool) strlen($this->getAltBody())) {
+        if (strlen($content) && false === (bool) strlen($this->getAltBody())) {
             $this->d3UserManagerThrowUnequalContentException();
         }
     }
@@ -249,7 +245,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
     {
         $this->setSubject($content);
 
-        if ((bool) strlen($content) && false === (bool) strlen($this->getSubject())) {
+        if (strlen($content) && false === (bool) strlen($this->getSubject())) {
             $this->d3UserManagerThrowUnequalContentException();
         }
     }
@@ -362,7 +358,6 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @param Manager $oManager
      *
      * @return array
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -382,7 +377,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
         $oConfig = $this->d3GetUserManagerConfigObject();
         $oConfig->setAdminMode($blTplFromAdmin);
 
-        $oShop = $this->_getShop();
+        $oShop = $this->getShop();
         $this->_setMailParams($oShop);
 
         /** @var TemplateRendererInterface $renderer */

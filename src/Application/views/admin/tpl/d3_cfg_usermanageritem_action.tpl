@@ -1,6 +1,6 @@
 [{include file="headitem.tpl" title="D3_USERMANAGER_ACTION"|oxmultilangassign}]
 
-<style type="text/css">
+<style>
     .ext_edittext {
         padding: 2px;
     }
@@ -60,7 +60,7 @@
     -->
 </script>
 
-<style type="text/css">
+<style>
     <!--
     fieldset{
         border: 1px inset black;

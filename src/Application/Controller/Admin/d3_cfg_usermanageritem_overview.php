@@ -27,11 +27,12 @@ use D3\Usermanager\Application\Model\d3usermanager_configurationcheck;
 use D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist as ActionListModel;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
+use D3\Usermanager\Application\Model\Exceptions\d3ActionRequirementAbstract;
 use D3\Usermanager\Application\Model\Exceptions\d3ActionRequirementInterface;
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist as RequirementListModel;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_action as ItemActionController;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ as ItemRequirementController;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
 use OxidEsales\Eshop\Application\Model\User as ItemModel;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -39,6 +40,7 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\UtilsView;
+use ReflectionException;
 
 class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 {
@@ -61,7 +63,6 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 
     /**
      * @return string
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws d3ShopCompatibilityAdapterException
@@ -219,10 +220,15 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 
     /**
      * @return int
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
+     * @throws ReflectionException
+     * @throws StandardException
+     * @throws DoctrineException
+     * @throws d3ActionRequirementAbstract
      * @throws d3ParameterNotFoundException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
      */
     public function getToFinishedCount(): int
     {
@@ -233,7 +239,7 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
         if ($this->canRequestData(__FUNCTION__)) {
             /** @var Manager $oProfile */
             $oProfile = $this->getProfile();
-            return (int) $oProfile->getListGenerator()->getConcernedItemCount();
+            return $oProfile->getListGenerator()->getConcernedItemCount();
         } elseif ($this->canUseRequestData($requestCount)) {
             return (int) $requestCount;
         }
@@ -243,10 +249,15 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 
     /**
      * @return int
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
+     * @throws DoctrineException
+     * @throws ReflectionException
+     * @throws StandardException
+     * @throws d3ActionRequirementAbstract
      * @throws d3ParameterNotFoundException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
      */
     public function getFinishedCount(): int
     {
@@ -257,7 +268,7 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
         if ($this->canRequestData(__FUNCTION__)) {
             /** @var Manager $oProfile */
             $oProfile = $this->getProfile();
-            return (int) $oProfile->getListGenerator()->getFinishedItemCount();
+            return $oProfile->getListGenerator()->getFinishedItemCount();
         } elseif ($this->canUseRequestData($requestCount)) {
             return (int) $requestCount;
         }
@@ -267,10 +278,15 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 
     /**
      * @return int
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
+     * @throws DoctrineException
+     * @throws ReflectionException
+     * @throws StandardException
+     * @throws d3ActionRequirementAbstract
      * @throws d3ParameterNotFoundException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
      */
     public function getFinishedMonthCount(): int
     {
@@ -281,7 +297,7 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
         if ($this->canRequestData(__FUNCTION__)) {
             /** @var Manager $oProfile */
             $oProfile = $this->getProfile();
-            return (int) $oProfile->getListGenerator()->getFinishedMonthItemCount();
+            return $oProfile->getListGenerator()->getFinishedMonthItemCount();
         } elseif ($this->canUseRequestData($requestCount)) {
             return (int) $requestCount;
         }
@@ -291,10 +307,15 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
 
     /**
      * @return int
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
+     * @throws DoctrineException
+     * @throws ReflectionException
+     * @throws StandardException
+     * @throws d3ActionRequirementAbstract
      * @throws d3ParameterNotFoundException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
      */
     public function getNotFinishedCount(): int
     {
@@ -305,7 +326,7 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
         if ($this->canRequestData(__FUNCTION__)) {
             /** @var Manager $oProfile */
             $oProfile = $this->getProfile();
-            return (int) $oProfile->getListGenerator()->getNotFinishedItemCount();
+            return $oProfile->getListGenerator()->getNotFinishedItemCount();
         } elseif ($this->canUseRequestData($requestCount)) {
             return (int) $requestCount;
         }
@@ -317,7 +338,6 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @param $sFunctionName
      *
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -331,7 +351,6 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
      * @param $requestCount
      *
      * @return bool
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
@@ -344,7 +363,6 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
     /**
      * @return bool
      * @throws DatabaseConnectionException
-     * @throws DBALException
      * @throws DatabaseErrorException
      */
     public function getDataOnDemand(): bool
@@ -364,7 +382,7 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
         $request = d3GetModCfgDIC()->get($this->_DIC_OxInstance_Id.Request::class);
         $iRequestCount = (string) $request->getRequestEscapedParameter($sRequestName);
 
-        if ((bool) strlen($iRequestCount) || $this->_getRequestData() == $sFunctionName) {
+        if (strlen($iRequestCount) || $this->_getRequestData() == $sFunctionName) {
             return true;
         }
 

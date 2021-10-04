@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\integration\Requirements;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -46,7 +45,7 @@ class requirementVouchernumberTest extends d3RequirementIntegrationTestCase
      * Set up fixture.
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -55,12 +54,8 @@ class requirementVouchernumberTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
-     *
-     * @throws DBALException
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
      */
-    public function tearDown()
+    public function tearDown() : void
     {
         $this->cleanTestData();
 
@@ -134,9 +129,6 @@ class requirementVouchernumberTest extends d3RequirementIntegrationTestCase
         );
     }
 
-    /**
-     * @throws DBALException
-     */
     public function cleanTestData()
     {
         $this->deleteManager($this->sManagerId);
@@ -170,7 +162,6 @@ class requirementVouchernumberTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException

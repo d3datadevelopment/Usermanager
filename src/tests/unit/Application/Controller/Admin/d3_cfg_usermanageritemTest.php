@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\unit\Application\Controller\Admin;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -33,12 +32,11 @@ class d3_cfg_usermanageritemTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -47,7 +45,7 @@ class d3_cfg_usermanageritemTest extends d3UsermanagerUnitTestCase
         $this->_oController = d3GetModCfgDIC()->get(d3_cfg_usermanageritem::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -61,7 +59,7 @@ class d3_cfg_usermanageritemTest extends d3UsermanagerUnitTestCase
      */
     public function renderPass()
     {
-        $this->assertContains(
+        $this->assertStringContainsStringIgnoringCase(
             '.tpl',
             $this->callMethod($this->_oController, 'render')
         );

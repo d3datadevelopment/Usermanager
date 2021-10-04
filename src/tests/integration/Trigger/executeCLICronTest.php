@@ -24,7 +24,7 @@ use D3\Usermanager\Application\Model\Output\d3usermanager_debugoutput;
 use D3\Usermanager\Application\Model\Output\d3usermanager_nulloutput;
 use D3\Usermanager\publicDir\d3_usermanager_cron;
 use D3\Usermanager\tests\tools\Intercept;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as Item;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -46,7 +46,7 @@ class executeCronTest extends d3IntegrationTestCase
     public $sCurrentValue = 'current';
     public $sExpectedValue = 'expected';
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -98,7 +98,7 @@ class executeCronTest extends d3IntegrationTestCase
     }
 
     /**
-     * @throws DBALException
+     * @throws DoctrineException
      */
     public function cleanTestData()
     {
@@ -138,7 +138,6 @@ class executeCronTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -186,7 +185,6 @@ class executeCronTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -244,7 +242,6 @@ class executeCronTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException

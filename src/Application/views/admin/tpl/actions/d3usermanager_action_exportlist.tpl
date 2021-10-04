@@ -53,7 +53,17 @@
                     </ul>
                     <br><br>
                     [{oxmultilang ident="D3_USERMANAGER_ACTION_EXPORTTEMPLATE"}] [{$edit->getValue('sExportTemplatename')}]<br>
-                    [{oxmultilang ident="D3_USERMANAGER_ACTION_MAILSEND_FROMTPL_ADMIN"}] ([{$oView->getManagerTemplateDirs(1)}]
+                    [{if $edit->getValue('sExportListFromTheme') == 'admin'}]
+                        [{oxmultilang ident="D3_USERMANAGER_ACTION_MAILSEND_FROMTPL_ADMIN"}] ([{$oView->getManagerTemplateDirs(1)}])
+                    [{elseif $edit->getValue('sExportListFromTheme') == 'frontend'}]
+                        [{oxmultilang ident="D3_USERMANAGER_ACTION_MAILSEND_FROMTPL_FRONTEND"}] ([{$oView->getManagerTemplateDirs(0)}])
+                    [{elseif $edit->getValue('sExportListFromTheme') == 'module'}]
+                        [{oxmultilang ident="D3_USERMANAGER_ACTION_MAILSEND_FROMTPL_MODULE"}] (
+                        [{foreach from=$oView->getModulePathList() key="sId" item="sModulePath"}]
+                            [{if $edit->getValue('sExportListFromModulePath') == $sId}][{$sModulePath}][{/if}]
+                        [{/foreach}]
+                        )
+                    [{/if}]
                     <br><br>
                     [{oxmultilang ident="D3_USERMANAGER_ACTION_EXPORTEXTENSION"}] [{$edit->getValue('sExportExtension')}] [{oxinputhelp ident="D3_USERMANAGER_ACTION_EXPORTEXTENSION_DESC"}]
                     <br>[{oxmultilang ident="D3_USERMANAGER_ACTION_EXPORTLOCATION"}]<br><b>[{$oView->getExportExamplePath()}]</b>

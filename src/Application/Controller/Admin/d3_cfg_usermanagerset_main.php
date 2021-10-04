@@ -27,7 +27,7 @@ use D3\ModCfg\Application\Model\Filegenerator\d3filegeneratorcronsh;
 use D3\ModCfg\Application\Model\Shopcompatibility\d3ShopCompatibilityAdapterHandler;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -109,7 +109,6 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
      * @param bool|int $iCronJobId
      *
      * @return string
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws FileException
@@ -118,9 +117,9 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
     {
         $sBaseUrl = $this->getViewConfig()->getModuleUrl('d3usermanager').'public/d3_usermanager_cron.php';
 
-        $aParameters = array(
+        $aParameters = [
             'shp' => $this->getViewConfig()->getActiveShopId(),
-        );
+        ];
 
         if ($iCronJobId !== false) {
             $aParameters['cjid'] = $iCronJobId;
@@ -159,6 +158,7 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
     /**
      * @return array
      * @throws DatabaseConnectionException
+     * @throws DoctrineException
      */
     public function getAvailableCronjobIds(): array
     {
@@ -245,7 +245,6 @@ class d3_cfg_usermanagerset_main extends d3_cfg_mod_main
     }
 
     /**
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException

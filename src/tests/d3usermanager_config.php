@@ -15,5 +15,5 @@
  * @link      https://www.oxidmodule.com
  */
 
-define('D3USERMANAGER_REQUIRE_MODCFG', true);
+const D3USERMANAGER_REQUIRE_MODCFG = true;
 

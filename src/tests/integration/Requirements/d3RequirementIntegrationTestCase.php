@@ -18,25 +18,23 @@ namespace D3\Usermanager\tests\integration\Requirements;
 
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\tests\integration\d3IntegrationTestCase;
-use Doctrine\DBAL\DBALException;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 abstract class d3RequirementIntegrationTestCase extends d3IntegrationTestCase
 {
     /**
      * @param $sManagerId
-     * @return d3usermanager|PHPUnit_Framework_MockObject_MockObject
-     * @throws DBALException
+     * @return d3usermanager|MockObject
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      */
     public function getManagerMock($sManagerId)
     {
-        /** @var d3usermanager|PHPUnit_Framework_MockObject_MockObject $oManager */
+        /** @var d3usermanager|MockObject $oManager */
         $oManager = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['d3getLog'])
+            ->onlyMethods(['d3getLog'])
             ->getMock();
         $oManager->method('d3getLog')->willReturn($this->getD3LogMock());
         $oManager->load($sManagerId);

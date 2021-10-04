@@ -337,6 +337,13 @@ services:
     arguments:
       - 'OxidEsales\Eshop\Application\Model\Shop'
 
+  d3ox.usermanager.OxidEsales\Eshop\Application\Model\ShopList:
+    class:      'OxidEsales\Eshop\Application\Model\ShopList'
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - 'OxidEsales\Eshop\Application\Model\ShopList'
+
   d3ox.usermanager.OxidEsales\Eshop\Application\Model\Basket:
     class:      'OxidEsales\Eshop\Application\Model\Basket'
     factory:    'oxNew'

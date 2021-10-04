@@ -36,7 +36,7 @@
     -->
 </script>
 
-<style type="text/css">
+<style>
     fieldset legend {
         color: #A0A0A0;
     }

@@ -25,7 +25,7 @@ use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Configuration\d3modprofilelist;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -47,9 +47,9 @@ class d3usermanagerlist extends d3modprofilelist
     /**
      * @param $sFolderId
      * @return ManagerList
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
+     * @throws DoctrineException
      * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
@@ -84,10 +84,10 @@ class d3usermanagerlist extends d3modprofilelist
 
     /**
      * @return ManagerList
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
+     * @throws DoctrineException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
      */
@@ -133,9 +133,9 @@ class d3usermanagerlist extends d3modprofilelist
 
     /**
      * @return ManagerList
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
+     * @throws DoctrineException
      * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
@@ -185,11 +185,11 @@ class d3usermanagerlist extends d3modprofilelist
      *
      * @return bool
      * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
+     * @throws DoctrineException
+     * @throws StandardException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws DBALException
-     * @throws DatabaseErrorException
-     * @throws StandardException
      */
     public function canExecutedManually(Manager $oManager): bool
     {

@@ -20,7 +20,7 @@ use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Modules\Application\Model\d3_order_usermanager;
 use D3\Usermanager\Modules\Application\Model\d3_user_usermanager;
 use D3\Usermanager\tests\integration\d3IntegrationTestCase;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as Item;
 use OxidEsales\Eshop\Core\Registry;
@@ -44,7 +44,7 @@ class jobExecuteTest extends d3IntegrationTestCase
     public $sCurrentValue = 'current';
     public $sExpectedValue = 'expected';
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -76,7 +76,7 @@ class jobExecuteTest extends d3IntegrationTestCase
     }
 
     /**
-     * @throws DBALException
+     * @throws DoctrineException
      */
     public function cleanTestData()
     {
@@ -91,7 +91,6 @@ class jobExecuteTest extends d3IntegrationTestCase
 
     /**
      * @return Manager
-     * @throws Exception
      */
     public function getConfiguredManager()
     {
@@ -282,9 +281,7 @@ class jobExecuteTest extends d3IntegrationTestCase
             'execChangedContents'
         );
 
-        $this->assertInternalType(
-            'array',
-            $this->callMethod(
+        $this->assertIsArray($this->callMethod(
                 $this->_oController,
                 'getViewDataElement',
                 ['aMailContent']
@@ -313,9 +310,7 @@ class jobExecuteTest extends d3IntegrationTestCase
 
         $this->getConfiguredManager()->save();
 
-        $this->assertInternalType(
-            'array',
-            $this->callMethod(
+        $this->assertIsArray($this->callMethod(
                 $this->_oController,
                 'getViewDataElement',
                 ['aMailContent']

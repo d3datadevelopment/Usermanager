@@ -24,7 +24,6 @@ use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
-use Doctrine\DBAL\DBALException;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -55,7 +54,6 @@ class d3_cfg_usermanageritem_main extends d3_cfg_mod_main
      * name of template file "article_main.tpl".
      *
      * @return string
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException

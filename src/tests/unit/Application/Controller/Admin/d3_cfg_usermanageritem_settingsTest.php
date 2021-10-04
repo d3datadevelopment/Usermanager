@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\unit\Application\Controller\Admin;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_settings;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -36,19 +35,18 @@ class d3_cfg_usermanageritem_settingsTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->_oController = d3GetModCfgDIC()->get(d3_cfg_usermanageritem_settings::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -76,7 +74,7 @@ class d3_cfg_usermanageritem_settingsTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3_cfg_usermanageritem_settings|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_settings::class)
-            ->setMethods(['_getObjectList'])
+            ->onlyMethods(['_getObjectList'])
             ->getMock();
         $oControllerMock->method('_getObjectList')->will($this->returnCallback(function ($arg1) {
             return $arg1;
@@ -99,9 +97,9 @@ class d3_cfg_usermanageritem_settingsTest extends d3UsermanagerUnitTestCase
     {
         /** @var BaseModel|MockObject $oBaseMock */
         $oBaseMock = $this->getMockBuilder(BaseModel::class)
-            ->setMethods([
+            ->addMethods(['setLanguage'])
+            ->onlyMethods([
                 'isMultilang',
-                'setLanguage',
                 'getSelectFields',
                 'getViewName'])
             ->getMock();
@@ -112,7 +110,7 @@ class d3_cfg_usermanageritem_settingsTest extends d3UsermanagerUnitTestCase
 
         /** @var ListModel|MockObject $oListMock */
         $oListMock = $this->getMockBuilder(ListModel::class)
-            ->setMethods([
+            ->onlyMethods([
                 'selectString',
                 'getBaseObject'
             ])

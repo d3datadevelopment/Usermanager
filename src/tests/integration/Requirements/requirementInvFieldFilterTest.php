@@ -17,14 +17,15 @@
 namespace D3\Usermanager\tests\integration\Requirements;
 
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
+use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invfieldfilter;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
 {
@@ -39,7 +40,7 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
      * Set up fixture.
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -48,12 +49,8 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * Tear down fixture.
-     *
-     * @throws DBALException
-     * @throws DatabaseConnectionException
-     * @throws DatabaseErrorException
      */
-    public function tearDown()
+    public function tearDown() : void
     {
         $this->cleanTestData();
 
@@ -93,9 +90,6 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
         );
     }
 
-    /**
-     * @throws DBALException
-     */
     public function cleanTestData()
     {
         $this->deleteManager($this->sManagerId);
@@ -106,8 +100,9 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
     }
 
     /**
-     * @return d3usermanager
-     * @throws Exception
+     * @return d3usermanager|MockObject
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
      */
     public function getConfiguredManagerEmpty()
     {
@@ -121,8 +116,9 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
     }
 
     /**
-     * @return d3usermanager
-     * @throws Exception
+     * @return d3usermanager|MockObject
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
      */
     public function getConfiguredManagerNotempty()
     {
@@ -136,8 +132,9 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
     }
 
     /**
-     * @return d3usermanager
-     * @throws Exception
+     * @return d3usermanager|MockObject
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
      */
     public function getConfiguredManagerValue()
     {
@@ -153,13 +150,12 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
+     * @throws d3ParameterNotFoundException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
     public function requirementsSelectsRightUsersEmpty()
     {
@@ -176,13 +172,12 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
+     * @throws d3ParameterNotFoundException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
     public function requirementsSelectsRightUsersNotEmpty()
     {
@@ -199,13 +194,12 @@ class requirementInvFieldFilterTest extends d3RequirementIntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
+     * @throws d3ParameterNotFoundException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws Exception
      */
     public function requirementsSelectsRightUsersValue()
     {

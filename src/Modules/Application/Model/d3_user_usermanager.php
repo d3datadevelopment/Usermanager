@@ -29,8 +29,9 @@ use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_conf;
 use D3\Usermanager\Application\Model\d3usermanager_execute;
 use D3\Usermanager\Application\Model\d3usermanagerlist;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException;
+use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException;
 use D3\Usermanager\Application\Model\Exceptions\d3usermanager_templaterendererExceptionInterface;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -61,7 +62,6 @@ class d3_user_usermanager extends d3_user_usermanager_parent
 
     /**
      * required for test purposes only
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -80,7 +80,6 @@ class d3_user_usermanager extends d3_user_usermanager_parent
      * @throws d3ParameterNotFoundException
      * @throws d3ShopCompatibilityAdapterException
      * @throws d3_cfg_mod_exception
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -108,15 +107,10 @@ class d3_user_usermanager extends d3_user_usermanager_parent
                         Registry::getSession()->setVariable(self::PREVENTION_SAVEUSER, true);
                         $oManagerExecute->exec4user($this->getId(), d3usermanager_conf::EXECTYPE_USERSAVETRIGGERED);
                     }
-                } catch (d3ActionRequirementAbstract $e) {
-                    $e->debugOut();
-                    if (true === $currentAdminMode) {
-                        /** @var UtilsView $utilsView */
-                        $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.' . UtilsView::class);
-                        $utilsView->addErrorToDisplay($e);
+                } catch (d3ActionRequirementAbstract | d3usermanager_templaterendererExceptionInterface $e) {
+                    if (!defined('OXID_PHP_UNIT')) {
+                        Registry::getLogger()->error($e->getMessage(), [$e]);
                     }
-                } catch (d3usermanager_templaterendererExceptionInterface $e) {
-                    $e->debugOut();
                     if (true === $currentAdminMode) {
                         /** @var UtilsView $utilsView */
                         $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.' . UtilsView::class);
@@ -153,7 +147,8 @@ class d3_user_usermanager extends d3_user_usermanager_parent
 
     /**
      * @param Manager $oManager
-     * @throws d3ActionRequirementAbstract
+     * @throws d3usermanager_actionException
+     * @throws d3usermanager_requirementException
      */
     protected function d3UserManagerCheckForConfigurationException(Manager $oManager): void
     {

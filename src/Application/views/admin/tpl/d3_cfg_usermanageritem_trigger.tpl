@@ -44,7 +44,7 @@
     -->
 </script>
 
-<style type="text/css">
+<style>
     fieldset{
         border: 1px inset black;
         background-color: #F0F0F0;

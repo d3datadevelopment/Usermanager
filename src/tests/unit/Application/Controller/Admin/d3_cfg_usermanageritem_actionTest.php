@@ -21,7 +21,6 @@ use D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\Application\Model\d3usermanager_conf;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
 use Exception as ExceptionAlias;
 use Exception;
 use OxidEsales\Eshop\Application\Model\ContentList;
@@ -44,19 +43,18 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->_oController = d3GetModCfgDIC()->get(d3_cfg_usermanageritem_action::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -72,14 +70,14 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager|MockObject $oProfileMock */
         $oProfileMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['getValue'])
+            ->onlyMethods(['getValue'])
             ->getMock();
         $getValueMap = [['blActionOrderStorno_status', true]];
         $oProfileMock->method('getValue')->willReturnMap($getValueMap);
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['getProfile'])
+            ->onlyMethods(['getProfile'])
             ->getMock();
         $oControllerMock->method('getProfile')->willReturn($oProfileMock);
 
@@ -98,14 +96,14 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager|MockObject $oProfileMock */
         $oProfileMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['getValue'])
+            ->onlyMethods(['getValue'])
             ->getMock();
         $getValueMap = [['blActionCust2Group_status', true]];
         $oProfileMock->method('getValue')->willReturnMap($getValueMap);
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['getProfile'])
+            ->onlyMethods(['getProfile'])
             ->getMock();
         $oControllerMock->method('getProfile')->willReturn($oProfileMock);
 
@@ -113,7 +111,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         $this->callMethod($this->_oController, 'save');
         $aMissing = $this->_oController->getViewDataElement('missingRequValuesActions');
-        $this->assertInternalType('array', $aMissing);
+        $this->assertIsArray($aMissing);
         $this->assertCount(1, $aMissing);
         $this->assertContains('add2Group', $aMissing);
     }
@@ -158,7 +156,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var Config|MockObject $oConfigMock */
         $oConfigMock = $this->getMockBuilder(Config::class)
-            ->setMethods(['getTemplateDir'])
+            ->onlyMethods(['getTemplateDir'])
             ->getMock();
         $oConfigMock->expects($this->any())->method('getTemplateDir')->with(
             $this->isTrue()
@@ -166,7 +164,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['d3GetConfig'])
+            ->onlyMethods(['d3GetConfig'])
             ->getMock();
         $oControllerMock->method('d3GetConfig')->willReturn($oConfigMock);
 
@@ -191,7 +189,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var Config|MockObject $oConfigMock */
         $oConfigMock = $this->getMockBuilder(Config::class)
-            ->setMethods(['getTemplateDir'])
+            ->onlyMethods(['getTemplateDir'])
             ->getMock();
         $oConfigMock->expects($this->any())->method('getTemplateDir')->with(
             $this->isFalse()
@@ -199,7 +197,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
         
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['d3GetConfig'])
+            ->onlyMethods(['d3GetConfig'])
             ->getMock();
         $oControllerMock->method('d3GetConfig')->willReturn($oConfigMock);
 
@@ -220,7 +218,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     public function orderFieldNamesPass()
     {
         $aFieldNames = $this->callMethod($this->_oController, 'getItemFieldNames');
-        $this->assertInternalType('array', $aFieldNames);
+        $this->assertIsArray($aFieldNames);
         $this->assertGreaterThan(0, count($aFieldNames));
     }
 
@@ -238,7 +236,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['getEditObjectId'])
+            ->onlyMethods(['getEditObjectId'])
             ->getMock();
         $oControllerMock->method('getEditObjectId')->willReturn('newProfileId');
 
@@ -269,7 +267,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['getEditObjectId'])
+            ->onlyMethods(['getEditObjectId'])
             ->getMock();
         $oControllerMock->method('getEditObjectId')->willReturn('newProfileId');
 
@@ -298,7 +296,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanager|MockObject $oProfileMock */
         $oProfileMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods([
+            ->onlyMethods([
                 'loadInLang',
                 'getStartTime',
                 'getListExportFilePath'
@@ -310,7 +308,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getProfile',
                 '_d3LoadInOtherLang'
             ])
@@ -322,7 +320,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         $sPath = $this->callMethod($this->_oController, 'getExportExamplePath');
         $this->assertRegExp('@/var/www/html/shop/source/export/d3usermananger_profileName_.*.csv@i', $sPath);
-        $this->assertNotContains('2015-01-08_12-23-48', $sPath);
+        $this->assertStringNotContainsStringIgnoringCase('2015-01-08_12-23-48', $sPath);
     }
 
     /**
@@ -347,13 +345,13 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var Language|MockObject $oLangMock */
         $oLangMock = $this->getMockBuilder(Language::class)
-            ->setMethods(['translateString'])
+            ->onlyMethods(['translateString'])
             ->getMock();
         $oLangMock->expects($this->once())->method('translateString')->willReturn('%1$s (%2$s)');
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getFieldNameTitle',
                 'getLang'
             ])
@@ -378,7 +376,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['getFieldNameTitle'])
+            ->onlyMethods(['getFieldNameTitle'])
             ->getMock();
         $oControllerMock->method('getFieldNameTitle')->willReturn(null);
 
@@ -399,7 +397,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var Language|MockObject $oLangMock */
         $oLangMock = $this->getMockBuilder(Language::class)
-            ->setMethods(['translateString'])
+            ->onlyMethods(['translateString'])
             ->getMock();
         $oLangMock->expects($this->exactly(2))->method('translateString')->with(
             $this->logicalOr(
@@ -415,7 +413,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['getLang'])
+            ->onlyMethods(['getLang'])
             ->getMock();
         $oControllerMock->method('getLang')->willReturn($oLangMock);
 
@@ -436,7 +434,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var Language|MockObject $oLangMock */
         $oLangMock = $this->getMockBuilder(Language::class)
-            ->setMethods(['translateString'])
+            ->onlyMethods(['translateString'])
             ->getMock();
         $oLangMock->expects($this->once())->method('translateString')->with(
             $this->stringContains('foobar')
@@ -444,7 +442,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['getLang'])
+            ->onlyMethods(['getLang'])
             ->getMock();
         $oControllerMock->method('getLang')->willReturn($oLangMock);
 
@@ -465,13 +463,13 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var Language|MockObject $oLangMock */
         $oLangMock = $this->getMockBuilder(Language::class)
-            ->setMethods(['translateString'])
+            ->onlyMethods(['translateString'])
             ->getMock();
         $oLangMock->expects($this->once())->method('translateString')->willReturn('FOOBAR');
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['getLang'])
+            ->onlyMethods(['getLang'])
             ->getMock();
         $oControllerMock->method('getLang')->willReturn($oLangMock);
 
@@ -522,9 +520,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     public function canGetActionList()
     {
         $aActionList = $this->callMethod($this->_oController, 'getActionList');
-        $this->assertInternalType(
-            'array',
-            $aActionList
+        $this->assertIsArray($aActionList
         );
         $this->assertTrue(count($aActionList) > 0);
     }
@@ -549,7 +545,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanager_actiongrouplist|MockObject $oActionGroupListMock */
         $oActionGroupListMock = $this->getMockBuilder(d3usermanager_actiongrouplist::class)
-            ->setMethods([
+            ->onlyMethods([
                 'setGroups',
                 'getGroupList'
             ])
@@ -560,31 +556,31 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
 
         /** @var d3usermanager_conf|MockObject $oConfigurationMock */
         $oConfigurationMock = $this->getMockBuilder(d3usermanager_conf::class)
-            ->setMethods(['getGroupedActionIdList'])
+            ->onlyMethods(['getGroupedActionIdList'])
             ->getMock();
         $oConfigurationMock->method('getGroupedActionIdList')->willReturn($groupedList);
 
         /** @var d3usermanager|MockObject $oProfileMock */
         $oProfileMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['getConfiguration'])
+            ->onlyMethods(['getConfiguration'])
             ->getMock();
         $oProfileMock->method('getConfiguration')->willReturn($oConfigurationMock);
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getProfile',
                 'getActionList'
             ])
             ->getMock();
         $oControllerMock->method('getProfile')->willReturn($oProfileMock);
-        $oControllerMock->method('getActionList')->willReturn($oActionGroupListMock);
+        $oControllerMock->method('getActionList')->willReturn($groupedList);
 
         $this->_oController = $oControllerMock;
 
         $aList = $this->callMethod($this->_oController, 'getGroupedActionList');
 
-        $this->assertInternalType('array', $aList);
+        $this->assertIsArray($aList);
         $this->assertCount(2, $aList);
     }
 
@@ -597,7 +593,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager|MockObject $oProfileMock */
         $oProfileMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getAvailableInLangs',
                 'loadInLang'
             ])
@@ -626,7 +622,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager|MockObject $oProfileMock */
         $oProfileMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getAvailableInLangs',
                 'loadInLang'
             ])
@@ -686,9 +682,9 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
             $this->assertArrayHasKey( 'd3module1', $aList );
             $this->assertArrayHasKey( 'd3module2', $aList );
             $this->assertArrayNotHasKey( 'd3module3', $aList );
-            $this->assertContains( 'source/modules/d3module1Path', implode('', $aList));
-            $this->assertContains( 'source/modules/d3module2Path', implode('', $aList));
-            $this->assertNotContains( 'source/modules/d3module3Path', implode('', $aList));
+            $this->assertStringContainsStringIgnoringCase( 'source/modules/d3module1Path', implode('', $aList));
+            $this->assertStringContainsStringIgnoringCase( 'source/modules/d3module2Path', implode('', $aList));
+            $this->assertStringNotContainsStringIgnoringCase( 'source/modules/d3module3Path', implode('', $aList));
         } finally {
             $shopConfiguration->deleteModuleConfiguration($moduleA->getId());
             $shopConfiguration->deleteModuleConfiguration($moduleB->getId());
@@ -715,13 +711,13 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3usermanager|MockObject $oProfileMock */
         $oProfileMock = $this->getMockBuilder(d3usermanager::class)
-            ->setMethods(['markConcernedItemsAsFinished'])
+            ->onlyMethods(['markConcernedItemsAsFinished'])
             ->getMock();
         $oProfileMock->expects($this->once())->method('markConcernedItemsAsFinished')->willReturn(25);
 
         /** @var d3_cfg_usermanageritem_action|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_action::class)
-            ->setMethods(['getProfile'])
+            ->onlyMethods(['getProfile'])
             ->getMock();
         $oControllerMock->method('getProfile')->willReturn($oProfileMock);
 

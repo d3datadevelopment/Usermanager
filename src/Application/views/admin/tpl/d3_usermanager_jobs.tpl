@@ -6,7 +6,7 @@
     [{assign var="readonly" value=""}]
 [{/if}]
 
-<style type="text/css">
+<style>
     .box td.listitem,
     .box td.listitem2 {
         padding-left: 5px;

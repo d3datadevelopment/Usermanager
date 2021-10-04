@@ -22,7 +22,6 @@ use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanagerlist;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as Item;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -67,9 +66,6 @@ class userSaveTest extends d3IntegrationTestCase
         $this->getConfiguredManager()->save();
     }
 
-    /**
-     * @throws DBALException
-     */
     public function cleanTestData()
     {
         $this->deleteManager($this->sManagerId);
@@ -110,7 +106,6 @@ class userSaveTest extends d3IntegrationTestCase
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -133,14 +128,13 @@ class userSaveTest extends d3IntegrationTestCase
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
-            (string) $this->sExpectedValue,
+            $this->sExpectedValue,
             (string) $oItem->getFieldData('oxlname')
         );
     }
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -160,7 +154,7 @@ class userSaveTest extends d3IntegrationTestCase
 
         /** @var d3usermanagerlist|MockObject $usermanagerlistmock */
         $usermanagerlistmock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetUserSaveTriggeredManagerTasks'])
+            ->onlyMethods(['d3GetUserSaveTriggeredManagerTasks'])
             ->getMock();
         $usermanagerlistmock->offsetSet($manager->getId(), $manager);
         $usermanagerlistmock->method('d3GetUserSaveTriggeredManagerTasks')->willReturnSelf();
@@ -177,14 +171,13 @@ class userSaveTest extends d3IntegrationTestCase
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
-            (string) $this->sCurrentValue,
+            $this->sCurrentValue,
             (string) $oItem->getFieldData('oxlname')
         );
     }
 
     /**
      * @test
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws StandardException
@@ -201,7 +194,7 @@ class userSaveTest extends d3IntegrationTestCase
 
         /** @var d3usermanagerlist|MockObject $usermanagerlistmock */
         $usermanagerlistmock = $this->getMockBuilder(d3usermanagerlist::class)
-            ->setMethods(['d3GetUserSaveTriggeredManagerTasks'])
+            ->onlyMethods(['d3GetUserSaveTriggeredManagerTasks'])
             ->getMock();
         $usermanagerlistmock->offsetSet($manager->getId(), $manager);
         $usermanagerlistmock->method('d3GetUserSaveTriggeredManagerTasks')->willReturnSelf();
@@ -226,7 +219,7 @@ class userSaveTest extends d3IntegrationTestCase
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
-            (string) $this->sCurrentValue,
+            $this->sCurrentValue,
             (string) $oItem->getFieldData('oxlname')
         );
     }
@@ -250,7 +243,7 @@ class userSaveTest extends d3IntegrationTestCase
         $oItem = d3GetModCfgDIC()->get('d3ox.usermanager.'.Item::class);
         $oItem->load( $this->aUserIdList[0]);
         $this->assertSame(
-            (string) $this->sCurrentValue,
+            $this->sCurrentValue,
             (string) $oItem->getFieldData('oxlname')
         );
     }

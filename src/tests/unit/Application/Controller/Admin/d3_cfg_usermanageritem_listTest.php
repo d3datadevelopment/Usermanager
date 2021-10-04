@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\unit\Application\Controller\Admin;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_list;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -34,19 +33,18 @@ class d3_cfg_usermanageritem_listTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->_oController = d3GetModCfgDIC()->get(d3_cfg_usermanageritem_list::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -62,7 +60,7 @@ class d3_cfg_usermanageritem_listTest extends d3UsermanagerUnitTestCase
     {
         /** @var d3_cfg_usermanageritem_list|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_list::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getListFilter',
                 'getItemList'
             ])
@@ -83,7 +81,7 @@ class d3_cfg_usermanageritem_listTest extends d3UsermanagerUnitTestCase
 
         // key check
         $this->assertRegExp(
-            '@oxv_d3modprofile_(\d+_)?de.oxsort--oxv_d3modprofile_(\d+_)?de.oxtitle@is',
+            '@oxv_d3modprofile_(\d+).oxsort--oxv_d3modprofile_(\d+).oxtitle@is',
             implode('--', array_keys($return))
         );
 

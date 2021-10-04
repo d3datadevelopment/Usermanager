@@ -19,7 +19,6 @@ namespace D3\Usermanager\tests\unit\Application\Controller\Admin;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_main;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
-use Doctrine\DBAL\DBALException;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
@@ -33,19 +32,18 @@ class d3_cfg_usermanageritem_mainTest extends d3UsermanagerUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->_oController = d3GetModCfgDIC()->get(d3_cfg_usermanageritem_main::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -59,7 +57,7 @@ class d3_cfg_usermanageritem_mainTest extends d3UsermanagerUnitTestCase
      */
     public function renderPass()
     {
-        $this->assertContains(
+        $this->assertStringContainsStringIgnoringCase(
             '.tpl',
             $this->callMethod($this->_oController, 'render')
         );
@@ -78,7 +76,7 @@ class d3_cfg_usermanageritem_mainTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_main::class)
-            ->setMethods(['fixCronjobId'])
+            ->onlyMethods(['fixCronjobId'])
             ->getMock();
         $oControllerMock->method('fixCronjobId')->willReturn('newCjId');
 
@@ -105,7 +103,7 @@ class d3_cfg_usermanageritem_mainTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_cfg_usermanageritem_main|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3_cfg_usermanageritem_main::class)
-            ->setMethods(['fixCronjobId'])
+            ->onlyMethods(['fixCronjobId'])
             ->getMock();
         $oControllerMock->method('fixCronjobId')->willReturn('newCjId');
 

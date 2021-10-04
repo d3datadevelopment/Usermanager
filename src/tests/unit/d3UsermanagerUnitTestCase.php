@@ -22,7 +22,6 @@ use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\ModCfg\Tests\unit\d3ModCfgUnitTestCase;
 use D3\Usermanager\Application\Model\d3usermanager;
-use Doctrine\DBAL\DBALException;
 use Exception as ExceptionAlias;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\DataObject\ShopConfiguration;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
@@ -58,8 +57,8 @@ abstract class d3UsermanagerUnitTestCase extends d3ModCfgUnitTestCase
         /** @var ModuleStateService $moduleState */
         $moduleState = $container->get(ModuleStateServiceInterface::class);
 
-        if (true === $shopConfiguration->hasModuleConfiguration('d3_ordermanager') &&
-            true === $moduleState->isActive('d3_ordermanager', Registry::getConfig()->getShopId())
+        if (true === $shopConfiguration->hasModuleConfiguration('d3ordermanager') &&
+            true === $moduleState->isActive('d3ordermanager', Registry::getConfig()->getShopId())
         ) {
             echo self::D3CLI_COLOR_YELLOW.
                 PHP_EOL."      - inaccurate test results possible due to installed and activated \"OrderManager\" module".
@@ -69,12 +68,11 @@ abstract class d3UsermanagerUnitTestCase extends d3ModCfgUnitTestCase
 
     /**
      * setup basic requirements
-     * @throws DBALException
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws ExceptionAlias
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -83,7 +81,7 @@ abstract class d3UsermanagerUnitTestCase extends d3ModCfgUnitTestCase
         $this->_setLicenseKeyBackup(d3_cfg_mod::get($this->sModId)->getFieldData('oxserial'));
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 
@@ -226,7 +224,7 @@ WIyZ2Nk',
     protected function getContainerMock($serviceName, $serviceMock)
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
-                          ->setMethods(['get', 'has'])
+                          ->onlyMethods(['get', 'has'])
                           ->getMock();
         $container->expects($this->any())
                   ->method('get')

@@ -24,18 +24,17 @@ use D3\ModCfg\Application\Model\Exception\d3PreventExitException;
 use D3\Usermanager\Application\Controller\d3usermanager_response as ResponseController;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\Output\d3usermanager_debugoutput;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DoctrineException;
 use Exception;
 use OxidEsales\ComposerPlugin\Installer\Package\ShopPackageInstaller;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\ConfigFile;
-use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Session;
 use OxidEsales\Eshop\Core\ShopControl;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\ShopConfigurationDaoBridgeInterface;
-use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Exception\ModuleConfigurationNotFoundException;
+use ReflectionException;
 use RuntimeException;
 use splitbrain\phpcli\CLI;
 use splitbrain\phpcli\Options;
@@ -148,9 +147,6 @@ class d3_usermanager_cron extends CLI
 
     /**
      * @param Options $options
-     *
-     * @throws DBALException
-     * @throws DatabaseConnectionException
      */
     protected function setup(Options $options)
     {
@@ -210,8 +206,6 @@ class d3_usermanager_cron extends CLI
 
     /**
      * @param Options $options
-     *
-     * @throws ModuleConfigurationNotFoundException
      */
     protected function main(Options $options)
     {
@@ -303,8 +297,9 @@ class d3_usermanager_cron extends CLI
     /**
      * prevent code exit while coverage check
      *
+     * @throws ReflectionException
+     * @throws DoctrineException
      * @codeCoverageIgnore
-     * @throws DBALException
      */
     public function run()
     {
