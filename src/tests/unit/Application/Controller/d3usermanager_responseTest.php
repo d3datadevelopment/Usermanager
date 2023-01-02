@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This Software is the property of Data Development and is protected
  * by copyright law - it is NOT Freeware.
@@ -17,6 +18,7 @@
 namespace D3\Usermanager\tests\unit\Application\Controller;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
+use D3\ModCfg\Application\Model\Exception\wrongModIdException;
 use D3\ModCfg\Application\Model\Log\d3log;
 use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\Usermanager\Application\Controller\d3usermanager_response;
@@ -28,12 +30,14 @@ use D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementExcepti
 use D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_bonifilter;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
 use Exception;
+use Monolog\Logger;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Language;
 use OxidEsales\Eshop\Core\Registry;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use ReflectionException;
 use stdClass;
 
@@ -72,6 +76,27 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
         $this->assertSame(
             'd3usermanager',
             d3GetModCfgDIC()->getParameter('d3.usermanager.modcfgid')
+        );
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\d3usermanager_response::__construct
+     * @test
+     */
+    public function constructorException()
+    {
+        /** @var d3usermanager_response|MockObject $controller */
+        $controller = $this->getMockBuilder(d3usermanager_response::class)
+                           ->disableOriginalConstructor()
+                           ->getMock();
+
+        d3GetModCfgDIC()->setParameter('d3.usermanager.modcfgid', 'differentModCfgid');
+
+        $this->expectException(wrongModIdException::class);
+
+        $this->callMethod(
+            $controller,
+            '__construct'
         );
     }
 
@@ -141,6 +166,14 @@ class d3usermanager_responseTest extends d3UsermanagerUnitTestCase
             ->setConstructorArgs([$requirement])
             ->onlyMethods(['getMessage'])
             ->getMock();
+
+        /** @var Logger|MockObject $loggerMock */
+        $loggerMock = $this->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['error'])
+            ->getMock();
+        $loggerMock->expects($this->once())->method('error');
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', $loggerMock);
 
         /** @var d3usermanager_response|MockObject $oControllerMock */
         $oControllerMock = $this->getMockBuilder(d3usermanager_response::class)

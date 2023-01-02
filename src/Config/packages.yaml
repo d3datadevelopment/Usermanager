@@ -15,11 +15,28 @@ parameters:
   Html2Text\Html2Text.args.html:
 
 services:
+  _defaults:
+    autowire: false
+    public: true
+
   Html2Text\Html2Text:
     class:      Html2Text\Html2Text
     shared:     false
     arguments:
-      - '%Html2Text\Html2Text.args.html%'
+      - '@d3ox.usermanager.Html2Text.context.html'
+
+  D3\Usermanager\Application\Model\Context\Html2TextContextInterface:
+    class:      D3\Usermanager\Application\Model\Context\Html2TextContext
+    public:     true
+    factory:    'oxNew'
+    shared:     true
+    arguments:
+      - 'D3\Usermanager\Application\Model\Context\Html2TextContext'
+
+  d3ox.usermanager.Html2Text.context.html:
+    class: D3\Usermanager\Application\Model\Context\Html2TextContextInterface
+    factory: ['@D3\Usermanager\Application\Model\Context\Html2TextContextInterface', 'getMessage']
+    shared: false
 
   d3.usermanager.D3\OxidSqlLogger\OxidEsalesDatabase:
     class:      D3\OxidSqlLogger\OxidEsalesDatabase
@@ -30,3 +47,7 @@ services:
     shared:     false
     arguments:
       - '@ReflectionClass.args.object'
+    # arg #1 object
+  ReflectionClass.args.object:
+    synthetic:  true
+    shared:     false

@@ -14,7 +14,7 @@
  * @link      https://www.oxidmodule.com
  */
 
-namespace D3\Usermanager\tests\integration;
+namespace D3\Usermanager\tests\integration\Trigger;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
@@ -23,6 +23,7 @@ use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\Output\d3usermanager_debugoutput;
 use D3\Usermanager\Application\Model\Output\d3usermanager_nulloutput;
 use D3\Usermanager\publicDir\d3_usermanager_cron;
+use D3\Usermanager\tests\integration\d3IntegrationTestCase;
 use D3\Usermanager\tests\tools\Intercept;
 use Doctrine\DBAL\Exception as DoctrineException;
 use Exception;
@@ -31,7 +32,7 @@ use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
-class executeCronTest extends d3IntegrationTestCase
+class executeCLICronTest extends d3IntegrationTestCase
 {
     public $sManagerId = 'managerTestId';
     public $aCountryIdList = [

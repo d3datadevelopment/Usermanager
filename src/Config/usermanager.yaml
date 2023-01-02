@@ -13,13 +13,18 @@
 
 parameters:
   D3\Usermanager\Application\Model\d3usermanagerlist.args.objectname:
-  D3\Usermanager\Application\Model\d3usermanager_configurationcheck.args.checktypes:
   D3\Usermanager\Application\Model\d3usermanager_export.args.filename:
+  D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.message:
+  D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.code:
   D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException.args.message:
   D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.message:
   D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.code:
 
 services:
+  _defaults:
+    autowire: false
+    public: true
+
   # usermanager
   D3\Usermanager\Application\Model\d3usermanager:
     class:      D3\Usermanager\Application\Model\d3usermanager
@@ -44,11 +49,9 @@ services:
     arguments:
       - D3\Usermanager\Application\Model\d3usermanager_configurationcheck
       - '@D3\Usermanager\Application\Model\d3usermanager_configurationcheck.args.usermanager'
-      - '%D3\Usermanager\Application\Model\d3usermanager_configurationcheck.args.checktypes%'
   D3\Usermanager\Application\Model\d3usermanager_configurationcheck.args.usermanager:
     synthetic: true
     shared: false
-    public: false
 
   # d3usermanager_debugoutput
   D3\Usermanager\Application\Model\Output\d3usermanager_debugoutput:
@@ -110,7 +113,6 @@ services:
   D3\Usermanager\Application\Model\d3usermanager_listgenerator.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   # d3usermanager_actionlist
   D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist:
@@ -125,12 +127,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #2 user
   D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   # d3usermanager_remark
   D3\Usermanager\Application\Model\d3usermanager_remark:
@@ -144,7 +144,6 @@ services:
   D3\Usermanager\Application\Model\d3usermanager_remark.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   # d3usermanager_requirementlist
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist:
@@ -158,7 +157,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   # d3usermanager_requirementgrouplist
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist:
@@ -172,7 +170,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   # d3usermanager_actiongrouplist
   D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist:
@@ -187,12 +184,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #2 user
   D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   # d3usermanager_execute
   D3\Usermanager\Application\Model\d3usermanager_execute:
@@ -206,7 +201,24 @@ services:
   D3\Usermanager\Application\Model\d3usermanager_execute.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
+
+  # MessageContentGenerator
+  D3\Usermanager\Application\Model\MessageContentGenerator:
+    class:      D3\Usermanager\Application\Model\MessageContentGenerator
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\MessageContentGenerator
+      - '@D3\Usermanager\Application\Model\MessageContentGenerator.args.usermanager'
+      - '@D3\Usermanager\Application\Model\MessageContentGenerator.args.user'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\MessageContentGenerator.args.usermanager:
+    synthetic:  true
+    shared:     false
+    # arg #2 order
+  D3\Usermanager\Application\Model\MessageContentGenerator.args.user:
+    synthetic:  true
+    shared:     false
 
   # d3usermanager_export
   D3\Usermanager\Application\Model\d3usermanager_export:
@@ -222,12 +234,27 @@ services:
   D3\Usermanager\Application\Model\d3usermanager_export.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #2 parametercontainer
   D3\Usermanager\Application\Model\d3usermanager_export.args.parametercontainer:
     synthetic:  true
     shared:     false
-    public:     false
+
+  # emptyMessageException
+  D3\Usermanager\Application\Model\Exceptions\emptyMessageException:
+    class:      D3\Usermanager\Application\Model\Exceptions\emptyMessageException
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Exceptions\emptyMessageException
+      - '%D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.message%'
+      - '%D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.code%'
+      - '@?D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.exception'
+    # arg #3 exception
+    # no synthetic instance, because it's an optional argument
+  # D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.exception:
+  #   synthetic:  true
+  #   shared:     false
+  #   public:     false
 
   # d3usermanager_cronUnavailableException
   D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException:
@@ -244,7 +271,6 @@ services:
   # D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.exception:
   #   synthetic:  true
   #   shared:     false
-  #   public:     false
 
   # d3usermanager_actionException
   D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException:
@@ -258,7 +284,6 @@ services:
   D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException.args.actionobject:
     synthetic: true
     shared: false
-    public: false
 
   # d3usermanager_cronUnavailableException
   D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException:
@@ -282,7 +307,6 @@ services:
   D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException.args.requirementobject:
     synthetic:  true
     shared:     false
-    public:     false
 
   # d3usermanager_touserassignment
   D3\Usermanager\Application\Model\d3usermanager_touserassignment:
@@ -296,7 +320,6 @@ services:
   D3\Usermanager\Application\Model\d3usermanager_touserassignment.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   # d3usermanager_renderererrorhandler
   D3\Usermanager\Application\Model\d3usermanager_renderererrorhandler:

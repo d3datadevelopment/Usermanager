@@ -17,6 +17,7 @@
 namespace D3\Usermanager\tests\integration;
 
 use D3\ModCfg\Application\Model\d3database;
+use D3\ModCfg\Application\Model\DependencyInjectionContainer\d3DicHandler;
 use D3\ModCfg\Application\Model\Log\d3log;
 use D3\ModCfg\Tests\unit\d3ModCfgUnitTestCase;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
@@ -40,6 +41,8 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
      */
     public function setUp() : void
     {
+        d3DicHandler::getUncompiledInstance();
+
         parent::setUp();
 
         $this->createTestData();
@@ -53,6 +56,8 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
         $this->cleanTestData();
 
         parent::tearDown();
+
+        d3DicHandler::removeInstance();
     }
 
     abstract public function createTestData();
@@ -225,7 +230,7 @@ abstract class d3IntegrationTestCase extends d3ModCfgUnitTestCase
             ->from('d3user2usermanager')
             ->where('oxusermanagerid = '.$qb->createNamedParameter($sId));
 
-        foreach ((array) $qb->execute()->fetchAllAssociative() as $aId) {
+        foreach ($qb->execute()->fetchAllAssociative() as $aId) {
             $aId = array_change_key_case($aId, CASE_UPPER);
             $this->deleteBaseModelObject('d3user2usermanager', $aId['OXID']);
         }

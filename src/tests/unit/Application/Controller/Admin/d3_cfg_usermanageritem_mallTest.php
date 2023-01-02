@@ -19,6 +19,7 @@ namespace D3\Usermanager\tests\unit\Application\Controller\Admin;
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\d3filesystem;
 use D3\ModCfg\Application\Model\d3str;
+use D3\ModCfg\Application\Model\Exception\wrongModIdException;
 use D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_mall;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\tests\unit\d3UsermanagerUnitTestCase;
@@ -64,6 +65,27 @@ class d3_cfg_usermanageritem_mallTest extends d3UsermanagerUnitTestCase
         $this->assertSame(
             'd3usermanager',
             d3GetModCfgDIC()->getParameter('d3.usermanager.modcfgid')
+        );
+    }
+
+    /**
+     * @covers \D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_mall::__construct
+     * @test
+     */
+    public function constructorException()
+    {
+        /** @var d3_cfg_usermanageritem_mall|MockObject $controller */
+        $controller = $this->getMockBuilder(d3_cfg_usermanageritem_mall::class)
+                           ->disableOriginalConstructor()
+                           ->getMock();
+
+        d3GetModCfgDIC()->setParameter('d3.usermanager.modcfgid', 'differentModCfgid');
+
+        $this->expectException(wrongModIdException::class);
+
+        $this->callMethod(
+            $controller,
+            '__construct'
         );
     }
 

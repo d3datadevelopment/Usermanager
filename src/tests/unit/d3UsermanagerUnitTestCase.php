@@ -76,6 +76,8 @@ abstract class d3UsermanagerUnitTestCase extends d3ModCfgUnitTestCase
     {
         parent::setUp();
 
+        d3DicHandler::getUncompiledInstance();
+
         d3GetModCfgDIC()->set('d3.usermanager.log', d3GetModCfgDIC()->get(d3NullLogger::class));
 
         $this->_setLicenseKeyBackup(d3_cfg_mod::get($this->sModId)->getFieldData('oxserial'));

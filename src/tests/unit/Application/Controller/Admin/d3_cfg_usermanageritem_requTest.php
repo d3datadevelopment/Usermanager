@@ -151,7 +151,7 @@ class d3_cfg_usermanageritem_requTest extends d3UsermanagerUnitTestCase
             PaymentList::class,
             $oList
         );
-        $this->assertTrue(count($oList) > 0);
+        $this->assertNotEmpty($oList);
     }
 
     /**
@@ -171,7 +171,7 @@ class d3_cfg_usermanageritem_requTest extends d3UsermanagerUnitTestCase
             DeliveryList::class,
             $oList
         );
-        $this->assertTrue(count($oList) > 0);
+        $this->assertNotEmpty($oList);
     }
 
     /**
@@ -191,7 +191,7 @@ class d3_cfg_usermanageritem_requTest extends d3UsermanagerUnitTestCase
             CountryList::class,
             $oList
         );
-        $this->assertTrue(count($oList) > 0);
+        $this->assertNotEmpty($oList);
     }
 
     /**
@@ -211,7 +211,7 @@ class d3_cfg_usermanageritem_requTest extends d3UsermanagerUnitTestCase
             d3usermanagerlist::class,
             $oList
         );
-        $this->assertTrue(count($oList) > 0, 'usermanager job list shouldn\t empty');
+        $this->assertNotEmpty($oList, 'usermanager job list shouldn\t empty');
         $this->assertFalse($oList->offsetExists('testId'), 'current object shouldn\'t contain in job list');
     }
 
@@ -230,7 +230,7 @@ class d3_cfg_usermanageritem_requTest extends d3UsermanagerUnitTestCase
 
         $this->assertIsArray($aList
         );
-        $this->assertTrue(count($aList) > 0);
+        $this->assertNotEmpty($aList);
     }
 
     /**
@@ -246,9 +246,8 @@ class d3_cfg_usermanageritem_requTest extends d3UsermanagerUnitTestCase
             'getTransStatusList'
         );
 
-        $this->assertIsArray($aTransStatusList
-        );
-        $this->assertTrue(count($aTransStatusList) > 0);
+        $this->assertIsArray($aTransStatusList);
+        $this->assertNotEmpty($aTransStatusList);
     }
 
     /**
@@ -321,7 +320,7 @@ class d3_cfg_usermanageritem_requTest extends d3UsermanagerUnitTestCase
         $aRequList = $this->callMethod($this->_oController, 'getRequirementList');
         $this->assertIsArray($aRequList
         );
-        $this->assertTrue(count($aRequList) > 0);
+        $this->assertNotEmpty($aRequList);
     }
 
     /**

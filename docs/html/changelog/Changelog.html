@@ -72,21 +72,49 @@
     <div class="Page__header">
         <h1><a href="../changelog/Changelog.html">Changelog</a></h1>
                 <span class="ModifiedDate">
-                        04.10.2021        </span>
+                        02.01.2023        </span>
                     </div>
 
     <div class="s-content">
-        <h2 id="page_5-0-1-0-2021-10-01">5.0.1.0 - (2021-10-01)</h2>
+        <p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/" class="Link--external">Keep a Changelog</a>,
+and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class="Link--external">Semantic Versioning</a>.</p>
+<h2 id="page_Unreleased"><a href="https://git.d3data.de/D3Private/Usermanager/compare/5.1.1.0...rel_5.x" class="Link--external">Unreleased</a></h2>
+<h2 id="page_5-1-0-0-2022-09-01"><a href="https://git.d3data.de/D3Private/Usermanager/compare/5.0.1.0...5.1.1.0" class="Link--external">5.1.0.0</a> - 2022-09-01</h2>
 <h3 id="page_Added">Added</h3>
+<ul>
+<li>installierbar in OXID 6.4 und 6.5 sowie PHP 8.1</li>
+<li>Platzhalter in Push Notification URLs werden nun für dynamische Parameter geparst</li>
+<li>zusätzliche GET Parameter werden bei POST Verwendung an den POST Body angehängt</li>
+</ul>
+<h3 id="page_Changed">Changed</h3>
+<ul>
+<li>adjust DI container to updated container dependency</li>
+<li>adjust tests</li>
+<li>extract message content creator from mail class</li>
+<li>make mySQL content check more compatible</li>
+<li>adjust documentation to Source Guardian Loader based installation</li>
+<li>changelog improved</li>
+<li>Dateiregister für kommende Connector-Version angepasst</li>
+<li>CLI-Prüfung für PHP interne Server angepasst</li>
+</ul>
+<h3 id="page_Fixed">Fixed</h3>
+<ul>
+<li>prevent &quot;undefined array key&quot; warning</li>
+<li>timespan requirement option in admin panel does not represent the saved type</li>
+<li>Type cast Fehler korrigiert</li>
+</ul>
+<h2 id="page_5-0-1-0-2021-10-01">5.0.1.0 - (2021-10-01)</h2>
+<h3 id="page_Added-2">Added</h3>
 <ul>
 <li>installierbar in OXID 6.3.x</li>
 </ul>
-<h3 id="page_Changed">Changed</h3>
+<h3 id="page_Changed-2">Changed</h3>
 <ul>
 <li>#10850: Limitierung wird vorzeitig auf das Ergebnis des Filterqueries angewandt</li>
 <li>Tests angepasst</li>
 </ul>
-<h3 id="page_Fixed">Fixed</h3>
+<h3 id="page_Fixed-2">Fixed</h3>
 <ul>
 <li>#10933: Übersicht zeigt falsche Anzahlen</li>
 <li>Eingabekonvertierung bei Rabatt ändern Aktion optimiert</li>

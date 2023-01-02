@@ -15,7 +15,7 @@
  * @link      https://www.oxidmodule.com
  */
 
-namespace D3\Usermanager\tests\integration;
+namespace D3\Usermanager\tests\integration\Trigger;
 
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
@@ -23,6 +23,7 @@ use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
 use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\Usermanager\Application\Controller\d3usermanager_response as ResponseController;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
+use D3\Usermanager\tests\integration\d3IntegrationTestCase;
 use Doctrine\DBAL\Exception as DoctrineException;
 use Exception;
 use OxidEsales\Eshop\Application\Model\User as Item;

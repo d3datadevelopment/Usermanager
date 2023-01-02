@@ -25,6 +25,7 @@ use D3\ModCfg\Application\Model\d3str;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\ModCfg\Application\Model\Exception\wrongModIdException;
 use D3\Usermanager\Application\Model\d3usermanager_configurationcheck;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanager_execute as ManagerExecuteModel;
@@ -47,6 +48,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\Session;
 use OxidEsales\Eshop\Core\UtilsView;
+use Psr\Log\LoggerInterface;
 use ReflectionException;
 
 class d3_usermanager_jobs extends AdminDetailsController
@@ -66,7 +68,9 @@ class d3_usermanager_jobs extends AdminDetailsController
         // prevent the use of the global currency setting instead of the order setting
         unset($_GET['cur']);
 
-        d3GetModCfgDIC()->setParameter($this->_DIC_Instance_Id.'modcfgid', $this->_sModId);
+        if (d3GetModCfgDIC()->getParameter($this->_DIC_Instance_Id . 'modcfgid') !== $this->_sModId) {
+            throw oxNew(wrongModIdException::class, $this->_sModId);
+        }
 
         parent::__construct();
     }
@@ -100,7 +104,7 @@ class d3_usermanager_jobs extends AdminDetailsController
         $soxId = $this->getEditObjectId();
         $this->addTplParam("oxid", $soxId);
 
-        if ($soxId != "-1" && isset($soxId)) {
+        if (isset($soxId) && $soxId != "-1") {
             $oItem = $this->getItemObject();
             $oItem->load($soxId);
             $this->addTplParam("edit", $oItem);
@@ -263,9 +267,7 @@ class d3_usermanager_jobs extends AdminDetailsController
                 $oManagerExec->finishJobExecution();
             }
         } catch (d3ActionRequirementInterface | d3usermanager_templaterendererExceptionInterface $oEx) {
-            if (!defined('OXID_PHP_UNIT')) {
-                Registry::getLogger()->error($oEx->getMessage(), [$oEx]);
-            }
+            d3GetModCfgDIC()->get('d3ox.usermanager.Logger')->error($oEx->getMessage(), [$oEx]);
             /** @var UtilsView $utilsView */
             $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
             $utilsView->addErrorToDisplay($oEx);
@@ -305,9 +307,9 @@ class d3_usermanager_jobs extends AdminDetailsController
                 $oManagerExec->finishJobExecution();
             }
         } catch (d3ActionRequirementInterface | d3usermanager_templaterendererExceptionInterface $e) {
-            if (!defined('OXID_PHP_UNIT')) {
-                Registry::getLogger()->error($e->getMessage(), [$e]);
-            }
+            /** @var LoggerInterface $logger */
+            $logger = d3GetModCfgDIC()->get('d3ox.usermanager.Logger');
+            $logger->error($e->getMessage(), [$e]);
             /** @var UtilsView $utilsView */
             $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
             $utilsView->addErrorToDisplay($e);
@@ -396,9 +398,7 @@ class d3_usermanager_jobs extends AdminDetailsController
             $this->addTplParam('sAction', __FUNCTION__);
             $this->addTplParam('oManager', $oManager);
         } catch (d3ActionRequirementInterface | d3usermanager_templaterendererExceptionInterface $oEx) {
-            if (!defined('OXID_PHP_UNIT')) {
-                Registry::getLogger()->error($oEx->getMessage(), [$oEx]);
-            }
+            d3GetModCfgDIC()->get('d3ox.usermanager.Logger')->error($oEx->getMessage(), [$oEx]);
             /** @var UtilsView $utilsView */
             $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
             $utilsView->addErrorToDisplay($oEx);
@@ -476,14 +476,10 @@ class d3_usermanager_jobs extends AdminDetailsController
     protected function checkForConfigurationException(Manager $oManager): void
     {
         d3GetModCfgDIC()->set(d3usermanager_configurationcheck::class.'.args.usermanager', $oManager);
-        d3GetModCfgDIC()->setParameter(
-            d3usermanager_configurationcheck::class.'.args.checktypes',
-            $oManager->getValue('sManuallyExecMeetCondition') ?
-                d3usermanager_configurationcheck::REQUIREMENTS_AND_ACTIONS :
-                d3usermanager_configurationcheck::ACTIONS_ONLY
-        );
         /** @var d3usermanager_configurationcheck $confCheck */
         $confCheck = d3GetModCfgDIC()->get(d3usermanager_configurationcheck::class);
-        $confCheck->checkThrowingExceptions();
+        $confCheck->checkThrowingExceptions($oManager->getValue('sManuallyExecMeetCondition') ?
+            d3usermanager_configurationcheck::REQUIREMENTS_AND_ACTIONS :
+            d3usermanager_configurationcheck::ACTIONS_ONLY);
     }
 }

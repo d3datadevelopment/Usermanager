@@ -72,7 +72,7 @@
     <div class="Page__header">
         <h1><a href="../../manual/Aufgaben/index.html">Aufgaben</a> <svg class="Page__header--separator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 477.175 477.175"><path d="M360.73 229.075l-225.1-225.1c-5.3-5.3-13.8-5.3-19.1 0s-5.3 13.8 0 19.1l215.5 215.5-215.5 215.5c-5.3 5.3-5.3 13.8 0 19.1 2.6 2.6 6.1 4 9.5 4 3.4 0 6.9-1.3 9.5-4l225.1-225.1c5.3-5.2 5.3-13.8.1-19z"/></svg> <a href="../../manual/Aufgaben/Aktionen.html">Aktionen</a></h1>
                 <span class="ModifiedDate">
-                        04.10.2021        </span>
+                        02.01.2023        </span>
                     </div>
 
     <div class="s-content">
@@ -146,6 +146,100 @@ vorgenommen.</p>
 </tbody>
 </table>
 <p>Legen Sie die Templatedateien im auszuwählenden Ordner ab.</p>
+<h3 id="page_Push-Benachrichtigung-senden">&quot;Push-Benachrichtigung senden&quot;</h3>
+<p>Hierbei wird eine Benachrichtigung an eine eigene Schnittstelle oder einen Dienst (z.B. <a href="https://ifttt.com/" class="Link--external">IFTTT</a> oder <a href="https://automate.io/" class="Link--external">Automate.io</a>) gesendet, der damit weitere Aktionen auslösen kann. Welche Aktionen möglich sind, hängt vom verwendeten Dienst ab.</p>
+<p>Bei Push-Benachrichtigungen können der Benachrichtung Daten mitgegeben werden, die vom benachrichtigten Dienst ausgewertet werden können. Der mögliche Funktionsumfang ist so groß, dass wir nur ein Beispiel mitgeben. Möchten Sie die Daten über den konfigurierbaren Umfang hinaus verändern, stehen Ihnen dazu diese Funktionen zur Verfügung, die modular überladen werden können.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Klasse</th>
+<th>Methode</th>
+<th>Parameter</th>
+<th>erwarteter Rückgabetyp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Headerangaben</td>
+<td>d3usermanager_action_sendpushnotification</td>
+<td>getHeaders</td>
+<td>keine</td>
+<td>Array</td>
+</tr>
+<tr>
+<td>Nachrichtenbody</td>
+<td>d3usermanager_action_sendpushnotification</td>
+<td>getSubmittedBody</td>
+<td>keine</td>
+<td>String</td>
+</tr>
+<tr>
+<td>alle zu übertragenden Optionen</td>
+<td>d3usermanager_action_sendpushnotification</td>
+<td>getSubmittedOptions</td>
+<td>keine</td>
+<td>Array</td>
+</tr>
+<tr>
+<td>Übertragungsmethode</td>
+<td>d3usermanager_action_sendpushnotification</td>
+<td>getRequestMethod</td>
+<td>keine</td>
+<td>String</td>
+</tr>
+<tr>
+<td>Zieladresse</td>
+<td>d3usermanager_action_sendpushnotification</td>
+<td>getRequestUrl</td>
+<td>keine</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<p>In den meisten Fällen wird das Anpassen des Nachrichtenbody ausreichen. Im Standard werden dort benötigte Felder als json encodetes Array zurückgegeben.</p>
+<p>GET-Parameter innerhalb der Anfrage-URL können mit Platzhaltern angepasst werden. Platzhaltervariablen werden in doppelte geschweifte Klammern gefasst &quot;{{var1}}&quot;. Die verfügbaren Variablen sehen Sie am Hilfetext der URL im Adminbereich der Aktion.</p>
+<p>Bei der Verwendung der POST-Übertragsmethode werden optionale GET-Parameter der URL automatisch an den schon bestehenden Nachrichtenbody angefügt.</p>
+<p>Innerhalb der Methoden stehen folgende Objekte und deren Eigenschaften zur Verfügung:</p>
+<table>
+<thead>
+<tr>
+<th>Aufruf</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$this-&gt;getManager()</td>
+<td>enthält die Kundenmanager-Aufgabe und alle seine Möglichkeiten</td>
+</tr>
+<tr>
+<td>...-&gt;getId()</td>
+<td>die eindeutige Identnummer</td>
+</tr>
+<tr>
+<td>...-&gt;getFieldData('oxtitle')</td>
+<td>den Aufgabentitel</td>
+</tr>
+<tr>
+<td>...-&gt;getFieldData('oxsort')</td>
+<td>die Aufgabensortiernummer</td>
+</tr>
+<tr>
+<td>...-&gt;getFieldData('d3_cronjobid')</td>
+<td>die Cronjob-ID</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>$this-&gt;getManager()-&gt;getCurrentItem()</td>
+<td>enthält das Kundenobjekt und alle seine Möglichkeiten</td>
+</tr>
+</tbody>
+</table>
+<p>Benötigen Sie Unterstützung bei der Einrichtung, kontaktieren Sie uns bitte.</p>
     </div>
 
         <nav>

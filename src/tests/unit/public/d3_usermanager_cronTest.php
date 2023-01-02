@@ -58,14 +58,15 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
      * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::__construct
      * @test
      * @throws ReflectionException
+     * @dataProvider constructorPassDataProvider
      */
-    public function constructorCLIPass()
+    public function constructorPass($isCli)
     {
         $controllerMock = $this->getMockBuilder(d3_usermanager_cron::class)
             ->onlyMethods(['isCLI'])
             ->disableOriginalConstructor()
             ->getMock();
-        $controllerMock->method('isCLI')->willReturn(true);
+        $controllerMock->method('isCLI')->willReturn($isCli);
 
         $this->callMethod(
             $controllerMock,
@@ -82,29 +83,14 @@ class d3_usermanager_cronTest extends d3UsermanagerUnitTestCase
     }
 
     /**
-     * @covers \D3\Usermanager\publicDir\d3_usermanager_cron::__construct
-     * @test
-     * @throws ReflectionException
+     * @return array
      */
-    public function constructorNonCLIPass()
+    public function constructorPassDataProvider(): array
     {
-        $controllerMock = $this->getMockBuilder(d3_usermanager_cron::class)
-            ->onlyMethods(['isCLI'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $controllerMock->method('isCLI')->willReturn(false);
-
-        $this->callMethod(
-            $controllerMock,
-            '__construct'
-        );
-
-        $this->assertNull(
-            $this->getValue(
-                $controllerMock,
-                'options'
-            )
-        );
+        return [
+            'is CLI'    => [true],
+            'no CLI'    => [false],
+        ];
     }
 
     /**

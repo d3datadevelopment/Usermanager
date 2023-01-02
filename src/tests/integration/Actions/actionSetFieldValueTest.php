@@ -18,6 +18,7 @@ namespace D3\Usermanager\tests\integration\Actions;
 
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\Usermanager\Application\Model\d3usermanager;
 use D3\Usermanager\Modules\Application\Model\d3_user_usermanager;
 use Doctrine\DBAL\Exception as DoctrineException;
@@ -176,6 +177,8 @@ class actionSetFieldValueTest extends d3ActionIntegrationTestCase
      */
     public function actionChangeConcernedUserNotExistingSingleLangField()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         // prevent save trigger action in test
         Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, true);
 
@@ -210,6 +213,8 @@ class actionSetFieldValueTest extends d3ActionIntegrationTestCase
      */
     public function actionChangeConcernedUserNotExistingMultiLangField()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         // prevent save trigger action in test
         Registry::getSession()->setVariable(d3_user_usermanager::PREVENTION_SAVEUSER, true);
 

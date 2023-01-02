@@ -20,11 +20,13 @@ namespace D3\Usermanager\tests\integration\Trigger;
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanagerlist;
 use D3\Usermanager\Modules\Application\Model\d3_user_usermanager;
 use D3\Usermanager\tests\integration\d3IntegrationTestCase;
 use Doctrine\DBAL\Exception as DoctrineException;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order as Item;
@@ -36,6 +38,8 @@ use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class finalizeOrderTest extends d3IntegrationTestCase
@@ -136,6 +140,18 @@ class finalizeOrderTest extends d3IntegrationTestCase
         $this->deleteArticle($this->aArticleIdList[0]);
         $this->deleteBaseModelObject('oxpayments', $this->aPaymentIdList[0]);
         $this->deleteUser($this->aUserIdList[0]);
+
+        /** @var QueryBuilder $qb */
+        $qb = ContainerFactory::getInstance()->getContainer()->get(QueryBuilderFactoryInterface::class)->create();
+        $qb->delete('oxorder')
+            ->where(
+                $qb->expr()->eq(
+                    'oxuserid',
+                    $qb->createNamedParameter($this->aUserIdList[0])
+                )
+            );
+
+        $qb->execute();
     }
 
     /**
@@ -249,6 +265,8 @@ class finalizeOrderTest extends d3IntegrationTestCase
      */
     public function runTriggerCanceledInvalidRequirementConfig()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $manager = $this->getConfiguredManager();
         $manager->setValue( 'aInvCountryId', [ 'notExistingCountryId' ] );
         $manager->save();
@@ -313,6 +331,8 @@ class finalizeOrderTest extends d3IntegrationTestCase
      */
     public function runTriggerCanceledInvalidActionConfig()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $manager = $this->getConfiguredManager();
         $manager->setValue('sActionAddField_field', 'invalidFieldName');
 

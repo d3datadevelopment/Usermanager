@@ -15,6 +15,10 @@ parameters:
   d3.usermanager.modcfgid:     'd3usermanager'
 
 services:
+  _defaults:
+    autowire: false
+    public: true
+
   d3.usermanager.modcfg:
     class:      'D3\ModCfg\Application\Model\Configuration\d3_cfg_mod'
     factory:

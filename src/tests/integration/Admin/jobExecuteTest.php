@@ -15,6 +15,7 @@
 
 namespace D3\Usermanager\tests\integration\Admin;
 
+use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Modules\Application\Model\d3_order_usermanager;
@@ -122,7 +123,7 @@ class jobExecuteTest extends d3IntegrationTestCase
      * @throws ReflectionException
      * @dataProvider execMethodDataProvider
      */
-    public function testExecUsermanagerOk($methodname)
+    public function canExecUsermanagerOk($methodname)
     {
         $_GET['usermanagerid'] = $this->sManagerId;
         $_GET['oxid'] = $this->aUserIdList[0];
@@ -156,7 +157,7 @@ class jobExecuteTest extends d3IntegrationTestCase
      * @throws ReflectionException
      * @dataProvider execMethodDataProvider
      */
-    public function testExecUsermanagerInvalidRequirementConfigUnchecked($methodname)
+    public function canExecUsermanagerInvalidRequirementConfigUnchecked($methodname)
     {
         $_GET['usermanagerid'] = $this->sManagerId;
         $_GET['oxid'] = $this->aUserIdList[0];
@@ -197,8 +198,10 @@ class jobExecuteTest extends d3IntegrationTestCase
      * @throws ReflectionException
      * @dataProvider execMethodDataProvider
      */
-    public function testExecUsermanagerInvalidRequirementConfigChecked($methodname)
+    public function canExecUsermanagerInvalidRequirementConfigChecked($methodname)
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $_GET['usermanagerid'] = $this->sManagerId;
         $_GET['oxid'] = $this->aUserIdList[0];
 
@@ -231,8 +234,10 @@ class jobExecuteTest extends d3IntegrationTestCase
      * @throws ReflectionException
      * @dataProvider execMethodDataProvider
      */
-    public function testExecUsermanagerInvalidActionConfig($methodname)
+    public function canExecUsermanagerInvalidActionConfig($methodname)
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $_GET['usermanagerid'] = $this->sManagerId;
         $_GET['oxid'] = $this->aUserIdList[0];
 
@@ -271,7 +276,7 @@ class jobExecuteTest extends d3IntegrationTestCase
      * @test
      * @throws ReflectionException
      */
-    public function testExecChangedContentsOk()
+    public function canExecChangedContentsOk()
     {
         $_GET['usermanagerid'] = $this->sManagerId;
         $_GET['oxid'] = $this->aUserIdList[0];
@@ -293,7 +298,7 @@ class jobExecuteTest extends d3IntegrationTestCase
      * @test
      * @throws ReflectionException
      */
-    public function testExecChangedContentsInvalidRequirementConfigUnchecked()
+    public function canExecChangedContentsInvalidRequirementConfigUnchecked()
     {
         $_GET['usermanagerid'] = $this->sManagerId;
         $_GET['oxid'] = $this->aUserIdList[0];
@@ -322,8 +327,10 @@ class jobExecuteTest extends d3IntegrationTestCase
      * @test
      * @throws ReflectionException
      */
-    public function testExecChangedContentsInvalidRequirementConfigChecked()
+    public function canExecChangedContentsInvalidRequirementConfigChecked()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $_GET['usermanagerid'] = $this->sManagerId;
         $_GET['oxid'] = $this->aUserIdList[0];
 
@@ -352,8 +359,10 @@ class jobExecuteTest extends d3IntegrationTestCase
      * @test
      * @throws ReflectionException
      */
-    public function testExecChangedContentsInvalidActionConfig()
+    public function canExecChangedContentsInvalidActionConfig()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $_GET['usermanagerid'] = $this->sManagerId;
         $_GET['oxid'] = $this->aUserIdList[0];
 

@@ -148,7 +148,7 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
 
             // load object in other languages
             $oOtherLang = $oProfile->getAvailableInLangs();
-            if (false == isset($oOtherLang[$this->_iEditLang])) {
+            if (!isset($oOtherLang[$this->_iEditLang])) {
                 $oProfile->loadInLang(key($oOtherLang), $soxId);
             }
         }
@@ -311,7 +311,7 @@ class d3_cfg_usermanageritem_action extends ItemSettingsController
     {
         // load object in other languages
         $oOtherLang = $oProfile->getAvailableInLangs();
-        if (false == isset($oOtherLang[$this->_iEditLang])) {
+        if (!isset($oOtherLang[$this->_iEditLang])) {
             $oProfile->loadInLang(key($oOtherLang), $soxId);
         }
 

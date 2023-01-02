@@ -23,6 +23,7 @@ use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ParameterNotFoundException;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\ModCfg\Application\Model\Exception\wrongModIdException;
 use D3\ModCfg\Application\Model\Log\d3LogInterface;
 use D3\ModCfg\Application\Model\Log\d3log;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
@@ -44,6 +45,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\Session;
 use OxidEsales\EshopCommunity\Core\ShopControl;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
 
@@ -57,7 +59,9 @@ class d3usermanager_response extends Base
      */
     public function __construct()
     {
-        d3GetModCfgDIC()->setParameter($this->_DIC_Instance_Id.'modcfgid', $this->_sModId);
+        if (d3GetModCfgDIC()->getParameter($this->_DIC_Instance_Id . 'modcfgid') !== $this->_sModId) {
+            throw oxNew(wrongModIdException::class, $this->_sModId);
+        }
 
         parent::__construct();
     }
@@ -87,9 +91,9 @@ class d3usermanager_response extends Base
             $oEx->d3showMessage();
         } catch (StandardException $oEx) {
             /** @var StandardException $oEx */
-            if (!defined('OXID_PHP_UNIT')) {
-                Registry::getLogger()->error($oEx, [$oEx]);
-            }
+            /** @var LoggerInterface $logger */
+            $logger = d3GetModCfgDIC()->get('d3ox.usermanager.Logger');
+            $logger->error($oEx, [$oEx]);
             echo $oEx->getMessage().PHP_EOL;
         } finally {
             /** @var Session $session */
@@ -363,19 +367,11 @@ class d3usermanager_response extends Base
      */
     public function getCronUnavailableException($sMessage): cronUnavailableException
     {
-        d3GetModCfgDIC()->setParameter(
-            cronUnavailableException::class.'.args.message',
-            $sMessage
-        );
-
-        /** @var cronUnavailableException $cronUnavailableExc */
-        $cronUnavailableExc = d3GetModCfgDIC()->get(cronUnavailableException::class);
-
-        return $cronUnavailableExc;
+        return oxNew(cronUnavailableException::class, $sMessage);
     }
 
     /**
-     * @return string
+     * @return string|int
      */
     protected function _getCronJobIdParameter()
     {
@@ -395,10 +391,7 @@ class d3usermanager_response extends Base
      */
     protected function _getCronTimestampVarName(): string
     {
-        $sVarName = "sCronExecTimestamp";
-        $sVarName .= $this->_getCronJobIdParameter();
-
-        return $sVarName;
+        return "sCronExecTimestamp".$this->_getCronJobIdParameter();
     }
 
     public function getLastExecDate(): string

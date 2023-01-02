@@ -134,6 +134,16 @@ class d3_usermanager_cron extends CLI
         // there are argv setting in CLI mode only
         if ($this->isCLI()) {
             parent::__construct();
+        } else {
+            try {
+                parent::__construct();
+                // @codeCoverageIgnoreStart
+            } catch (\splitbrain\phpcli\Exception $e) {
+                if ($e->getCode() !== \splitbrain\phpcli\Exception::E_ARG_READ) {
+                    throw new \splitbrain\phpcli\Exception($e->getMessage(), $e->getCode());
+                }
+            }
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -142,7 +152,7 @@ class d3_usermanager_cron extends CLI
      */
     public function isCLI(): bool
     {
-        return 'cli' == php_sapi_name();
+        return 'cli' == substr(php_sapi_name(), 0, 3);
     }
 
     /**
@@ -226,7 +236,7 @@ class d3_usermanager_cron extends CLI
         $aTranslation         = [];
         $aTranslation['shp']  = $arguments[0] ?? '';
         $aTranslation['cjid'] = $arguments[1] ?? '';
-        $aTranslation['key']  = $arguments[2] ?: '';
+        $aTranslation['key']  = $arguments[2] ?? '';
 
         $_GET = array_merge( $_GET, $aTranslation );
 
@@ -362,7 +372,8 @@ class d3_usermanager_cron extends CLI
 // @codeCoverageIgnoreStart
 /** @var d3_usermanager_cron $cli */
 $cli = d3GetModCfgDIC()->get(d3_usermanager_cron::class);
-if (false === defined('OXID_PHP_UNIT')) {
+$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+if (false === defined('OXID_PHP_UNIT') && !count($trace)) {
     try {
         $cli->run();
     } catch ( Exception $e) {

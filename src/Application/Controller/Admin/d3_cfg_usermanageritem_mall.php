@@ -20,6 +20,7 @@ namespace D3\Usermanager\Application\Controller\Admin;
 
 use D3\ModCfg\Application\Model\d3filesystem;
 use D3\ModCfg\Application\Model\d3str;
+use D3\ModCfg\Application\Model\Exception\wrongModIdException;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\Usermanager\Application\Model\d3usermanager_vars as VariablesTrait;
@@ -85,7 +86,9 @@ class d3_cfg_usermanageritem_mall extends d3AdminMall
      */
     public function __construct()
     {
-        d3GetModCfgDIC()->setParameter($this->_DIC_Instance_Id.'modcfgid', $this->_sModId);
+        if (d3GetModCfgDIC()->getParameter($this->_DIC_Instance_Id . 'modcfgid') !== $this->_sModId) {
+            throw oxNew(wrongModIdException::class, $this->_sModId);
+        }
 
         parent::__construct();
     }

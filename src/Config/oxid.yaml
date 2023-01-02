@@ -23,6 +23,10 @@ parameters:
   d3ox.usermanager.OxidEsales\Eshop\Core\Exception\StandardException.args.code:
 
 services:
+  _defaults:
+    autowire: false
+    public: true
+
   # config
   d3ox.usermanager.OxidEsales\Eshop\Core\Config:
     class:      'OxidEsales\Eshop\Core\Config'
@@ -46,6 +50,14 @@ services:
       - 'OxidEsales\Eshop\Core\Registry'
       - 'getLang'
     shared: true
+
+  # logger
+  d3ox.usermanager.Logger:
+    class:      'PSR\Log\LoggerInterface'
+    factory:
+      - 'OxidEsales\Eshop\Core\Registry'
+      - 'getLogger'
+    shared:     true
 
   # ViewConfig
   d3ox.usermanager.OxidEsales\Eshop\Core\ViewConfig:
@@ -406,11 +418,9 @@ services:
   # d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecache:
   #  synthetic:  true
   #  shared:     false
-  #  public:     false
   # d3ox.usermanager.OxidEsales\Eshop\Core\Module\ModuleInstaller.args.modulecleaner:
   #  synthetic:  true
   #  shared:     false
-  #  public:     false
 
   d3ox.usermanager.OxidEsales\Eshop\Core\Exception\StandardException:
     class:      'OxidEsales\Eshop\Core\Exception\StandardException'
@@ -426,4 +436,3 @@ services:
     # D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.exception:
     #   synthetic:  true
     #   shared:     false
-    #   public:     false

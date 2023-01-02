@@ -12,6 +12,10 @@
 # @link      https://www.oxidmodule.com
 
 services:
+  _defaults:
+    autowire: false
+    public: true
+
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_activefilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_activefilter
     factory:    'oxNew'
@@ -23,7 +27,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_activefilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_agecheck:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_agecheck
@@ -36,7 +39,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_agecheck.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdatefrom:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdatefrom
@@ -49,7 +51,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdatefrom.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdateto:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdateto
@@ -62,7 +63,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_birthdateto.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_bonifilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_bonifilter
@@ -75,7 +75,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_bonifilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrfrom:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrfrom
@@ -88,7 +87,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrfrom.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrto:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrto
@@ -101,7 +99,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_custnrto.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_deladdrfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_deladdrfilter
@@ -114,7 +111,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_deladdrfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcompanyfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcompanyfilter
@@ -127,7 +123,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcompanyfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcountryfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcountryfilter
@@ -140,7 +135,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delcountryfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delfieldfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delfieldfilter
@@ -153,7 +147,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delfieldfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delgenderfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delgenderfilter
@@ -166,7 +159,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delgenderfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delzipfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delzipfilter
@@ -179,7 +171,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_delzipfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_executemethodfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_executemethodfilter
@@ -192,7 +183,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_executemethodfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasbirthday:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasbirthday
@@ -205,7 +195,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasbirthday.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasnoticelist:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasnoticelist
@@ -218,7 +207,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasnoticelist.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasuserbasket:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasuserbasket
@@ -231,7 +219,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasuserbasket.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasvoucher:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasvoucher
@@ -244,7 +231,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_hasvoucher.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_haswishlist:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_haswishlist
@@ -257,7 +243,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_haswishlist.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ingroupfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ingroupfilter
@@ -270,7 +255,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ingroupfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcompanyfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcompanyfilter
@@ -283,7 +267,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcompanyfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcountryfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcountryfilter
@@ -296,7 +279,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invcountryfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invfieldfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invfieldfilter
@@ -309,7 +291,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invfieldfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invgenderfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invgenderfilter
@@ -322,7 +303,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invgenderfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invustidfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invustidfilter
@@ -335,7 +315,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invustidfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invzipfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invzipfilter
@@ -348,7 +327,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_invzipfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_newsletterfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_newsletterfilter
@@ -361,7 +339,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_newsletterfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_noticelistcount:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_noticelistcount
@@ -374,7 +351,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_noticelistcount.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_notingroupfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_notingroupfilter
@@ -387,7 +363,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_notingroupfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderdeltypefilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderdeltypefilter
@@ -400,7 +375,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderdeltypefilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderfieldfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderfieldfilter
@@ -413,7 +387,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderfieldfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderlanguagefilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderlanguagefilter
@@ -426,7 +399,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderlanguagefilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxcount:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxcount
@@ -439,7 +411,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxcount.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxsum:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxsum
@@ -452,7 +423,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxsum.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxtimespan:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxtimespan
@@ -465,7 +435,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermaxtimespan.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermincount:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermincount
@@ -478,7 +447,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermincount.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderminsum:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderminsum
@@ -491,7 +459,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderminsum.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermintimespan:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermintimespan
@@ -504,7 +471,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordermintimespan.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordernocount:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordernocount
@@ -517,7 +483,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordernocount.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderpaymentfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderpaymentfilter
@@ -530,7 +495,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_orderpaymentfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordertimespan:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordertimespan
@@ -543,7 +507,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_ordertimespan.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_otherjob:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_otherjob
@@ -556,7 +519,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_otherjob.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_passwordfilter:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_passwordfilter
@@ -569,7 +531,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_passwordfilter.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerfrom:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerfrom
@@ -582,7 +543,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerfrom.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registertimespan:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registertimespan
@@ -595,7 +555,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registertimespan.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerto:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerto
@@ -608,7 +567,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_registerto.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketfrom:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketfrom
@@ -621,7 +579,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketfrom.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbaskettimespan:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbaskettimespan
@@ -634,7 +591,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbaskettimespan.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketto:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketto
@@ -647,7 +603,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_userbasketto.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_validnewslettermail:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_validnewslettermail
@@ -660,7 +615,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_validnewslettermail.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_vouchernumber:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_vouchernumber
@@ -673,7 +627,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_vouchernumber.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_voucherserie:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_voucherserie
@@ -686,7 +639,6 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_voucherserie.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_wishlistcount:
     class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_wishlistcount
@@ -699,4 +651,3 @@ services:
   D3\Usermanager\Application\Model\Requirements\d3usermanager_requirement_wishlistcount.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false

@@ -19,6 +19,7 @@ namespace D3\Usermanager\tests\integration\Actions;
 
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\Usermanager\Application\Model\d3usermanager;
 use Doctrine\DBAL\Exception as DoctrineException;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -364,6 +365,8 @@ class actionAdd2GroupTest extends d3ActionIntegrationTestCase
      */
     public function actionChangeConcernedUserSingleGroupsNotExistsNotAssigned()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $oExecute = $this->getExecuteMock($this->getConfiguredManagerSingleGroupsNotExistsNotAssigned());
         $oExecute->startJobItemExecution();
 
@@ -431,6 +434,8 @@ class actionAdd2GroupTest extends d3ActionIntegrationTestCase
      */
     public function actionChangeConcernedUserNoGroups()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $oExecute = $this->getExecuteMock($this->getConfiguredManagerNoGroups());
         $oExecute->startJobItemExecution();
 

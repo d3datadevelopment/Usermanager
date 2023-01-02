@@ -32,18 +32,23 @@
     }
   },
   "require": {
-    "php": "7.3 - 8.0", "ext-ionCube-Loader": "*",
-    "oxid-esales/oxideshop-ce": "6.8 - 6.9",
-    "d3/modcfg": "^6.0.0.000",
-    "splitbrain/php-cli": "^1.1",
+    "php": "7.3 - 8.0",
+    "ext-ionCube-Loader": "*",
+    "oxid-esales/oxideshop-ce": "6.8 - 6.13",
+    "d3/modcfg": "^6.0.3.000",
+    "splitbrain/php-cli": "^1.2.0",
     "html2text/html2text": "^4.2",
     "d3/oxid-sql-logger": "^1.2.2",
     "ext-mbstring": "*",
-    "d3/oxidservicebridges": "^1.0.0"
+    "d3/oxidservicebridges": "^1.1.0"
   },
   "require-dev": {
     "mikey179/vfsstream": "^1.4",
-    "donatj/mock-webserver": "^2.1"
+    "donatj/mock-webserver": "^2.1",
+    "php": "7.3 - 8.0",
+    "ext-ionCube-Loader": "*",
+    "friendsofphp/php-cs-fixer": "^3.9",
+    "phpstan/phpstan": "^1.8"
   },
   "autoload": {
     "psr-4": {

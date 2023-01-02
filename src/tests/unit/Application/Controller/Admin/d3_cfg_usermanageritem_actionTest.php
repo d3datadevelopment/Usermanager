@@ -126,7 +126,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
         $oContentList = $this->callMethod($this->_oController, 'getContentList', array());
 
         $this->assertInstanceOf(ContentList::class, $oContentList);
-        $this->assertTrue($oContentList->count() > 0);
+        $this->assertNotEmpty($oContentList);
     }
 
     /**
@@ -522,7 +522,7 @@ class d3_cfg_usermanageritem_actionTest extends d3UsermanagerUnitTestCase
         $aActionList = $this->callMethod($this->_oController, 'getActionList');
         $this->assertIsArray($aActionList
         );
-        $this->assertTrue(count($aActionList) > 0);
+        $this->assertNotEmpty($aActionList);
     }
 
     /**

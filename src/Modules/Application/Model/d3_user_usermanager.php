@@ -39,6 +39,7 @@ use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
+use Psr\Log\LoggerInterface;
 
 class d3_user_usermanager extends d3_user_usermanager_parent
 {
@@ -108,9 +109,9 @@ class d3_user_usermanager extends d3_user_usermanager_parent
                         $oManagerExecute->exec4user($this->getId(), d3usermanager_conf::EXECTYPE_USERSAVETRIGGERED);
                     }
                 } catch (d3ActionRequirementAbstract | d3usermanager_templaterendererExceptionInterface $e) {
-                    if (!defined('OXID_PHP_UNIT')) {
-                        Registry::getLogger()->error($e->getMessage(), [$e]);
-                    }
+                    /** @var LoggerInterface $logger */
+                    $logger = d3GetModCfgDIC()->get('d3ox.usermanager.Logger');
+                    $logger->error($e->getMessage(), [$e]);
                     if (true === $currentAdminMode) {
                         /** @var UtilsView $utilsView */
                         $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.' . UtilsView::class);
@@ -153,14 +154,10 @@ class d3_user_usermanager extends d3_user_usermanager_parent
     protected function d3UserManagerCheckForConfigurationException(Manager $oManager): void
     {
         d3GetModCfgDIC()->set(d3usermanager_configurationcheck::class.'.args.usermanager', $oManager);
-        d3GetModCfgDIC()->setParameter(
-            d3usermanager_configurationcheck::class.'.args.checktypes',
-            $oManager->getValue('sManuallyExecMeetCondition') ?
-                d3usermanager_configurationcheck::REQUIREMENTS_AND_ACTIONS :
-                d3usermanager_configurationcheck::ACTIONS_ONLY
-        );
         /** @var d3usermanager_configurationcheck $confCheck */
         $confCheck = d3GetModCfgDIC()->get(d3usermanager_configurationcheck::class);
-        $confCheck->checkThrowingExceptions();
+        $confCheck->checkThrowingExceptions($oManager->getValue('sManuallyExecMeetCondition') ?
+            d3usermanager_configurationcheck::REQUIREMENTS_AND_ACTIONS :
+            d3usermanager_configurationcheck::ACTIONS_ONLY);
     }
 }

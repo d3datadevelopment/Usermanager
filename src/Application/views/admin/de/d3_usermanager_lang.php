@@ -392,8 +392,9 @@ $aLang = array(
     'D3_USERMANAGER_ACTION_EXPORTEXTENSION_DESC'        => 'Hier können Sie die Dateiendung der zu exportierenden Datei angeben. Dies sind z.B. für CSV-Dateien die Endung "csv" oder "txt". XML-Dateien haben in der Regel die Endung "xml". Beachten Sie bitte: Für den Inhalt der Exportdateien ist nicht die Dateinamenendung verantwortlich. Dieser muss die passende Exportvorlage zugeordnet sein.',
     'D3_USERMANAGER_ACTION_USERSENDPUSHNOTIFICATION'    => 'Push-Benachrichtigung senden',
     'D3_USERMANAGER_ACTION_USERSENDPUSHNOTIFICATION_URL' => 'Dienst-URL',
+    'D3_USERMANAGER_ACTION_ORDERSENDPUSHNOTIFICATION_URL_DESC' => '<p>Geben Sie hier die URL des Dienstes oder Scriptes an, der die Nachricht empfangen soll.</p><p>Soll die URL dynamische Parameter enthalten, setzen Sie diese in doppelte geschweifte Klammern "{{value1}}". Diese Parameter stehen im Standard zur Verfügung und werden auch als Body mitgegeben:</p><ul><li>value1 + orderNr -> Bestellnummer</li><li>value2 + userName -> Mail des Bestellers</li><li>value3 + shopUrl -> URL dieses Shops</li></ul><p>Bei Verwendung der POST-Methode werden optionale GET-Parameter an den Body angehängt.</p>',
     'D3_USERMANAGER_ACTION_USERSENDPUSHNOTIFICATION_METHOD' => 'Übertragungsmethode',
-    'D3_USERMANAGER_ACTION_USERSENDPUSHNOTIFICATION_DESC' => '<p>Geben Sie hier die URL des Dienstes oder Scriptes an, der die Nachricht empfangen soll und wählen Sie die bevorzuge Übertragungsmethode (POST ist für die Fälle Standard).</p>',
+    'D3_USERMANAGER_ACTION_USERSENDPUSHNOTIFICATION_DESC' => '<p>Wählen Sie die bevorzuge Übertragungsmethode (POST ist für die Fälle Standard).</p>',
     'D3_USERMANAGER_ACTION_USERSENDPUSHNOTIFICATION_ERR_INVALIDMETHOD' => 'keine gültige Übertragungsmethode gewählt',
     'D3_USERMANAGER_ACTION_USERSENDPUSHNOTIFICATION_ERR_INVALID' => 'keine gültige Einstellung gesetzt',
 
@@ -558,7 +559,7 @@ $aLang = array(
     'D3_USERMANAGER_CLI_FINISHED_ERRORS'                => 'Diese Fehler sind aufgetreten:',
     'D3_USERMANAGER_CLI_DEPRECATED'                     => 'Die Cronjobausführung über dieses Script wird mittelfristig deaktiviert. Bitte stellen Sie den Cronjob auf diesen Konsolenaufruf um: "./vendor/bin/d3_usermanager_cron" um.',
 
-    'D3_USERMANAGER_SETUP_CRONPASSWORD'                 => 'Für die Absicherung externer Cronjobaufrufe wird ein sicheres Passwort gesetzt. Dieses können Sie später in den Moduleinstellungen einsehen und bei Bedarf verändern.',
+    'D3_USERMANAGER_SETUP_CRONPASSWORD'                 => 'Für die Absicherung externer Cronjobaufrufe des Kundenmanagermoduls wird ein sicheres Passwort gesetzt. Dieses können Sie später in den Moduleinstellungen einsehen und bei Bedarf verändern.',
     
     'D3_USERMANAGER_EXC_CRON_MODULEDISABLED'            => 'Kundenmanagermodul ist deaktiviert.',
     'D3_USERMANAGER_EXC_CRON_UNAVAILABLE'               => 'Cronjob Aufruf ist deaktiviert.',

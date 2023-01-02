@@ -1,24 +1,16 @@
+[![deutsche Version](https://logos.oxidmodule.com/de2_xs.svg)](README.md)
+[![english version](https://logos.oxidmodule.com/en2_xs.svg)](README.en.md)
+
 # D³ Kundenmanager für OXID eShop
-Lassen Sie wiederkehrende Aufgaben automatisch nach frei definierbaren Regeln ausführen
 
-[![Latest Stable Release](https://img.shields.io/packagist/v/d3/usermanager.svg?label=aktuelles%20Release)](https://packagist.org/packages/d3/usermanager)
-![](https://img.shields.io/badge/V6--konform-komplett-brightgreen.svg)
-![](https://img.shields.io/badge/softwaregetestet-komplett-brightgreen.svg)
-![](https://img.shields.io/badge/Testabdeckung-100%25-brightgreen.svg)
+Lassen Sie wiederkehrende Aufgaben automatisch nach frei definierbaren Regeln ausführen.
 
-[![Downloads](https://img.shields.io/packagist/dt/d3/usermanager.svg?label=Downloads)](https://packagist.org/packages/d3/usermanager)
-[![](https://img.shields.io/badge/documentation-online-brightgreen.svg)](https://docs.oxidmodule.com/Kundenmanager/)
-[![License](https://img.shields.io/packagist/l/d3/usermanager.svg?label=Lizenz)](https://packagist.org/packages/d3/usermanager)
+Die Anforderungen des Moduls, Installations- und Konfigurationshinweise, Changelog und weitere Informationen entnehmen Sie bitte der Dokumentation [online](https://docs.oxidmodule.com/Kundenmanager/) und im docs-Verzeichnis dieses Paketes. 
 
-## Systemanforderungen:
-- installierter OXID eShop
-- PHP-Version, für die Installationspakete verfügbar sind
-- Installation via Composer
-- ionCubeLoader
-- D3 Modul Connector
+## Changelog
+Siehe [CHANGELOG](docs/daux/changelog/010_Changelog.md) für weitere Informationen.
 
-Die jeweils geforderten Versionen und sonstige Anforderungen entnehmen Sie bitte der Dokumentation [online](https://docs.oxidmodule.com/Kundenmanager/) und im docs-Verzeichnis dieses Paketes. 
+## Lizenz
+(Stand: 15.01.2012)
 
-## Installation:
-
-Eine detaillierte Installationsanleitung finden Sie [online](https://docs.oxidmodule.com/Kundenmanager/) und im docs-Verzeichnis dieses Pakets.
+Die Copyright- und Lizenzinformationen entnehmen Sie bitte der [LICENSE](LICENSE.md)-Datei, die mit diesem Quellcode verteilt wurde.

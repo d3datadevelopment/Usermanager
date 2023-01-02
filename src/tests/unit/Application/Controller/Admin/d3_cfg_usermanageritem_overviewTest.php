@@ -111,7 +111,7 @@ class d3_cfg_usermanageritem_overviewTest extends d3UsermanagerUnitTestCase
             ->onlyMethods(['checkThrowingExceptions'])
             ->disableOriginalConstructor()
             ->getMock();
-        $confCheckMock->method('checkThrowingExceptions')->willReturn(true);
+        $confCheckMock->method('checkThrowingExceptions');
 
         d3GetModCfgDIC()->set(d3usermanager_configurationcheck::class, $confCheckMock);
 

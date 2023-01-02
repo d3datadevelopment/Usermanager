@@ -12,6 +12,10 @@
 # @link      https://www.oxidmodule.com
 
 services:
+  _defaults:
+    autowire: false
+    public: true
+
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group
     factory:    'oxNew'
@@ -24,12 +28,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_add2group.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup
@@ -43,12 +45,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_deletefromgroup.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser
@@ -62,12 +62,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_deleteuser.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod
@@ -81,12 +79,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_executemethod.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist
@@ -100,12 +96,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_exportlist.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail
@@ -119,12 +113,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendmail.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification
@@ -138,12 +130,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_sendpushnotification.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag
@@ -157,12 +147,10 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_setactiveflag.args.user:
     synthetic:  true
     shared:     false
-    public:     false
 
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue:
     class:      D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue
@@ -176,9 +164,7 @@ services:
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.usermanager:
     synthetic:  true
     shared:     false
-    public:     false
     # arg #1 usermanager
   D3\Usermanager\Application\Model\Actions\d3usermanager_action_setfieldvalue.args.user:
     synthetic:  true
     shared:     false
-    public:     false

@@ -20,6 +20,7 @@ namespace D3\Usermanager\tests\integration;
 use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use D3\ModCfg\Application\Model\Log\d3NullLogger;
 use D3\Usermanager\Application\Model\d3usermanager as Manager;
 use D3\Usermanager\Application\Model\d3usermanagerlist;
 use Exception;
@@ -144,6 +145,8 @@ class userSaveTest extends d3IntegrationTestCase
      */
     public function runTriggerCanceledInvalidRequirementConfig()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $set = d3_cfg_mod::get('d3usermanager');
         $set->assign( [ 'oxactive' => 1 ] );
         $set->saveNoLicenseRefresh();
@@ -187,6 +190,8 @@ class userSaveTest extends d3IntegrationTestCase
      */
     public function runTriggerCanceledInvalidActionConfig()
     {
+        d3GetModCfgDIC()->set('d3ox.usermanager.Logger', d3GetModCfgDIC()->get(d3NullLogger::class));
+
         $manager = $this->getConfiguredManager();
         $manager->setValue('sActionAddField_field', 'invalidFieldName');
 

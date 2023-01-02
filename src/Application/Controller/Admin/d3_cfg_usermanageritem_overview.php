@@ -76,16 +76,12 @@ class d3_cfg_usermanageritem_overview extends d3_cfg_mod_main
                 d3usermanager_configurationcheck::class.'.args.usermanager',
                 $this->getManager()
             );
-            d3GetModCfgDIC()->setParameter(
-                d3usermanager_configurationcheck::class.'.args.checktypes',
-                d3usermanager_configurationcheck::REQUIREMENTS_AND_ACTIONS
-            );
             /** @var d3usermanager_configurationcheck $confCheck */
             $confCheck = d3GetModCfgDIC()->get(d3usermanager_configurationcheck::class);
-            $confCheck->checkThrowingExceptions();
+            $confCheck->checkThrowingExceptions(d3usermanager_configurationcheck::REQUIREMENTS_AND_ACTIONS);
         } catch (d3ActionRequirementInterface $e) {
             /** @var UtilsView $utilsView */
-            $utilsView = d3GetModCfgDIC()->get('d3ox.Usermanager.'.UtilsView::class);
+            $utilsView = d3GetModCfgDIC()->get('d3ox.usermanager.'.UtilsView::class);
             $utilsView->addErrorToDisplay($e);
         }
 
