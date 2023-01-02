@@ -1,0 +1,53 @@
+# This Software is the property of Data Development and is protected
+# by copyright law - it is NOT Freeware.
+#
+# Any unauthorized use of this software without a valid license
+# is a violation of the license agreement and will be prosecuted by
+# civil and criminal law.
+#
+# https://www.d3data.de
+#
+# @copyright (C) D3 Data Development (Inh. Thomas Dartsch)
+# @author    D3 Data Development - Daniel Seifert <support@shopmodule.com>
+# @link      https://www.oxidmodule.com
+
+parameters:
+  Html2Text\Html2Text.args.html:
+
+services:
+  _defaults:
+    autowire: false
+    public: true
+
+  Html2Text\Html2Text:
+    class:      Html2Text\Html2Text
+    shared:     false
+    arguments:
+      - '@d3ox.usermanager.Html2Text.context.html'
+
+  D3\Usermanager\Application\Model\Context\Html2TextContextInterface:
+    class:      D3\Usermanager\Application\Model\Context\Html2TextContext
+    public:     true
+    factory:    'oxNew'
+    shared:     true
+    arguments:
+      - 'D3\Usermanager\Application\Model\Context\Html2TextContext'
+
+  d3ox.usermanager.Html2Text.context.html:
+    class: D3\Usermanager\Application\Model\Context\Html2TextContextInterface
+    factory: ['@D3\Usermanager\Application\Model\Context\Html2TextContextInterface', 'getMessage']
+    shared: false
+
+  d3.usermanager.D3\OxidSqlLogger\OxidEsalesDatabase:
+    class:      D3\OxidSqlLogger\OxidEsalesDatabase
+    shared:     false
+
+  ReflectionClass:
+    class:      ReflectionClass
+    shared:     false
+    arguments:
+      - '@ReflectionClass.args.object'
+    # arg #1 object
+  ReflectionClass.args.object:
+    synthetic:  true
+    shared:     false

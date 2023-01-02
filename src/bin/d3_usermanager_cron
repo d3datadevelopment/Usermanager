@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * This Software is the property of Data Development and is protected
+ * by copyright law - it is NOT Freeware.
+ *
+ * Any unauthorized use of this software without a valid license
+ * is a violation of the license agreement and will be prosecuted by
+ * civil and criminal law.
+ *
+ * https://www.d3data.de
+ *
+ * @copyright (C) D3 Data Development (Inh. Thomas Dartsch)
+ * @author    D3 Data Development - Daniel Seifert <support@shopmodule.com>
+ * @link      https://www.oxidmodule.com
+ */
+
+declare(strict_types = 1);
+
+$count = 0;
+$filePath = '../../../source/modules/d3/usermanager/public/d3_usermanager_cron.php';
+$currentDirectory = __DIR__ . '/';
+while ($count < 5) {
+    $count++;
+    if (file_exists($currentDirectory . $filePath)) {
+        $filePath = $currentDirectory . $filePath;
+        break;
+    }
+    $filePath = '../' . $filePath;
+}
+
+require($filePath);

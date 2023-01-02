@@ -1,0 +1,48 @@
+# This Software is the property of Data Development and is protected
+# by copyright law - it is NOT Freeware.
+#
+# Any unauthorized use of this software without a valid license
+# is a violation of the license agreement and will be prosecuted by
+# civil and criminal law.
+#
+# https://www.d3data.de
+#
+# @copyright (C) D3 Data Development (Inh. Thomas Dartsch)
+# @author    D3 Data Development - Daniel Seifert <support@shopmodule.com>
+# @link      https://www.oxidmodule.com
+
+parameters:
+  d3.usermanager.modcfgid:     'd3usermanager'
+
+services:
+  _defaults:
+    autowire: false
+    public: true
+
+  d3.usermanager.modcfg:
+    class:      'D3\ModCfg\Application\Model\Configuration\d3_cfg_mod'
+    factory:
+      - 'D3\ModCfg\Application\Model\Configuration\d3_cfg_mod'
+      - 'get'
+    arguments:
+      - '%d3.usermanager.modcfgid%'
+
+  d3.usermanager.log:
+    class:      'D3\ModCfg\Application\Model\Log\d3log'
+    factory:
+      - '@d3.usermanager.modcfg'
+      - 'd3getLog'
+
+  d3.usermanager.database:
+    class:      'D3\ModCfg\Application\Model\d3database'
+    factory:
+      - 'D3\ModCfg\Application\Model\d3database'
+      - 'getInstance'
+
+  # d3filesystem
+  d3ox.usermanager.D3\ModCfg\Application\Model\d3filesystem:
+    class: D3\ModCfg\Application\Model\d3filesystem
+    factory: 'oxNew'
+    shared: false
+    arguments:
+      - D3\ModCfg\Application\Model\d3filesystem

@@ -1,0 +1,435 @@
+# This Software is the property of Data Development and is protected
+# by copyright law - it is NOT Freeware.
+#
+# Any unauthorized use of this software without a valid license
+# is a violation of the license agreement and will be prosecuted by
+# civil and criminal law.
+#
+# https://www.d3data.de
+#
+# @copyright (C) D3 Data Development (Inh. Thomas Dartsch)
+# @author    D3 Data Development - Daniel Seifert <support@shopmodule.com>
+# @link      https://www.oxidmodule.com
+
+parameters:
+  D3\Usermanager\Application\Model\d3usermanagerlist.args.objectname:
+  D3\Usermanager\Application\Model\d3usermanager_export.args.filename:
+  D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.message:
+  D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.code:
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException.args.message:
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.message:
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.code:
+
+services:
+  _defaults:
+    autowire: false
+    public: true
+
+  # usermanager
+  D3\Usermanager\Application\Model\d3usermanager:
+    class:      D3\Usermanager\Application\Model\d3usermanager
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanager
+
+  # usermanager_conf
+  D3\Usermanager\Application\Model\d3usermanager_conf:
+    class:      D3\Usermanager\Application\Model\d3usermanager_conf
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanager_conf
+
+  # usermanager_configurationcheck
+  D3\Usermanager\Application\Model\d3usermanager_configurationcheck:
+    class: D3\Usermanager\Application\Model\d3usermanager_configurationcheck
+    factory: 'oxNew'
+    shared: false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanager_configurationcheck
+      - '@D3\Usermanager\Application\Model\d3usermanager_configurationcheck.args.usermanager'
+  D3\Usermanager\Application\Model\d3usermanager_configurationcheck.args.usermanager:
+    synthetic: true
+    shared: false
+
+  # d3usermanager_debugoutput
+  D3\Usermanager\Application\Model\Output\d3usermanager_debugoutput:
+    class: D3\Usermanager\Application\Model\Output\d3usermanager_debugoutput
+    factory: 'oxNew'
+    shared: false
+    arguments:
+      - D3\Usermanager\Application\Model\Output\d3usermanager_debugoutput
+
+  # usermanagerlist
+  D3\Usermanager\Application\Model\d3usermanagerlist:
+    class:      D3\Usermanager\Application\Model\d3usermanagerlist
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanagerlist
+      - '%D3\Usermanager\Application\Model\d3usermanagerlist.args.objectname%'
+
+  # d3_cfg_usermanageritem_list
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_list:
+    class:      D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_list
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_list
+
+  # d3_cfg_usermanageritem_action
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_action:
+    class:      D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_action
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_action
+
+  # d3_cfg_usermanageritem_requ
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ:
+    class:      D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_requ
+
+  # d3usermanager_response
+  D3\Usermanager\Application\Controller\d3usermanager_response:
+    class:      D3\Usermanager\Application\Controller\d3usermanager_response
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Controller\d3usermanager_response
+
+  # d3usermanager_listgenerator
+  D3\Usermanager\Application\Model\d3usermanager_listgenerator:
+    class:      D3\Usermanager\Application\Model\d3usermanager_listgenerator
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanager_listgenerator
+      - '@D3\Usermanager\Application\Model\d3usermanager_listgenerator.args.usermanager'
+  D3\Usermanager\Application\Model\d3usermanager_listgenerator.args.usermanager:
+    synthetic:  true
+    shared:     false
+
+  # d3usermanager_actionlist
+  D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.user'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.usermanager:
+    synthetic:  true
+    shared:     false
+    # arg #2 user
+  D3\Usermanager\Application\Model\Actions\d3usermanager_actionlist.args.user:
+    synthetic:  true
+    shared:     false
+
+  # d3usermanager_remark
+  D3\Usermanager\Application\Model\d3usermanager_remark:
+    class:      D3\Usermanager\Application\Model\d3usermanager_remark
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanager_remark
+      - '@D3\Usermanager\Application\Model\d3usermanager_remark.args.usermanager'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\d3usermanager_remark.args.usermanager:
+    synthetic:  true
+    shared:     false
+
+  # d3usermanager_requirementlist
+  D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist:
+    class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist.args.usermanager'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementlist.args.usermanager:
+    synthetic:  true
+    shared:     false
+
+  # d3usermanager_requirementgrouplist
+  D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist:
+    class:      D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist
+      - '@D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist.args.usermanager'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Requirements\d3usermanager_requirementgrouplist.args.usermanager:
+    synthetic:  true
+    shared:     false
+
+  # d3usermanager_actiongrouplist
+  D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist:
+    class:      D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.usermanager'
+      - '@D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.user'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.usermanager:
+    synthetic:  true
+    shared:     false
+    # arg #2 user
+  D3\Usermanager\Application\Model\Actions\d3usermanager_actiongrouplist.args.user:
+    synthetic:  true
+    shared:     false
+
+  # d3usermanager_execute
+  D3\Usermanager\Application\Model\d3usermanager_execute:
+    class:      D3\Usermanager\Application\Model\d3usermanager_execute
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanager_execute
+      - '@D3\Usermanager\Application\Model\d3usermanager_execute.args.usermanager'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\d3usermanager_execute.args.usermanager:
+    synthetic:  true
+    shared:     false
+
+  # MessageContentGenerator
+  D3\Usermanager\Application\Model\MessageContentGenerator:
+    class:      D3\Usermanager\Application\Model\MessageContentGenerator
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\MessageContentGenerator
+      - '@D3\Usermanager\Application\Model\MessageContentGenerator.args.usermanager'
+      - '@D3\Usermanager\Application\Model\MessageContentGenerator.args.user'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\MessageContentGenerator.args.usermanager:
+    synthetic:  true
+    shared:     false
+    # arg #2 order
+  D3\Usermanager\Application\Model\MessageContentGenerator.args.user:
+    synthetic:  true
+    shared:     false
+
+  # d3usermanager_export
+  D3\Usermanager\Application\Model\d3usermanager_export:
+    class:      D3\Usermanager\Application\Model\d3usermanager_export
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanager_export
+      - '%D3\Usermanager\Application\Model\d3usermanager_export.args.filename%'
+      - '@D3\Usermanager\Application\Model\d3usermanager_export.args.usermanager'
+      - '@D3\Usermanager\Application\Model\d3usermanager_export.args.parametercontainer'
+    # arg #2 usermanager
+  D3\Usermanager\Application\Model\d3usermanager_export.args.usermanager:
+    synthetic:  true
+    shared:     false
+    # arg #2 parametercontainer
+  D3\Usermanager\Application\Model\d3usermanager_export.args.parametercontainer:
+    synthetic:  true
+    shared:     false
+
+  # emptyMessageException
+  D3\Usermanager\Application\Model\Exceptions\emptyMessageException:
+    class:      D3\Usermanager\Application\Model\Exceptions\emptyMessageException
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Exceptions\emptyMessageException
+      - '%D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.message%'
+      - '%D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.code%'
+      - '@?D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.exception'
+    # arg #3 exception
+    # no synthetic instance, because it's an optional argument
+  # D3\Usermanager\Application\Model\Exceptions\emptyMessageException.args.exception:
+  #   synthetic:  true
+  #   shared:     false
+  #   public:     false
+
+  # d3usermanager_cronUnavailableException
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException:
+    class:      D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException
+      - '%D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.message%'
+      - '%D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.code%'
+      - '@?D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.exception'
+    # arg #3 exception
+    # no synthetic instance, because it's an optional argument
+  # D3\Usermanager\Application\Model\Exceptions\d3usermanager_cronUnavailableException.args.exception:
+  #   synthetic:  true
+  #   shared:     false
+
+  # d3usermanager_actionException
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException:
+    class: D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException
+    factory: 'oxNew'
+    shared: false
+    arguments:
+      - D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException
+      - '@D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException.args.actionobject'
+    # arg #2 action object
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_actionException.args.actionobject:
+    synthetic: true
+    shared: false
+
+  # d3usermanager_cronUnavailableException
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException:
+    class: D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException
+    factory: 'oxNew'
+    shared: false
+    arguments:
+      - D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException
+      - '%D3\Usermanager\Application\Model\Exceptions\d3usermanager_smartyException.args.message%'
+
+
+  # d3usermanager_requirementException
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException:
+    class:      D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException
+      - '@D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException.args.requirementobject'
+    # arg #2 requirement object
+  D3\Usermanager\Application\Model\Exceptions\d3usermanager_requirementException.args.requirementobject:
+    synthetic:  true
+    shared:     false
+
+  # d3usermanager_touserassignment
+  D3\Usermanager\Application\Model\d3usermanager_touserassignment:
+    class:      D3\Usermanager\Application\Model\d3usermanager_touserassignment
+    factory:    'oxNew'
+    shared:     false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanager_touserassignment
+      - '@D3\Usermanager\Application\Model\d3usermanager_touserassignment.args.usermanager'
+    # arg #1 usermanager
+  D3\Usermanager\Application\Model\d3usermanager_touserassignment.args.usermanager:
+    synthetic:  true
+    shared:     false
+
+  # d3usermanager_renderererrorhandler
+  D3\Usermanager\Application\Model\d3usermanager_renderererrorhandler:
+    class: D3\Usermanager\Application\Model\d3usermanager_renderererrorhandler
+    factory: 'oxNew'
+    shared: false
+    arguments:
+      - D3\Usermanager\Application\Model\d3usermanager_renderererrorhandler
+
+  D3\Usermanager\tests\additional:
+    class:    D3\Usermanager\tests\additional
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\tests\additional
+
+  D3\Usermanager\Setup\d3usermanager_update:
+    class:    D3\Usermanager\Setup\d3usermanager_update
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Setup\d3usermanager_update
+
+  D3\Usermanager\Modules\Application\Controller\Admin\d3_user_remark_usermanager:
+    class:    D3\Usermanager\Modules\Application\Controller\Admin\d3_user_remark_usermanager
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Modules\Application\Controller\Admin\d3_user_remark_usermanager
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_mall:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_mall
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_mall
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_settings:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_settings
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_settings
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_overview
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_main:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_main
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_main
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_trigger:
+    class: D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_trigger
+    factory: 'oxNew'
+    shared: false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem_trigger
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_list:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_list
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_list
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_main:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_main
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset_main
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerset
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerlog:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerlog
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanagerlog
+
+  D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_usermanager_jobs
+
+  D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem:
+    class:    D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem
+    factory:  'oxNew'
+    shared:   false
+    arguments:
+      - D3\Usermanager\Application\Controller\Admin\d3_cfg_usermanageritem
+
+  D3\Usermanager\publicDir\d3_usermanager_cron:
+    class: D3\Usermanager\publicDir\d3_usermanager_cron
+    factory: 'oxNew'
+    shared: true
+    arguments:
+      - D3\Usermanager\publicDir\d3_usermanager_cron

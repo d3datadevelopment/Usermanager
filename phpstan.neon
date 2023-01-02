@@ -1,0 +1,16 @@
+parameters:
+    scanFiles:
+        - src/IntelliSenseHelper.php
+        - ../../oxid-esales/oxideshop-ce/source/oxfunctions.php
+        - ../../oxid-esales/oxideshop-ce/source/overridablefunctions.php
+    scanDirectories:
+        - ../../oxid-projects/pdf-invoice-module/
+    paths:
+        - src
+    excludePaths:
+        - src/tests
+    level: 0
+    phpVersion: 70300
+    checkMissingIterableValueType: false
+    featureToggles:
+        disableRuntimeReflectionProvider: true
