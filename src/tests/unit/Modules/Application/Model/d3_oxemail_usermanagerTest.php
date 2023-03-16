@@ -935,9 +935,9 @@ class d3_oxemail_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_oxemail_usermanager|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(Email::class)
-                           ->onlyMethods(['getMessageContentGenerator', 'd3GetUserManagerContentObject'])
+                           ->onlyMethods(['getMessageContentGeneratorUserManager', 'd3GetUserManagerContentObject'])
                            ->getMock();
-        $oModelMock->method('getMessageContentGenerator')->willReturn($messageContentGeneratorMock);
+        $oModelMock->method('getMessageContentGeneratorUserManager')->willReturn($messageContentGeneratorMock);
         $oModelMock->method('d3GetUserManagerContentObject')->willReturn($contentMock);
 
         $this->_oModel = $oModelMock;
@@ -986,9 +986,9 @@ class d3_oxemail_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_oxemail_usermanager|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(Email::class)
-                           ->onlyMethods(['getMessageContentGenerator'])
+                           ->onlyMethods(['getMessageContentGeneratorUserManager'])
                            ->getMock();
-        $oModelMock->method('getMessageContentGenerator')->willReturn($messageContentGeneratorMock);
+        $oModelMock->method('getMessageContentGeneratorUserManager')->willReturn($messageContentGeneratorMock);
 
         $this->_oModel = $oModelMock;
 
@@ -1035,11 +1035,9 @@ class d3_oxemail_usermanagerTest extends d3UsermanagerUnitTestCase
 
         /** @var d3_oxemail_usermanager|MockObject $oModelMock */
         $oModelMock = $this->getMockBuilder(Email::class)
-                           ->onlyMethods([
-                                             'getMessageContentGenerator'
-                                         ])
-                           ->getMock();
-        $oModelMock->method('getMessageContentGenerator')->willReturn($messageContentGeneratorMock);
+            ->onlyMethods(['getMessageContentGeneratorUserManager'])
+            ->getMock();
+        $oModelMock->method('getMessageContentGeneratorUserManager')->willReturn($messageContentGeneratorMock);
 
         $this->_oModel = $oModelMock;
 
@@ -1893,7 +1891,7 @@ class d3_oxemail_usermanagerTest extends d3UsermanagerUnitTestCase
      * @test
      * @return void
      * @throws ReflectionException
-     * @covers \D3\Usermanager\Modules\Application\Model\d3_oxemail_usermanager::getMessageContentGenerator
+     * @covers \D3\Usermanager\Modules\Application\Model\d3_oxemail_usermanager::getMessageContentGeneratorUserManager
      */
     public function getMessageContentGeneratorHasRightInstance()
     {
@@ -1908,7 +1906,7 @@ class d3_oxemail_usermanagerTest extends d3UsermanagerUnitTestCase
             MessageContentGenerator::class,
             $this->callMethod(
                 $this->_oModel,
-                'getMessageContentGenerator',
+                'getMessageContentGeneratorUserManager',
                 [$managerMock]
             )
         );

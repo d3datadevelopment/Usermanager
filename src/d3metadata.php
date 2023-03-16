@@ -29,6 +29,7 @@ $aModule = [
         'd3/usermanager/d3metadata.php',
         'd3/usermanager/Application/views/admin/blocks/d3usermanager_user_remark_type.tpl',
         'd3/usermanager/Application/views/admin/de/d3_usermanager_lang.php',
+        'd3/usermanager/Application/views/admin/en/d3_usermanager_lang.php',
         'd3/usermanager/Application/views/admin/tpl/d3_usermanager_bottomnaviitem.tpl',
         'd3/usermanager/Application/views/admin/tpl/email/html/d3orderbreak.tpl',
         'd3/usermanager/Application/views/admin/tpl/email/plain/d3orderbreak.tpl',

@@ -1,13 +1,13 @@
 <?php //006f9
-// <?php /** This Software is the property of D³ Data Development and is protected by copyright law - it is NOT Freeware.  Any unauthorized use of this software without a valid license key is a violation of the license agreement and will be prosecuted by civil and criminal law.  Inhaber: Thomas Dartsch Alle Rechte vorbehalten  @package Kundenmanager @version 5.1.1.0 PHP73 (02.01.2023) @author  Daniel Seifert support@shopmodule.com @copyright (C) 2023, D3 Data Development @see https://www.d3data.de */ ?>
+// <?php /** This Software is the property of D³ Data Development and is protected by copyright law - it is NOT Freeware.  Any unauthorized use of this software without a valid license key is a violation of the license agreement and will be prosecuted by civil and criminal law.  Inhaber: Thomas Dartsch Alle Rechte vorbehalten  @package Kundenmanager @version 5.1.1.1 PHP73 (16.03.2023) @author  Daniel Seifert support@shopmodule.com @copyright (C) 2023, D3 Data Development @see https://www.d3data.de */ ?>
 if(!extension_loaded('ionCube Loader')){$__oc=strtolower(substr(php_uname(),0,3));$__ln='ioncube_loader_'.$__oc.'_'.substr(phpversion(),0,3).(($__oc=='win')?'.dll':'.so');if(function_exists('dl')){@dl($__ln);}if(function_exists('_il_exec')){return _il_exec();}$__ln='/ioncube/'.$__ln;$__oid=$__id=realpath(ini_get('extension_dir'));$__here=dirname(__FILE__);if(strlen($__id)>1&&$__id[1]==':'){$__id=str_replace('\\','/',substr($__id,2));$__here=str_replace('\\','/',substr($__here,2));}$__rd=str_repeat('/..',substr_count($__id,'/')).$__here.'/';$__i=strlen($__rd);while($__i--){if($__rd[$__i]=='/'){$__lp=substr($__rd,0,$__i).$__ln;if(file_exists($__oid.$__lp)){$__ln=$__lp;break;}}}if(function_exists('dl')){@dl($__ln);}}else{die('The file '.__FILE__." is corrupted.\n");}if(function_exists('_il_exec')){return _il_exec();}echo("Site error: the ".(php_sapi_name()=='cli'?'ionCube':'<a href="http://www.ioncube.com">ionCube</a>')." PHP Loader needs to be installed. This is a widely used PHP extension for running ionCube protected PHP code, website security and malware blocking.\n\nPlease visit ".(php_sapi_name()=='cli'?'get-loader.ioncube.com':'<a href="http://get-loader.ioncube.com">get-loader.ioncube.com</a>')." for install assistance.\n\n");exit(199);
 ?>
-HR+cPt03jUo+wWt3HxSWpoRzBY2/+Y+fz76ceeou9yRBy5bWzhs1f74miMgUYU7ByQHCcXr1mvGi
-xc7r4ULYQZ7CVip0dOSe+LDCbk8M+VSFXRnDceElTZw+hApCpFvVrhNl/2xXHUw4tzo8WFuUDP13
-j9EqcGXOpEYztgRkK90GYCv6Hp0IPdQAamHnaFoAtpfroq5JowvQW/F008MGFKYyYFKi670temM4
-vnxb2uKfKvyP1EtYyhQzaCsBfQF3GqEXUPP6wqIchTkzv+Qy+W98K7JQZXDqBMocI5n6GnsaTxDd
-nwTotYhmdWIHrGjlDXO+3PbuaSmK//kmVg3VTI8ig1dKblfJ9pZIAZ/Azbofdnc69B16V/pqD4mX
-oB+zqOWJTlAtmtN4/waBWEcAbtw5Z65V/DC/7BqXwZAPAeAF7eylHfAgwTwwQrPwmihLIDrIu0Bf
-6SSq5sFynHAQuzQ2g8jU7jkKJI7lroNESGwjVyylXwRZCf5nBlOwMxRCFv/IWmlC+VI/usmtrMko
-1i7B7UfinFQe64Iu1Vz2O4zBbhUF3SLnc9lr1NIesE2vLObCs7XCSY8/ekdhxxEEoyXE5/lQTwsY
-TpbV
+HR+cPpVaJRvqGhQn0L3OdVW+mGAz5IEL7COFw9UuffGbvRzR8j1qccaC+awBCiWG4NAZbuhy51en
+PZt5u2QMfSTj+YPbbeJl9Pc0kzjWiPs6cwbqABEYFXb+bdfznNIfmykpIPcjGc9tCCvOvQoFmdQ1
+8oLO6rWi6HUCL1WvgyCYmMzezvBvk780ZOGTGT4e153IT45KQi6FR1tisWo9Krg12eLGL2uIyEwo
+D3druYipMWVzDcEnomlwuJ5AaS0DRz6/nDTjpUF1f1ZhpZ22fnmtNwzcyCXcZYWJETNk/ayEa6lB
+ngT2tRNXrmNMWM2QmxWDC8G9WFfTdExZmz2KtNzJBZsEubq5V10mNRHvdXcmxx9usYMXaKmAnNuv
+Hud3W4vBtDFTn8zj/qyLSqe52BaHZO/qFxRcRi+rnFYv82dc9CgjsXlqIZ0Gb7T31UV+lJ0Ai7t+
++2lsmRdmxUZYOpWN1MCzk3euRUY1WrfaLOPNZC/E3Cyzcad2G+gQcQJNVKPO8vp+Ij/x9ADTfp+y
++Z/8c6T+c1W7zx3Y+irZzfGvH8cL62IUANT+h5XcDjE6rV2duttb9FkCUjER1X6xnebg5GoViJDr
+0qC=

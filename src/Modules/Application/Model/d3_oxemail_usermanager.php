@@ -361,7 +361,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
             }
             unset($aContent['genplain']);
         } elseif ($oManager->getValue('sSendMailFromSource') == 'cms') {
-            $generator = $this->getMessageContentGenerator( $oManager );
+            $generator = $this->getMessageContentGeneratorUserManager( $oManager );
             $generator->setAllowEmptyMessageContent(true);
             $oContent = $this->d3GetUserManagerContentObject();
             $oContent->load($oManager->getValue('sSendMailFromContentname'));
@@ -369,7 +369,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
             $aContent['subject'] = $oContent->getFieldData('oxtitle');
             $aContent['plain'] = $generator->generateFromCms($oManager->getValue('sSendMailFromContentnamePlain'));
         } elseif ($oManager->getValue('sSendMailFromSource') == 'template') {
-            $generator = $this->getMessageContentGenerator( $oManager );
+            $generator = $this->getMessageContentGeneratorUserManager( $oManager );
             $generator->setAllowEmptyMessageContent(true);
             $fromTheme = $oManager->getValue('sSendMailFromTheme');
             $generator->setTemplateFrom(
@@ -634,7 +634,7 @@ class d3_oxemail_usermanager extends d3_oxemail_usermanager_parent
      * @return MessageContentGenerator|mixed
      * @throws d3ParameterNotFoundException
      */
-    protected function getMessageContentGenerator( Manager $oManager )
+    protected function getMessageContentGeneratorUserManager( Manager $oManager )
     {
         return oxNew( MessageContentGenerator::class, $oManager, $oManager->getCurrentItem() );
     }
