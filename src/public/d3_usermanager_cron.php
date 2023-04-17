@@ -373,7 +373,7 @@ class d3_usermanager_cron extends CLI
 /** @var d3_usermanager_cron $cli */
 $cli = d3GetModCfgDIC()->get(d3_usermanager_cron::class);
 $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-if (false === defined('OXID_PHP_UNIT') && !count($trace)) {
+if (false === defined('OXID_PHP_UNIT') && (!count($trace) || (bool) stristr($trace[0]['file'], 'bin/d3_usermanager_cron'))) {
     try {
         $cli->run();
     } catch ( Exception $e) {
