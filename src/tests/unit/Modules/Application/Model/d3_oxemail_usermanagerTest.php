@@ -1737,8 +1737,8 @@ class d3_oxemail_usermanagerTest extends d3UsermanagerUnitTestCase
                 'setReplyTo'
             ])
             ->getMock();
-        $oModelMock->expects($this->never())->method('setFrom')->willReturn(true);
-        $oModelMock->expects($this->once())->method('setReplyTo')->willReturn(true);
+        $oModelMock->expects($this->atLeastOnce())->method('setFrom')->willReturn(true);
+        $oModelMock->expects($this->atLeastOnce())->method('setReplyTo')->willReturn(true);
 
         $this->_oModel = $oModelMock;
 
