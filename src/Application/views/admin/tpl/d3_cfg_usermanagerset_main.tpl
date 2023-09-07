@@ -129,7 +129,7 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                             </dt>
                             <dd>
                                 <input type="hidden" name="value[blCalcStatOnDemand]" value="0">
-                                <input id="SetCronActive" class="edittext ext_edittext" type="checkbox" name="value[blCalcStatOnDemand]" value='1' [{if $edit->getValue('blCalcStatOnDemand') == 1}]checked[{/if}]>
+                                <input id="SetCronActive" class="edittext ext_edittext" type="checkbox" name="value[blCalcStatOnDemand]" value='1' [{if $edit->getValue('blCalcStatOnDemand') == 1}]checked[{/if}] [{$readonly}]>
                                 [{oxinputhelp ident="D3_USERMANAGER_SET_CALCULATESTATONDEMAND_DESC"}]
                             </dd>
                             <div class="spacer"></div>
@@ -139,7 +139,7 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                                 <label for="SetFolder">[{oxmultilang ident="D3_USERMANAGER_SET_FOLDERLIST"}]</label>
                             </dt>
                             <dd>
-                                <textarea id="SetFolder" class="edittext ext_edittext" name="valuearr[aFolderList]" style="height: 70px; width: 300px;">[{$edit->getEditValue('aFolderList')}]</textarea>
+                                <textarea id="SetFolder" class="edittext ext_edittext" name="valuearr[aFolderList]" style="height: 70px; width: 300px;" [{$readonly}]>[{$edit->getEditValue('aFolderList')}]</textarea>
                                 [{oxinputhelp ident="D3_USERMANAGER_SET_FOLDERLIST_DESC"}]
                             </dd>
                             <div class="spacer"></div>
@@ -160,7 +160,7 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                             </dt>
                             <dd>
                                 <input type="hidden" name="value[blCronActive]" value="0">
-                                <input id="SetCronActive" class="edittext ext_edittext" type="checkbox" name="value[blCronActive]" value='1' [{if $edit->getValue('blCronActive') == 1}]checked[{/if}]>
+                                <input id="SetCronActive" class="edittext ext_edittext" type="checkbox" name="value[blCronActive]" value='1' [{if $edit->getValue('blCronActive') == 1}]checked[{/if}] [{$readonly}]>
                                 [{oxinputhelp ident="D3_USERMANAGER_SET_CRON_ACTIVE_DESC"}]
                             </dd>
                             <div class="spacer"></div>
@@ -171,7 +171,7 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                             </dt>
                             <dd>
                                 <input type="hidden" name="value[iMaxUserCnt]" value="0">
-                                <input id="SetCronMaxUserCnt" class="edittext ext_edittext" type="text" size="4" maxlength="7" name="value[iMaxUserCnt]" value="[{if $edit->getValue('iMaxUserCnt')}][{$edit->getValue('iMaxUserCnt') == 1}][{else}]50[{/if}]">
+                                <input id="SetCronMaxUserCnt" class="edittext ext_edittext" type="text" size="4" maxlength="7" name="value[iMaxUserCnt]" value="[{if $edit->getValue('iMaxUserCnt')}][{$edit->getValue('iMaxUserCnt') == 1}][{else}]50[{/if}]" [{$readonly}]>
                                 [{oxinputhelp ident="D3_USERMANAGER_SET_CRON_MAXUSERCNT_DESC"}]
                             </dd>
                             <div class="spacer"></div>
@@ -181,7 +181,7 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                                 <label for="SetCronPW">[{oxmultilang ident="D3_USERMANAGER_SET_CRON_PASSWORD"}]</label>
                             </dt>
                             <dd>
-                                <input id="SetCronPW" class="edittext ext_edittext" type="test" size="20" maxlength="50" name="value[sCronPassword]" value="[{if $edit->getValue('sCronPassword')}][{$edit->getValue('sCronPassword')}][{else}][{$oView->getBaseCronPW()}][{/if}]">
+                                <input id="SetCronPW" class="edittext ext_edittext" type="text" size="20" maxlength="50" name="value[sCronPassword]" value="[{if $edit->getValue('sCronPassword')}][{$edit->getValue('sCronPassword')}][{else}][{$oView->getBaseCronPW()}][{/if}]" [{$readonly}]>
                                 [{oxinputhelp ident="D3_USERMANAGER_SET_CRON_PASSWORD_DESC"}]
                             </dd>
                             <div class="spacer"></div>
@@ -212,7 +212,7 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                                     <label for="shcrontype_[{$aCronJobIds.id}]">[{oxmultilang ident="D3_SHGENERATOR_CRON_SHGENERATOR"}]</label>
                                 </dt>
                                 <dd>
-                                    <select style="float: left; margin-right: 10px;" id="shcrontype_[{$aCronJobIds.id}]">
+                                    <select style="float: left; margin-right: 10px;" id="shcrontype_[{$aCronJobIds.id}]" [{$readonly}]>
                                         [{foreach from=$oView->getCronProviderList() item="sProviderName" key="sProviderId"}]
                                             <option value="[{$sProviderId}]">
                                                 [{$sProviderName}]
@@ -220,7 +220,7 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                                         [{/foreach}]
                                     </select>
                                     <span class="d3modcfg_btn icon d3color-blue">
-                                        <button name="save" onclick="oForm = document.getElementById('myedit'); oForm.crontype.value = document.getElementById('shcrontype_[{$aCronJobIds.id}]').value; oForm.cronid.value='[{$aCronJobIds.id}]'; oForm.fnc.value='generateCronShFile'; oForm.submit();">
+                                        <button name="save" onclick="oForm = document.getElementById('myedit'); oForm.crontype.value = document.getElementById('shcrontype_[{$aCronJobIds.id}]').value; oForm.cronid.value='[{$aCronJobIds.id}]'; oForm.fnc.value='generateCronShFile'; oForm.submit();" [{$readonly}]>
                                             <i class="fa fa-download fa-inverse"></i>
                                             [{oxmultilang ident="D3_SHGENERATOR_CRON_SHGENERATOR_GENERATE"}]
                                         </button>
@@ -234,7 +234,7 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                                     [{oxmultilang ident="D3_USERMANAGER_SET_CRON_EXTLINK"}]
                                 </dt>
                                 <dd>
-                                    <a href="[{$oView->getCronLink(true, $aCronJobIds.id)}]" target="_new" class="d3modcfg_btn icon d3color-blue" style="margin-right: 3px; padding-right: 0; background-image: none; width: 25px;">
+                                    <a href="[{$oView->getCronLink(true, $aCronJobIds.id)}]" target="_new" class="d3modcfg_btn icon d3color-blue" style="margin-right: 3px; padding-right: 0; background-image: none; width: 25px;" [{$readonly}]>
                                         <i class="fa fa-mouse-pointer fa-inverse" style="padding: 5px 9px;"></i>
                                     </a>
                                     [{$oView->getCronLink(true, $aCronJobIds.id)}]
@@ -260,7 +260,7 @@ function showFormatSettings(sElemId, visible, blUseOldElem)
                     <tr>
                         <td class="edittext ext_edittext" style="text-align: left">
                             <span class="d3modcfg_btn icon d3color-green">
-                                <button type="submit" name="save" onclick="oForm = document.getElementById('myedit'); oForm.crontype.value = ''; oForm.cronid.value=''; oForm.fnc.value='save'; oForm.submit();">
+                                <button type="submit" name="save" onclick="oForm = document.getElementById('myedit'); oForm.crontype.value = ''; oForm.cronid.value=''; oForm.fnc.value='save'; oForm.submit();" [{$readonly}]>
                                     <i class="fa fa-check-circle fa-inverse"></i>
                                     [{oxmultilang ident="D3_CFG_MOD_GENERAL_SAVE"}]
                                 </button>

@@ -34,7 +34,7 @@
   "require": {
     "php": "^8.0",
     "ext-sourceguardian": "*",
-    "oxid-esales/oxideshop-ce": "6.8 - 6.13",
+    "oxid-esales/oxideshop-ce": "6.8 - 6.14",
     "d3/modcfg": "^6.0.3.000",
     "splitbrain/php-cli": "^1.2.0",
     "html2text/html2text": "^4.2",

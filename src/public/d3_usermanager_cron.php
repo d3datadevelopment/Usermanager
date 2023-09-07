@@ -76,7 +76,7 @@ if (false === defined('OXID_PHP_UNIT')) {
     require_once($bootstrapFileName);
 
     // required for recalculating order and generating pdf
-    if (!OX_IS_ADMIN) {
+    if (!defined('OX_IS_ADMIN')) {
         define('OX_IS_ADMIN', true);
     }
 }

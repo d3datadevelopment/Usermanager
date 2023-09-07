@@ -99,7 +99,8 @@ class jobExecuteTest extends d3IntegrationTestCase
 
         $oManager->assign(
             [
-                'D3_CRONJOBID'    => 'testId'
+                'D3_CRONJOBID'          => 'testId',
+                'D3_UM_EXECMANUALLY'    => 1
             ]
         );
 
