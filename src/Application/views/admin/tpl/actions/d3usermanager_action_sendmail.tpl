@@ -57,7 +57,7 @@
                     [{oxinputhelp ident="D3_USERMANAGER_ACTION_MAILSEND_TOMAIL_DESC"}]<br>
 
                     <label for="ReplyAdr">[{oxmultilang ident="D3_USERMANAGER_ACTION_MAILSEND_USEALTREPLYADR"}]</label>
-                    <input id="ReplyAdr" class="edittext ext_edittext" type="text" name="value[sSendMailReplyAddress]" value="[{$edit->getValue('sSendMailReplyAddress')}]">
+                    <input id="ReplyAdr" class="edittext ext_edittext" type="text" name="value[sSendMailReplyAddress]" value="[{$edit->getValue('sSendMailReplyAddress')}]" [{$readonly}]>
                     [{oxinputhelp ident="D3_USERMANAGER_ACTION_MAILSEND_USEALTREPLYADR_DESC"}]
                 [{/block}]
             [{else}]

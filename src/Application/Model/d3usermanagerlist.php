@@ -25,6 +25,7 @@ use D3\ModCfg\Application\Model\Configuration\d3_cfg_mod;
 use D3\ModCfg\Application\Model\Configuration\d3modprofilelist;
 use D3\ModCfg\Application\Model\Exception\d3_cfg_mod_exception;
 use D3\ModCfg\Application\Model\Exception\d3ShopCompatibilityAdapterException;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Exception as DoctrineException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -185,6 +186,23 @@ class d3usermanagerlist extends d3modprofilelist
      *
      * @return bool
      * @throws DatabaseConnectionException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
+     * @throws DBALException
+     * @throws DatabaseErrorException
+     * @throws StandardException
+     */
+    public function canExecutedByCron(Manager $oManager): bool
+    {
+        return $oManager->isActive() &&
+               $oManager->getLicenseActive();
+    }
+
+    /**
+     * @param Manager $oManager
+     *
+     * @return bool
+     * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
      * @throws DoctrineException
      * @throws StandardException
@@ -193,7 +211,55 @@ class d3usermanagerlist extends d3modprofilelist
      */
     public function canExecutedManually(Manager $oManager): bool
     {
-        return $oManager->getFieldData('D3_UM_EXECMANUALLY') &&
+        return $this->canExecutedByConfField($oManager, 'D3_UM_EXECMANUALLY');
+    }
+
+    /**
+     * @param Manager $oManager
+     *
+     * @return bool
+     * @throws DatabaseConnectionException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
+     * @throws DBALException
+     * @throws DatabaseErrorException
+     * @throws StandardException
+     */
+    public function canExecutedUserSaveTriggered(Manager $oManager): bool
+    {
+        return $this->canExecutedByConfField($oManager, 'D3_UM_USERSAVETRIGGERED');
+    }
+
+    /**
+     * @param Manager $oManager
+     *
+     * @return bool
+     * @throws DatabaseConnectionException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
+     * @throws DBALException
+     * @throws DatabaseErrorException
+     * @throws StandardException
+     */
+    public function canExecutedOrderFinishTriggered(Manager $oManager): bool
+    {
+        return $this->canExecutedByConfField($oManager, 'D3_UM_ORDERFINISHTRIGGERED');
+    }
+
+    /**
+     * @param Manager $oManager
+     *
+     * @return bool
+     * @throws DatabaseConnectionException
+     * @throws d3ShopCompatibilityAdapterException
+     * @throws d3_cfg_mod_exception
+     * @throws DBALException
+     * @throws DatabaseErrorException
+     * @throws StandardException
+     */
+    protected function canExecutedByConfField(Manager $oManager, $fieldname): bool
+    {
+        return $oManager->getFieldData($fieldname) &&
                $oManager->getLicenseActive();
     }
 

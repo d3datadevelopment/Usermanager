@@ -9,7 +9,7 @@
                     [{oxinputhelp ident="D3_USERMANAGER_ACTION_ORDERSENDPUSHNOTIFICATION_URL_DESC"}]<br>
 
                     <label for="ActionUserSendPushNotificationMethod">[{oxmultilang ident="D3_USERMANAGER_ACTION_USERSENDPUSHNOTIFICATION_METHOD"}]</label>
-                    <select id="ActionUserSendPushNotificationMethod" name="value[sActionSendPushNotification_method]">
+                    <select id="ActionUserSendPushNotificationMethod" name="value[sActionSendPushNotification_method]" [{$readonly}]>
                         [{foreach from=$oAction->getMethodList() key="method" item="translation"}]
                             <option value="[{$key}]" [{if $edit->getValue('sActionSendPushNotification_method') == $key}]selected="selected"[{/if}]>[{$translation}]</option>
                         [{/foreach}]
